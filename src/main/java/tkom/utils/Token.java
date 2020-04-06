@@ -6,7 +6,7 @@ public class Token {
     private String value;
     private Integer line;
     private Integer position;
-
+    
     public Token(TokenType type, String value, Integer line, Integer position) {
         this.type = type;
         this.value = value;

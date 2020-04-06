@@ -16,7 +16,7 @@ public class Lexer {
     private StringBuilder stringBuilder;
 
     private void skipWhiteSpaces() throws IOException {
-        while(isWhiteSpace(reader.read()));
+        while(Character.isWhitespace(reader.read()));
 
         reader.unRead();
     }
@@ -25,8 +25,8 @@ public class Lexer {
         return c == ' ' || c == '\n';
     }
 
-    private boolean isEOF(int c) {
-        return c == -1;
+    private boolean isEOF(Character c) {
+        return c == Character.UNASSIGNED;
     }
 
     public Lexer(String fileName) throws FileNotFoundException {
@@ -41,14 +41,15 @@ public class Lexer {
         token.setLine(reader.getLineNumber());
         stringBuilder = new StringBuilder();
 
-        int c;
-        while (!isEOF((c=reader.read()))) {
+        Character c;
 
-            if(isWhiteSpace(c)) {
+        while (!isEOF(c=reader.read())) {
+
+            if(Character.isWhitespace(c)) {
                 break;
             }
 
-            stringBuilder.append(Character.toString(c));
+            stringBuilder.append(c);
         }
 
         token.setType(TokenType.Test);

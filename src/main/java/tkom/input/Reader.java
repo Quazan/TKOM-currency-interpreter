@@ -9,8 +9,16 @@ public class Reader {
 
     private LineNumberReader reader;
     private Integer characterPosition = -1;
-    private Integer previousCharacter = 0;
+    private Character previousCharacter = Character.UNASSIGNED;
     private static final Integer buffer = 4;
+
+    private Character castToCharacter(int c) {
+        if (c == -1) {
+            return Character.UNASSIGNED;
+        } else {
+            return (char) c;
+        }
+    }
 
     public Reader(String fileName) throws FileNotFoundException {
         this.reader = new LineNumberReader(new FileReader(fileName));
@@ -20,20 +28,22 @@ public class Reader {
         return reader.getLineNumber();
     }
 
-    public Integer peek() throws IOException {
+    public Character peek() throws IOException {
         reader.mark(buffer);
         int c = reader.read();
         reader.reset();
-        return c;
+        return castToCharacter(c);
     }
 
-    public Integer read() throws IOException {
-        if (previousCharacter == 10) {
+    public Character read() throws IOException {
+        if (previousCharacter == '\n') {
             characterPosition = -1;
         }
 
         reader.mark(buffer);
-        previousCharacter = reader.read();
+        int c = reader.read();
+        //System.out.println(c);
+        previousCharacter = castToCharacter(c);
         characterPosition++;
 
         //System.out.println(previousCharacter);
