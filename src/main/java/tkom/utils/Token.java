@@ -3,10 +3,10 @@ package tkom.utils;
 public class Token {
 
     private TokenType type;
-    private String value;
+    private String value = "";
     private Integer line;
     private Integer position;
-    
+
     public Token(TokenType type, String value, Integer line, Integer position) {
         this.type = type;
         this.value = value;

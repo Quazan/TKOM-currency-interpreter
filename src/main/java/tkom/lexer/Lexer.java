@@ -1,22 +1,22 @@
 package tkom.lexer;
 
-import lombok.ToString;
 import tkom.input.Reader;
+import tkom.utils.Keywords;
 import tkom.utils.Token;
 import tkom.utils.TokenType;
 
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.LineNumberReader;
+import java.util.List;
 
 public class Lexer {
 
     private Reader reader;
     private StringBuilder stringBuilder;
+    private List<String> currencies;
 
     private void skipWhiteSpaces() throws IOException {
-        while(Character.isWhitespace(reader.read()));
+        while (Character.isWhitespace(reader.read())) ;
 
         reader.unRead();
     }
@@ -29,34 +29,122 @@ public class Lexer {
         return c == Character.UNASSIGNED;
     }
 
-    public Lexer(String fileName) throws FileNotFoundException {
+    public Lexer(String fileName, List<String> currencies) throws FileNotFoundException {
         this.reader = new Reader(fileName);
+        this.currencies = currencies;
     }
 
     public Token nextToken() throws IOException {
         skipWhiteSpaces();
 
+        stringBuilder = new StringBuilder();
+
         Token token = new Token();
         token.setPosition(reader.getCharacterPosition());
         token.setLine(reader.getLineNumber());
-        stringBuilder = new StringBuilder();
 
-        Character c;
+        Character sign = reader.read();
 
-        while (!isEOF(c=reader.read())) {
-
-            if(Character.isWhitespace(c)) {
-                break;
-            }
-
-            stringBuilder.append(c);
+        if (isEOF(sign)) {
+            return null;
         }
 
-        token.setType(TokenType.Test);
-        token.setValue(stringBuilder.toString());
+        if (Character.isLetter(sign)) {
+            do {
+                stringBuilder.append(sign);
+                sign = reader.read();
+            } while (Character.isLetterOrDigit(sign));
+            reader.unRead();
 
-        if(stringBuilder.length() == 0) {
-            return null;
+            String s = stringBuilder.toString();
+
+            token.setType(Keywords.keywords.getOrDefault(s, TokenType.IDENTIFIER));
+
+            if (Keywords.keywords.containsKey(s)) {
+                token.setType(Keywords.keywords.get(s));
+            } else if (currencies.contains(s)) {
+                token.setType(TokenType.CURRENCY);
+                token.setValue(s);
+            } else {
+                token.setType(TokenType.IDENTIFIER);
+                token.setValue(s);
+            }
+
+        } else if (Character.isDigit(sign)) {
+            do {
+                stringBuilder.append(sign);
+                sign = reader.read();
+            } while (Character.isDigit(sign));
+            reader.unRead();
+
+            token.setType(TokenType.NUMBER);
+            token.setValue(stringBuilder.toString());
+        } else {
+            switch (sign) {
+                case '=': {
+                    if (reader.read() == '=') {
+                        token.setType(TokenType.EQUALITY);
+                    } else {
+                        reader.unRead();
+                        token.setType(TokenType.ASSIGNMENT);
+                    }
+                    break;
+                }
+
+                case '<': {
+                    if (reader.read() == '=') {
+                        token.setType(TokenType.LESS_OR_EQUAL);
+                    } else {
+                        reader.unRead();
+                        token.setType(TokenType.LESS);
+                    }
+                    break;
+                }
+
+                case '>': {
+                    if (reader.read() == '=') {
+                        token.setType(TokenType.GREATER_OR_EQUAL);
+                    } else {
+                        reader.unRead();
+                        token.setType(TokenType.GREATER);
+                    }
+                    break;
+                }
+
+                case '!': {
+                    if (reader.read() == '=') {
+                        token.setType(TokenType.INEQUALITY);
+                    } else {
+                        reader.unRead();
+                        token.setType(TokenType.NOT);
+                    }
+                    break;
+                }
+
+                case '&': {
+                    if (reader.read() == '&') {
+                        token.setType(TokenType.AND);
+                    } else {
+                        reader.unRead();
+                        token.setType(TokenType.INVALID);
+                    }
+                    break;
+                }
+
+                case '|': {
+                    if (reader.read() == '|') {
+                        token.setType(TokenType.OR);
+                    } else {
+                        reader.unRead();
+                        token.setType(TokenType.INVALID);
+                    }
+                    break;
+                }
+
+                default: {
+                    token.setType(Keywords.singleSings.getOrDefault(sign.toString(), TokenType.INVALID));
+                }
+            }
         }
 
         return token;
