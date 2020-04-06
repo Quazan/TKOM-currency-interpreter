@@ -14,14 +14,76 @@ public class Lexer {
     private Reader reader;
     private StringBuilder stringBuilder;
     private List<String> currencies;
+    private Character sign;
 
     private void skipWhiteSpaces() throws IOException {
         while (Character.isWhitespace(reader.read())) ;
         reader.unRead();
     }
 
-    private boolean isEOF(Character c) {
-        return c == Character.UNASSIGNED;
+    private boolean isEndOfFile() {
+        return sign == Character.UNASSIGNED;
+    }
+
+    private void setTokenPosition(Token token) {
+        token.setPosition(reader.getCharacterPosition());
+        token.setLine(reader.getLineNumber());
+    }
+
+    private void parseToken(Token token) throws IOException {
+        if (Character.isLetter(sign) || sign == '_') {
+            parseKeywordOrIdentifier(token);
+        } else if (Character.isDigit(sign) || sign == '.') {
+            parseNumber(token);
+        } else {
+            parseOther(token);
+        }
+    }
+
+    private void parseOther(Token token) throws IOException {
+        token.setType(
+                Keywords.keywords.getOrDefault(sign.toString() + reader.peek(),
+                        Keywords.keywords.getOrDefault(sign.toString(), TokenType.INVALID)
+                ));
+    }
+
+    private void parseNumber(Token token) throws IOException {
+        token.setValueAndType(readNumber(), TokenType.NUMBER);
+    }
+
+    private String readNumber() throws IOException {
+        do {
+            readToBuilder();
+        } while (Character.isDigit(sign));
+        reader.unRead();
+
+        return stringBuilder.toString();
+    }
+
+    private void parseKeywordOrIdentifier(Token token) throws IOException {
+        String id = readIdentifier();
+
+        if (Keywords.keywords.containsKey(id)) {
+            token.setType(Keywords.keywords.get(id));
+        } else if (currencies.contains(id)) {
+            token.setValueAndType(id, TokenType.CURRENCY);
+        } else {
+            token.setValueAndType(id, TokenType.IDENTIFIER);
+        }
+    }
+
+    private String readIdentifier() throws IOException {
+        do {
+            readToBuilder();
+        } while (Character.isLetterOrDigit(sign) || sign == '_');
+        reader.unRead();
+
+        return stringBuilder.toString();
+    }
+
+    private void readToBuilder() throws IOException {
+        stringBuilder.append(sign);
+        sign = reader.read();
     }
 
     public Lexer(String fileName, List<String> currencies) throws FileNotFoundException {
@@ -36,109 +98,14 @@ public class Lexer {
         skipWhiteSpaces();
         setTokenPosition(token);
 
-        Character sign = reader.read();
-        if (isEOF(sign)) {
+        sign = reader.read();
+        if (isEndOfFile()) {
             token.setType(TokenType.END_OF_FILE);
+        } else {
+            parseToken(token);
         }
-
-        parseToken(token, sign);
 
         return token;
-    }
-
-    private void setTokenPosition(Token token) {
-        token.setPosition(reader.getCharacterPosition());
-        token.setLine(reader.getLineNumber());
-    }
-
-    private void parseToken(Token token, Character sign) throws IOException {
-        if (Character.isLetter(sign) || sign == '_') {
-            parseKeywordOrIdentifier(token, sign);
-        } else if (Character.isDigit(sign) || sign == '.') {
-            parseNumber(token, sign);
-        } else {
-            parseOther(token, sign);
-        }
-    }
-
-    private void parseOther(Token token, Character sign) throws IOException {
-        switch (sign) {
-            case '=': {
-                tryDoubleKeyword(token, '=', TokenType.EQUALITY, TokenType.ASSIGNMENT);
-                break;
-            }
-
-            case '<': {
-                tryDoubleKeyword(token, '=', TokenType.LESS_OR_EQUAL, TokenType.LESS);
-                break;
-            }
-
-            case '>': {
-                tryDoubleKeyword(token, '=', TokenType.GREATER_OR_EQUAL, TokenType.GREATER);
-                break;
-            }
-
-            case '!': {
-                tryDoubleKeyword(token, '=', TokenType.INEQUALITY, TokenType.NOT);
-                break;
-            }
-
-            case '&': {
-                tryDoubleKeyword(token, '&', TokenType.AND, TokenType.INVALID);
-                break;
-            }
-
-            case '|': {
-                tryDoubleKeyword(token, '|', TokenType.OR, TokenType.INVALID);
-                break;
-            }
-
-            default: {
-                token.setType(Keywords.singleSings.getOrDefault(sign.toString(), TokenType.INVALID));
-            }
-        }
-    }
-
-    private void tryDoubleKeyword(Token token, Character c, TokenType ifTrue, TokenType ifFalse) throws IOException {
-        if (reader.read() == c) {
-            token.setType(ifTrue);
-        } else {
-            reader.unRead();
-            token.setType(ifFalse);
-        }
-    }
-
-    private void parseNumber(Token token, Character sign) throws IOException {
-        do {
-            stringBuilder.append(sign);
-            sign = reader.read();
-        } while (Character.isDigit(sign));
-        reader.unRead();
-
-        token.setType(TokenType.NUMBER);
-        token.setValue(stringBuilder.toString());
-    }
-
-    private void parseKeywordOrIdentifier(Token token, Character sign) throws IOException {
-        do {
-            stringBuilder.append(sign);
-            sign = reader.read();
-        } while (Character.isLetterOrDigit(sign) || sign == '_');
-        reader.unRead();
-
-        String s = stringBuilder.toString();
-
-        token.setType(Keywords.keywords.getOrDefault(s, TokenType.IDENTIFIER));
-
-        if (Keywords.keywords.containsKey(s)) {
-            token.setType(Keywords.keywords.get(s));
-        } else if (currencies.contains(s)) {
-            token.setType(TokenType.CURRENCY);
-            token.setValue(s);
-        } else {
-            token.setType(TokenType.IDENTIFIER);
-            token.setValue(s);
-        }
     }
 
     public Integer getLineNumber() {

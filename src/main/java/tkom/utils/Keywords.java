@@ -13,12 +13,6 @@ public final class Keywords {
             put("return", TokenType.RETURN);
             put("int", TokenType.INT);
             put("double", TokenType.DOUBLE);
-            //add currency from file
-        }
-    };
-
-    public static Map<String, TokenType> singleSings = new HashMap<>() {
-        {
             put("(", TokenType.ROUND_OPEN);
             put(")", TokenType.ROUND_CLOSE);
             put("{", TokenType.CURLY_OPEN);
@@ -31,12 +25,17 @@ public final class Keywords {
             put("/", TokenType.DIVIDE);
             put("=", TokenType.ASSIGNMENT);
             put("!", TokenType.NOT);
+            put("!=", TokenType.INEQUALITY);
+            put("==", TokenType.EQUALITY);
             put("<", TokenType.LESS);
+            put("<=", TokenType.LESS_OR_EQUAL);
             put(">", TokenType.GREATER);
+            put(">=", TokenType.GREATER_OR_EQUAL);
+            put("&&", TokenType.AND);
+            put("||", TokenType.OR);
             put(",", TokenType.COMMA);
             put(";", TokenType.SEMICOLON);
             put(".", TokenType.DOT);
         }
     };
-
 }

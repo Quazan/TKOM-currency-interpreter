@@ -49,6 +49,11 @@ public class Token {
         this.position = position;
     }
 
+    public void setValueAndType(String value, TokenType type) {
+        this.value = value;
+        this.type = type;
+    }
+
     @Override
     public String toString() {
         return "Token{" +
