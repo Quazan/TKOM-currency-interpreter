@@ -7,13 +7,6 @@ public class Token {
     private Integer line;
     private Integer position;
 
-    public Token(TokenType type, String value, Integer line, Integer position) {
-        this.type = type;
-        this.value = value;
-        this.line = line;
-        this.position = position;
-    }
-
     public Token() {
     }
 

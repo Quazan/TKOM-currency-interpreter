@@ -7,7 +7,7 @@ import java.io.LineNumberReader;
 
 public class Reader {
 
-    private LineNumberReader reader;
+    LineNumberReader reader;
     private Integer characterPosition = -1;
     private Character previousCharacter = Character.UNASSIGNED;
     private static final Integer buffer = 4;
@@ -42,11 +42,8 @@ public class Reader {
 
         reader.mark(buffer);
         int c = reader.read();
-        //System.out.println(c);
         previousCharacter = castToCharacter(c);
         characterPosition++;
-
-        //System.out.println(previousCharacter);
 
         return previousCharacter;
     }

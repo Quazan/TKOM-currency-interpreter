@@ -16,12 +16,9 @@ public class Main {
 
         Lexer lexer = new Lexer("src/main/resources/test.txt", rates.getCurrencies());
         Token token;
+
         while ((token=lexer.nextToken()).getType() != TokenType.END_OF_FILE) {
-            if(token.getValue() == "") {
-                System.out.println(token.getType());
-            } else {
-                System.out.println(token.getValue());
-            }
+            System.out.println(token);
         }
     }
 }
