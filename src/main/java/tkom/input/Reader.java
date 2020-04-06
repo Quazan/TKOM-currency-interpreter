@@ -56,4 +56,8 @@ public class Reader {
         reader.reset();
     }
 
+    public void close() throws IOException {
+        reader.close();
+    }
+
 }

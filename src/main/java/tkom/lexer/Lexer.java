@@ -34,7 +34,7 @@ public class Lexer {
     private String readNumber() throws IOException {
         do {
             readToBuilder();
-        } while (Character.isDigit(sign));
+        } while (Character.isDigit(sign) || sign == '.');
         reader.unRead();
 
         return stringBuilder.toString();
@@ -91,6 +91,7 @@ public class Lexer {
         sign = reader.read();
         if (isEndOfFile()) {
             token.setType(TokenType.END_OF_FILE);
+            reader.close();
         } else {
             parseToken(token);
         }
@@ -114,9 +115,4 @@ public class Lexer {
         parseNextToken(token);
         return token;
     }
-
-    public Integer getLineNumber() {
-        return reader.getLineNumber();
-    }
-
 }

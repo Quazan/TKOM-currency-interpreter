@@ -20,5 +20,6 @@ public class Main {
         while ((token=lexer.nextToken()).getType() != TokenType.END_OF_FILE) {
             System.out.println(token);
         }
+
     }
 }
