@@ -17,12 +17,7 @@ public class Lexer {
 
     private void skipWhiteSpaces() throws IOException {
         while (Character.isWhitespace(reader.read())) ;
-
         reader.unRead();
-    }
-
-    private boolean isWhiteSpace(int c) {
-        return c == ' ' || c == '\n';
     }
 
     private boolean isEOF(Character c) {
@@ -35,119 +30,115 @@ public class Lexer {
     }
 
     public Token nextToken() throws IOException {
-        skipWhiteSpaces();
-
+        Token token = new Token();
         stringBuilder = new StringBuilder();
 
-        Token token = new Token();
-        token.setPosition(reader.getCharacterPosition());
-        token.setLine(reader.getLineNumber());
+        skipWhiteSpaces();
+        setTokenPosition(token);
 
         Character sign = reader.read();
-
         if (isEOF(sign)) {
-            return null;
+            token.setType(TokenType.END_OF_FILE);
         }
 
-        if (Character.isLetter(sign)) {
-            do {
-                stringBuilder.append(sign);
-                sign = reader.read();
-            } while (Character.isLetterOrDigit(sign));
-            reader.unRead();
-
-            String s = stringBuilder.toString();
-
-            token.setType(Keywords.keywords.getOrDefault(s, TokenType.IDENTIFIER));
-
-            if (Keywords.keywords.containsKey(s)) {
-                token.setType(Keywords.keywords.get(s));
-            } else if (currencies.contains(s)) {
-                token.setType(TokenType.CURRENCY);
-                token.setValue(s);
-            } else {
-                token.setType(TokenType.IDENTIFIER);
-                token.setValue(s);
-            }
-
-        } else if (Character.isDigit(sign)) {
-            do {
-                stringBuilder.append(sign);
-                sign = reader.read();
-            } while (Character.isDigit(sign));
-            reader.unRead();
-
-            token.setType(TokenType.NUMBER);
-            token.setValue(stringBuilder.toString());
-        } else {
-            switch (sign) {
-                case '=': {
-                    if (reader.read() == '=') {
-                        token.setType(TokenType.EQUALITY);
-                    } else {
-                        reader.unRead();
-                        token.setType(TokenType.ASSIGNMENT);
-                    }
-                    break;
-                }
-
-                case '<': {
-                    if (reader.read() == '=') {
-                        token.setType(TokenType.LESS_OR_EQUAL);
-                    } else {
-                        reader.unRead();
-                        token.setType(TokenType.LESS);
-                    }
-                    break;
-                }
-
-                case '>': {
-                    if (reader.read() == '=') {
-                        token.setType(TokenType.GREATER_OR_EQUAL);
-                    } else {
-                        reader.unRead();
-                        token.setType(TokenType.GREATER);
-                    }
-                    break;
-                }
-
-                case '!': {
-                    if (reader.read() == '=') {
-                        token.setType(TokenType.INEQUALITY);
-                    } else {
-                        reader.unRead();
-                        token.setType(TokenType.NOT);
-                    }
-                    break;
-                }
-
-                case '&': {
-                    if (reader.read() == '&') {
-                        token.setType(TokenType.AND);
-                    } else {
-                        reader.unRead();
-                        token.setType(TokenType.INVALID);
-                    }
-                    break;
-                }
-
-                case '|': {
-                    if (reader.read() == '|') {
-                        token.setType(TokenType.OR);
-                    } else {
-                        reader.unRead();
-                        token.setType(TokenType.INVALID);
-                    }
-                    break;
-                }
-
-                default: {
-                    token.setType(Keywords.singleSings.getOrDefault(sign.toString(), TokenType.INVALID));
-                }
-            }
-        }
+        parseToken(token, sign);
 
         return token;
+    }
+
+    private void setTokenPosition(Token token) {
+        token.setPosition(reader.getCharacterPosition());
+        token.setLine(reader.getLineNumber());
+    }
+
+    private void parseToken(Token token, Character sign) throws IOException {
+        if (Character.isLetter(sign) || sign == '_') {
+            parseKeywordOrIdentifier(token, sign);
+        } else if (Character.isDigit(sign) || sign == '.') {
+            parseNumber(token, sign);
+        } else {
+            parseOther(token, sign);
+        }
+    }
+
+    private void parseOther(Token token, Character sign) throws IOException {
+        switch (sign) {
+            case '=': {
+                tryDoubleKeyword(token, '=', TokenType.EQUALITY, TokenType.ASSIGNMENT);
+                break;
+            }
+
+            case '<': {
+                tryDoubleKeyword(token, '=', TokenType.LESS_OR_EQUAL, TokenType.LESS);
+                break;
+            }
+
+            case '>': {
+                tryDoubleKeyword(token, '=', TokenType.GREATER_OR_EQUAL, TokenType.GREATER);
+                break;
+            }
+
+            case '!': {
+                tryDoubleKeyword(token, '=', TokenType.INEQUALITY, TokenType.NOT);
+                break;
+            }
+
+            case '&': {
+                tryDoubleKeyword(token, '&', TokenType.AND, TokenType.INVALID);
+                break;
+            }
+
+            case '|': {
+                tryDoubleKeyword(token, '|', TokenType.OR, TokenType.INVALID);
+                break;
+            }
+
+            default: {
+                token.setType(Keywords.singleSings.getOrDefault(sign.toString(), TokenType.INVALID));
+            }
+        }
+    }
+
+    private void tryDoubleKeyword(Token token, Character c, TokenType ifTrue, TokenType ifFalse) throws IOException {
+        if (reader.read() == c) {
+            token.setType(ifTrue);
+        } else {
+            reader.unRead();
+            token.setType(ifFalse);
+        }
+    }
+
+    private void parseNumber(Token token, Character sign) throws IOException {
+        do {
+            stringBuilder.append(sign);
+            sign = reader.read();
+        } while (Character.isDigit(sign));
+        reader.unRead();
+
+        token.setType(TokenType.NUMBER);
+        token.setValue(stringBuilder.toString());
+    }
+
+    private void parseKeywordOrIdentifier(Token token, Character sign) throws IOException {
+        do {
+            stringBuilder.append(sign);
+            sign = reader.read();
+        } while (Character.isLetterOrDigit(sign) || sign == '_');
+        reader.unRead();
+
+        String s = stringBuilder.toString();
+
+        token.setType(Keywords.keywords.getOrDefault(s, TokenType.IDENTIFIER));
+
+        if (Keywords.keywords.containsKey(s)) {
+            token.setType(Keywords.keywords.get(s));
+        } else if (currencies.contains(s)) {
+            token.setType(TokenType.CURRENCY);
+            token.setValue(s);
+        } else {
+            token.setType(TokenType.IDENTIFIER);
+            token.setValue(s);
+        }
     }
 
     public Integer getLineNumber() {
