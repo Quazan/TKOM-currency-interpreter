@@ -21,7 +21,7 @@ int main(){
     EUR  euro_2 = euro_1 - dolar;
     EUR wynik = max(euro_1, euro_2);
 
-    print(wynik) 
+    print(wynik)
 
     int i = 10;
     while(i > 0){

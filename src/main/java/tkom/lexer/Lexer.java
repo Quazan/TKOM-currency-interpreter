@@ -7,7 +7,9 @@ import tkom.utils.TokenType;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Lexer {
 
@@ -55,10 +57,11 @@ public class Lexer {
     }
 
     private void parseOther(Token token) throws IOException {
-        token.setType(
-                Keywords.keywords.getOrDefault(sign.toString() + reader.peek(),
-                        Keywords.keywords.getOrDefault(sign.toString(), TokenType.INVALID)
-                ));
+        if(Keywords.keywords.containsKey(sign.toString() + reader.peek())){
+            token.setType(Keywords.keywords.get(sign.toString() + reader.read()));
+        } else {
+            token.setType(Keywords.keywords.getOrDefault(sign.toString(), TokenType.INVALID));
+        }
     }
 
     private void parseNumber(Token token) throws IOException {
@@ -80,7 +83,7 @@ public class Lexer {
     private void parseToken(Token token) throws IOException {
         if (Character.isLetter(sign) || sign == '_') {
             parseKeywordOrIdentifier(token);
-        } else if (Character.isDigit(sign) || sign == '.') {
+        } else if (Character.isDigit(sign)) {
             parseNumber(token);
         } else {
             parseOther(token);
@@ -106,7 +109,7 @@ public class Lexer {
 
     public Lexer(String fileName, List<String> currencies) throws FileNotFoundException {
         this.reader = new Reader(fileName);
-        this.currencies = currencies;
+        this.currencies = Objects.requireNonNullElseGet(currencies, ArrayList::new);
     }
 
     public Token nextToken() throws IOException {

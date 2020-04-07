@@ -10,6 +10,13 @@ public class Token {
     public Token() {
     }
 
+    public Token(TokenType type, String value, Integer line, Integer position) {
+        this.type = type;
+        this.value = value;
+        this.line = line;
+        this.position = position;
+    }
+
     public TokenType getType() {
         return type;
     }

@@ -33,6 +33,6 @@ public enum TokenType {
     COMMA,
     SEMICOLON,
     DOT,
-    END_OF_FILE,
     INVALID,
+    END_OF_FILE,
 }

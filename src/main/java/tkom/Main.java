@@ -14,7 +14,7 @@ public class Main {
         JsonReader jsonReader = new JsonReader();
         Rates rates = jsonReader.getRates("src/main/resources/rates.json");
 
-        Lexer lexer = new Lexer("src/main/resources/test.txt", rates.getCurrencies());
+        Lexer lexer = new Lexer("src/main/resources/program.txt", rates.getCurrencies());
         Token token;
 
         while ((token=lexer.nextToken()).getType() != TokenType.END_OF_FILE) {

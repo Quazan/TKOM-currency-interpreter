@@ -3,15 +3,20 @@ package tkom.input;
 import lombok.SneakyThrows;
 import org.junit.Before;
 import org.junit.Test;
+import tkom.utils.Token;
+import tkom.utils.TokenType;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
 public class ReaderTest {
 
     Reader reader;
+    private String testFilePath = "src/test/resources/readerTest.txt";
+    private String emptyTestFilePath = "src/test/resources/emptyTest.txt";
 
     private void openFile(String path) {
         try {
@@ -35,7 +40,7 @@ public class ReaderTest {
     public void getLineNumberWithoutReading() {
         final int expectedLine = 0;
 
-        openFile("src/test/resources/readerTest.txt");
+        openFile(testFilePath);
         int line = reader.getLineNumber();
 
         assertEquals(expectedLine, line);
@@ -45,7 +50,7 @@ public class ReaderTest {
     public void getLineNumberOnNewLine() throws IOException {
         final int expectedLine = 1;
 
-        openFile("src/test/resources/readerTest.txt");
+        openFile(testFilePath);
 
         skipLine();
 
@@ -58,7 +63,7 @@ public class ReaderTest {
     public void peek() throws IOException {
         final Character expectedCharacter = '1';
 
-        openFile("src/test/resources/readerTest.txt");
+        openFile(testFilePath);
 
         Character peeked = reader.peek();
         Character read = reader.read();
@@ -71,7 +76,7 @@ public class ReaderTest {
     public void read() throws IOException {
         final Character expectedCharacter = '1';
 
-        openFile("src/test/resources/readerTest.txt");
+        openFile(testFilePath);
 
         Character read = reader.read();
 
@@ -82,7 +87,7 @@ public class ReaderTest {
     public void readOnEmptyFile() throws IOException {
         final Character expectedCharacter = Character.UNASSIGNED;
 
-        openFile("src/test/resources/emptyTest.txt");
+        openFile(emptyTestFilePath);
 
         Character read = reader.read();
 
@@ -93,7 +98,7 @@ public class ReaderTest {
     public void getCharacterPositionWithoutReading() {
         final int expectedPosition = -1;
 
-        openFile("src/test/resources/readerTest.txt");
+        openFile(testFilePath);
 
         int position = reader.getCharacterPosition();
 
@@ -104,7 +109,7 @@ public class ReaderTest {
     public void getCharacterPositionAfterReading() throws IOException {
         final int expectedPosition = 0;
 
-        openFile("src/test/resources/readerTest.txt");
+        openFile(testFilePath);
 
         reader.read();
         int position = reader.getCharacterPosition();
@@ -116,7 +121,7 @@ public class ReaderTest {
     public void getCharacterPositionOnNewLine() throws IOException {
         final int expectedPosition = 0;
 
-        openFile("src/test/resources/readerTest.txt");
+        openFile(testFilePath);
 
         skipLine();
 
@@ -127,7 +132,7 @@ public class ReaderTest {
 
     @Test(expected = IOException.class)
     public void unReadBeforeReading() throws IOException {
-        openFile("src/test/resources/readerTest.txt");
+        openFile(testFilePath);
 
         reader.unRead();
     }
@@ -136,7 +141,7 @@ public class ReaderTest {
     public void unRead() throws IOException {
         final Character expectedChar = '1';
 
-        openFile("src/test/resources/readerTest.txt");
+        openFile(testFilePath);
 
         reader.read();
         reader.unRead();
