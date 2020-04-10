@@ -8,7 +8,6 @@ import java.io.Reader;
 public class JsonReader {
 
     public Rates getRates(Reader reader) {
-
         Gson gson = new Gson();
 
         return gson.fromJson(reader, Rates.class);

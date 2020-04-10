@@ -59,6 +59,19 @@ public class Lexer {
         return stringBuilder.toString();
     }
 
+    private String readString() throws IOException, InvalidTokenException {
+        do {
+            readToBuilder();
+        } while ((Character.isLetterOrDigit(sign) || sign == '_') && sign != '"');
+        stringBuilder.append(sign);
+
+        if (stringBuilder.charAt(stringBuilder.length() - 1) != '"') {
+            throw new InvalidTokenException(token.getLine(), token.getPosition());
+        }
+
+        return stringBuilder.toString();
+    }
+
     private String readIdentifier() throws IOException, InvalidTokenException {
         do {
             readToBuilder();
@@ -117,17 +130,9 @@ public class Lexer {
         token.setTypeAndValue(TokenType.STRING, readString());
     }
 
-    private String readString() throws IOException, InvalidTokenException {
-        do {
-            readToBuilder();
-        } while ((Character.isLetterOrDigit(sign) || sign == '_') && sign != '"');
-        stringBuilder.append(sign);
-
-        if (stringBuilder.charAt(stringBuilder.length() - 1) != '"') {
-            throw new InvalidTokenException(token.getLine(), token.getPosition());
-        }
-
-        return stringBuilder.toString();
+    private void setNewToken() {
+        stringBuilder = new StringBuilder();
+        token = new Token(reader.getLineNumber(), reader.getCharacterPosition());
     }
 
     public Lexer(java.io.Reader abstractReader, List<String> currencies) {
@@ -135,16 +140,12 @@ public class Lexer {
         this.currencies = Objects.requireNonNullElseGet(currencies, ArrayList::new);
     }
 
-    private void setNewToken() {
-        stringBuilder = new StringBuilder();
-        token = new Token(reader.getLineNumber(), reader.getCharacterPosition());
-    }
-
     public Token nextToken() throws IOException, InvalidTokenException {
         skipWhiteSpaces();
-        setNewToken();
 
         sign = reader.read();
+        setNewToken();
+
         if (isEndOfFile()) {
             token.setType(TokenType.END_OF_FILE);
         } else {

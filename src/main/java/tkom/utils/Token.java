@@ -24,12 +24,6 @@ public class Token {
         setNumericValue();
     }
 
-    public Token(TokenType type, int line, int position) {
-        this.type = type;
-        this.line = line;
-        this.position = position;
-    }
-
     public Token(int line, int position) {
         this.line = line;
         this.position = position;
@@ -55,16 +49,6 @@ public class Token {
         return numericValue;
     }
 
-    @Override
-    public String toString() {
-        return "Token{" +
-                "type=" + type +
-                ", value='" + value + '\'' +
-                ", line=" + line +
-                ", position=" + position +
-                '}';
-    }
-
     public void setType(TokenType type) {
         this.type = type;
     }
@@ -77,5 +61,15 @@ public class Token {
         this.type = type;
         this.value = value;
         setNumericValue();
+    }
+
+    @Override
+    public String toString() {
+        return "Token{" +
+                "type=" + type +
+                ", value='" + value + '\'' +
+                ", line=" + line +
+                ", position=" + position +
+                '}';
     }
 }

@@ -6,7 +6,7 @@ import java.io.LineNumberReader;
 public class Reader {
 
     LineNumberReader reader;
-    private int characterPosition = 1;
+    private int characterPosition = 0;
     private Character previousCharacter = Character.UNASSIGNED;
     private static final int buffer = 4;
 
@@ -35,7 +35,7 @@ public class Reader {
 
     public Character read() throws IOException {
         if (previousCharacter == '\n') {
-            characterPosition = 1;
+            characterPosition = 0;
         }
 
         reader.mark(buffer);

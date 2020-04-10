@@ -5,21 +5,17 @@ import org.junit.Test;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.StringReader;
 
 import static org.junit.Assert.assertEquals;
 
 public class ReaderTest {
 
     Reader reader;
-    private String testFilePath = "src/test/resources/readerTest.txt";
-    private String emptyTestFilePath = "src/test/resources/emptyTest.txt";
 
-    private void openFile(String path) {
-        try {
-            reader = new Reader(new FileReader(testFilePath));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+    private void initialiseReader(String input) {
+        StringReader stringReader = new StringReader(input);
+        reader = new Reader(stringReader);
     }
 
     private void skipLine() throws IOException {
@@ -34,9 +30,9 @@ public class ReaderTest {
 
     @Test
     public void getLineNumberWithoutReading() {
-        final int expectedLine = 0;
+        final int expectedLine = 1;
+        initialiseReader("1234");
 
-        openFile(testFilePath);
         int line = reader.getLineNumber();
 
         assertEquals(expectedLine, line);
@@ -44,10 +40,8 @@ public class ReaderTest {
 
     @Test
     public void getLineNumberOnNewLine() throws IOException {
-        final int expectedLine = 1;
-
-        openFile(testFilePath);
-
+        final int expectedLine = 2;
+        initialiseReader("1234\r\nabcde");
         skipLine();
 
         int line = reader.getLineNumber();
@@ -58,8 +52,7 @@ public class ReaderTest {
     @Test
     public void peek() throws IOException {
         final Character expectedCharacter = '1';
-
-        openFile(testFilePath);
+        initialiseReader("1234");
 
         Character peeked = reader.peek();
         Character read = reader.read();
@@ -71,8 +64,7 @@ public class ReaderTest {
     @Test
     public void read() throws IOException {
         final Character expectedCharacter = '1';
-
-        openFile(testFilePath);
+        initialiseReader("123\r\nabcde");
 
         Character read = reader.read();
 
@@ -82,8 +74,7 @@ public class ReaderTest {
     @Test
     public void readOnEmptyFile() throws IOException {
         final Character expectedCharacter = Character.UNASSIGNED;
-
-        openFile(emptyTestFilePath);
+        initialiseReader("");
 
         Character read = reader.read();
 
@@ -92,9 +83,8 @@ public class ReaderTest {
 
     @Test
     public void getCharacterPositionWithoutReading() {
-        final int expectedPosition = -1;
-
-        openFile(testFilePath);
+        final int expectedPosition = 0;
+        initialiseReader("abcde");
 
         int position = reader.getCharacterPosition();
 
@@ -103,9 +93,8 @@ public class ReaderTest {
 
     @Test
     public void getCharacterPositionAfterReading() throws IOException {
-        final int expectedPosition = 0;
-
-        openFile(testFilePath);
+        final int expectedPosition = 1;
+        initialiseReader("abcde");
 
         reader.read();
         int position = reader.getCharacterPosition();
@@ -115,10 +104,8 @@ public class ReaderTest {
 
     @Test
     public void getCharacterPositionOnNewLine() throws IOException {
-        final int expectedPosition = 0;
-
-        openFile(testFilePath);
-
+        final int expectedPosition = 1;
+        initialiseReader("1234\r\nabcde");
         skipLine();
 
         int position = reader.getCharacterPosition();
@@ -128,7 +115,7 @@ public class ReaderTest {
 
     @Test(expected = IOException.class)
     public void unReadBeforeReading() throws IOException {
-        openFile(testFilePath);
+        initialiseReader("1234");
 
         reader.unRead();
     }
@@ -136,8 +123,7 @@ public class ReaderTest {
     @Test
     public void unRead() throws IOException {
         final Character expectedChar = '1';
-
-        openFile(testFilePath);
+        initialiseReader("123");
 
         reader.read();
         reader.unRead();
