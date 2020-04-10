@@ -13,6 +13,11 @@ public final class Keywords {
             put("return", TokenType.RETURN);
             put("int", TokenType.INT);
             put("double", TokenType.DOUBLE);
+        }
+    };
+
+    public static Map<String, TokenType> singleSigns = new HashMap<>() {
+        {
             put("(", TokenType.ROUND_OPEN);
             put(")", TokenType.ROUND_CLOSE);
             put("{", TokenType.CURLY_OPEN);
@@ -24,18 +29,23 @@ public final class Keywords {
             put("*", TokenType.MULTIPLY);
             put("/", TokenType.DIVIDE);
             put("=", TokenType.ASSIGNMENT);
-            put("!", TokenType.NOT);
-            put("!=", TokenType.INEQUALITY);
-            put("==", TokenType.EQUALITY);
             put("<", TokenType.LESS);
-            put("<=", TokenType.LESS_OR_EQUAL);
             put(">", TokenType.GREATER);
-            put(">=", TokenType.GREATER_OR_EQUAL);
-            put("&&", TokenType.AND);
-            put("||", TokenType.OR);
+            put("!", TokenType.NOT);
             put(",", TokenType.COMMA);
             put(";", TokenType.SEMICOLON);
             put(".", TokenType.DOT);
+        }
+    };
+
+    public static Map<String, TokenType> doubleSigns = new HashMap<>() {
+        {
+            put("!=", TokenType.INEQUALITY);
+            put("==", TokenType.EQUALITY);
+            put("<=", TokenType.LESS_OR_EQUAL);
+            put(">=", TokenType.GREATER_OR_EQUAL);
+            put("&&", TokenType.AND);
+            put("||", TokenType.OR);
         }
     };
 }

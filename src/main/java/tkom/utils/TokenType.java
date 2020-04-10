@@ -5,6 +5,7 @@ public enum TokenType {
     NUMBER,
     INT,
     DOUBLE,
+    STRING,
     CURRENCY,
     IF,
     ELSE,

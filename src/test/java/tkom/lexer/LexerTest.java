@@ -2,11 +2,14 @@ package tkom.lexer;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+import tkom.error.InvalidTokenException;
 import tkom.utils.Token;
 import tkom.utils.TokenType;
 
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,8 +24,8 @@ public class LexerTest {
     private String keywordTestFilePath = "src/test/resources/keywordTokenTest.txt";
     private Lexer lexer;
 
-    private void initializeLexer(String filePath, List<String> currencies) throws FileNotFoundException {
-        lexer = new Lexer(filePath, currencies);
+    private void initializeLexer(Reader reader, List<String> currencies) {
+        lexer = new Lexer(reader, currencies);
     }
 
     @BeforeClass
@@ -44,7 +47,7 @@ public class LexerTest {
     }
 
 
-    private List<Token> getAllTokensFromFile() throws IOException {
+    private List<Token> getAllTokensFromFile() throws IOException, InvalidTokenException {
         List<Token> tokenList = new ArrayList<>();
         Token token;
         while((token=lexer.nextToken()).getType() != TokenType.END_OF_FILE){
@@ -61,17 +64,17 @@ public class LexerTest {
     }
 
     @Test(expected = IOException.class)
-    public void nextTokenOnClosedStream() throws IOException {
-        initializeLexer(emptyTestFilePath, null);
+    public void nextTokenOnClosedStream() throws IOException, InvalidTokenException {
+        initializeLexer(new FileReader(emptyTestFilePath), null);
 
         lexer.nextToken();
         lexer.nextToken();
     }
 
     @Test
-    public void nextTokenOnEmptyFile() throws IOException {
+    public void nextTokenOnEmptyFile() throws IOException, InvalidTokenException {
         final Token expectedToken = new Token(TokenType.END_OF_FILE, "", 0, 0);
-        initializeLexer(emptyTestFilePath, null);
+        initializeLexer(new FileReader(emptyTestFilePath), null);
 
         Token actual = lexer.nextToken();
 
@@ -79,10 +82,10 @@ public class LexerTest {
     }
 
     @Test
-    public void nextTokenOnNullCurrencies() throws IOException {
+    public void nextTokenOnNullCurrencies() throws IOException, InvalidTokenException {
         final Token expectedToken = new Token(TokenType.RETURN, "", 0, 0);
 
-        initializeLexer(keywordTestFilePath, null);
+        initializeLexer(new FileReader(keywordTestFilePath), null);
 
         Token actual = lexer.nextToken();
 
@@ -90,8 +93,8 @@ public class LexerTest {
     }
 
     @Test
-    public void nextToken() throws IOException {
-        initializeLexer(tokensTestFilePath, currencies);
+    public void nextToken() throws IOException, InvalidTokenException {
+        initializeLexer(new FileReader(tokensTestFilePath), currencies);
 
         List<Token> actual = getAllTokensFromFile();
 

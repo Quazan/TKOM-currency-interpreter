@@ -1,16 +1,14 @@
 package tkom.input;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
 
 public class Reader {
 
     LineNumberReader reader;
-    private Integer characterPosition = -1;
+    private int characterPosition = 1;
     private Character previousCharacter = Character.UNASSIGNED;
-    private static final Integer buffer = 4;
+    private static final int buffer = 4;
 
     private Character castToCharacter(int c) {
         if (c == -1) {
@@ -20,12 +18,12 @@ public class Reader {
         }
     }
 
-    public Reader(String fileName) throws FileNotFoundException {
-        this.reader = new LineNumberReader(new FileReader(fileName));
+    public Reader(java.io.Reader abstractReader) {
+        this.reader = new LineNumberReader(abstractReader);
     }
 
-    public Integer getLineNumber() {
-        return reader.getLineNumber();
+    public int getLineNumber() {
+        return reader.getLineNumber() + 1;
     }
 
     public Character peek() throws IOException {
@@ -37,7 +35,7 @@ public class Reader {
 
     public Character read() throws IOException {
         if (previousCharacter == '\n') {
-            characterPosition = -1;
+            characterPosition = 1;
         }
 
         reader.mark(buffer);
@@ -48,12 +46,13 @@ public class Reader {
         return previousCharacter;
     }
 
-    public Integer getCharacterPosition() {
+    public int getCharacterPosition() {
         return characterPosition;
     }
 
     public void unRead() throws IOException {
         reader.reset();
+        characterPosition--;
     }
 
     public void close() throws IOException {

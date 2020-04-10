@@ -1,16 +1,12 @@
 package tkom.input;
 
-import lombok.SneakyThrows;
-import org.junit.Before;
 import org.junit.Test;
-import tkom.utils.Token;
-import tkom.utils.TokenType;
 
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
-import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class ReaderTest {
 
@@ -20,20 +16,20 @@ public class ReaderTest {
 
     private void openFile(String path) {
         try {
-            reader = new Reader(path);
+            reader = new Reader(new FileReader(testFilePath));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
 
     private void skipLine() throws IOException {
-        while(reader.read() != '\n');
+        while (reader.read() != '\n') ;
         reader.read();
     }
 
     @Test(expected = FileNotFoundException.class)
     public void openNonExistingFile() throws FileNotFoundException {
-        reader = new Reader("notActualFile");
+        reader = new Reader(new FileReader("nonExistingFile"));
     }
 
     @Test

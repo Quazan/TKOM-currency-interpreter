@@ -1,18 +1,36 @@
 package tkom.utils;
 
+import java.math.BigDecimal;
+
 public class Token {
 
     private TokenType type;
     private String value = "";
-    private Integer line;
-    private Integer position;
+    private BigDecimal numericValue;
+    private final int line;
+    private final int position;
 
-    public Token() {
+    private void setNumericValue() {
+        if (type == TokenType.NUMBER) {
+            numericValue = new BigDecimal(value);
+        }
     }
 
     public Token(TokenType type, String value, Integer line, Integer position) {
         this.type = type;
         this.value = value;
+        this.line = line;
+        this.position = position;
+        setNumericValue();
+    }
+
+    public Token(TokenType type, int line, int position) {
+        this.type = type;
+        this.line = line;
+        this.position = position;
+    }
+
+    public Token(int line, int position) {
         this.line = line;
         this.position = position;
     }
@@ -21,37 +39,20 @@ public class Token {
         return type;
     }
 
-    public void setType(TokenType type) {
-        this.type = type;
-    }
-
     public String getValue() {
         return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
     }
 
     public Integer getLine() {
         return line;
     }
 
-    public void setLine(Integer line) {
-        this.line = line;
-    }
-
     public Integer getPosition() {
         return position;
     }
 
-    public void setPosition(Integer position) {
-        this.position = position;
-    }
-
-    public void setValueAndType(String value, TokenType type) {
-        this.value = value;
-        this.type = type;
+    public BigDecimal getNumericValue() {
+        return numericValue;
     }
 
     @Override
@@ -62,5 +63,19 @@ public class Token {
                 ", line=" + line +
                 ", position=" + position +
                 '}';
+    }
+
+    public void setType(TokenType type) {
+        this.type = type;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public void setTypeAndValue(TokenType type, String value) {
+        this.type = type;
+        this.value = value;
+        setNumericValue();
     }
 }
