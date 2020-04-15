@@ -3,17 +3,14 @@ package tkom.ast.nodes;
 import lombok.Data;
 import tkom.ast.Node;
 import tkom.ast.NodeType;
-import tkom.utils.Type;
 
 @Data
-public class Parameter implements Node {
+public class Int implements Node {
 
-    private Type type;
-
-    private String name;
+    private int value;
 
     @Override
     public NodeType getType() {
-        return NodeType.PARAMETER;
+        return NodeType.INT;
     }
 }

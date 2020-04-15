@@ -1,10 +1,12 @@
 package tkom.ast.nodes;
 
 import lombok.Data;
+import tkom.ast.Node;
+import tkom.ast.NodeType;
 import tkom.ast.Statement;
 
 @Data
-public class IfStatement implements Statement {
+public class IfStatement implements Statement, Node {
 
     private Condition condition;
 
@@ -12,4 +14,8 @@ public class IfStatement implements Statement {
 
     private StatementBlock falseBlock;
 
+    @Override
+    public NodeType getType() {
+        return NodeType.IF_STATEMENT;
+    }
 }
