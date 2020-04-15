@@ -8,7 +8,7 @@ import tkom.ast.Statement;
 @Data
 public class AssignStatement implements Statement, Node {
 
-    private Variable variable;
+    private String identifier;
 
     private Expression assignable;
 

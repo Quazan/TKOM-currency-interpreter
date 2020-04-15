@@ -50,7 +50,7 @@ public class Parser {
 
     private Function parseFunction() throws UnexpectedTokenException, InvalidTokenException, IOException {
         Function function = new Function();
-
+        function.setReturnType(Type.valueOf(currentToken().getType().toString()));
         function.setName(getToken(TokenType.IDENTIFIER).getValue());
         getToken(TokenType.ROUND_OPEN);
 
@@ -68,8 +68,6 @@ public class Parser {
 
     private StatementBlock parseStatementBlock() throws UnexpectedTokenException, InvalidTokenException, IOException {
         StatementBlock block = new StatementBlock();
-
-
 
         while (isValidStatement(advance().getType())) {
             block.addStatement(parseStatement());
@@ -99,10 +97,11 @@ public class Parser {
             }
 
             case IDENTIFIER: {
+                String identifier = currentToken().getValue();
                 if (advance().getType() == TokenType.ASSIGNMENT) {
-                    return parseAssignStatement();
+                    return parseAssignStatement(identifier);
                 } else if (currentToken().getType() == TokenType.ROUND_OPEN) {
-                    return parseFunctionCall();
+                    return parseFunctionCall(identifier);
                 }
                 break;
             }
@@ -112,19 +111,79 @@ public class Parser {
         }
     }
 
-    private FunctionCall parseFunctionCall() {
+    private FunctionCall parseFunctionCall(String identifier) throws UnexpectedTokenException, InvalidTokenException, IOException {
+        FunctionCall functionCall = new FunctionCall();
+
+        functionCall.setName(identifier);
+
+        while (isValidArgument()) {
+            functionCall.addArgument(parseArgument());
+        }
+
+        getToken(TokenType.ROUND_CLOSE);
+        getToken(TokenType.SEMICOLON);
+
+        return functionCall;
     }
 
-    private AssignStatement parseAssignStatement() {
+    private Expression parseArgument() {
     }
 
-    private InitStatement parseInitStatement() {
+    private boolean isValidArgument() {
     }
 
-    private ReturnStatement parseReturnStatement() {
+    private AssignStatement parseAssignStatement(String identifier) throws UnexpectedTokenException, InvalidTokenException, IOException {
+        AssignStatement statement = new AssignStatement();
+
+        statement.setIdentifier(identifier);
+        statement.setAssignable(parseExpression());
+        getToken(TokenType.SEMICOLON);
+
+        return statement;
     }
 
-    private WhileStatement parseWhileStatement() {
+    private InitStatement parseInitStatement() throws UnexpectedTokenException, InvalidTokenException, IOException {
+        InitStatement statement = new InitStatement();
+
+        statement.setReturnType(Type.valueOf(currentToken().getType().toString()));
+        statement.setName(getToken(TokenType.IDENTIFIER).getValue());
+
+        getToken(TokenType.ASSIGNMENT);
+
+        statement.setAssignable(parseExpression());
+
+        return statement;
+    }
+
+    private ReturnStatement parseReturnStatement() throws UnexpectedTokenException, InvalidTokenException, IOException {
+        ReturnStatement statement = new ReturnStatement();
+
+        statement.setExpression(parseExpression());
+        getToken(TokenType.SEMICOLON);
+
+        return statement;
+    }
+
+    private Expression parseExpression() {
+        Expression expression = new Expression();
+
+        return expression;
+    }
+
+    private WhileStatement parseWhileStatement() throws UnexpectedTokenException, InvalidTokenException, IOException {
+        WhileStatement statement = new WhileStatement();
+
+        getToken(TokenType.ROUND_OPEN);
+        statement.setCondition(parseCondition());
+        getToken(TokenType.ROUND_CLOSE);
+
+        if (getOptionalToken(TokenType.CURLY_OPEN)) {
+            statement.setWhileBlock(parseStatementBlock());
+        } else {
+            statement.setWhileBlock(parseSingleStatement());
+        }
+
+        return statement;
     }
 
     private IfStatement parseIfStatement() throws UnexpectedTokenException, InvalidTokenException, IOException {
@@ -133,13 +192,21 @@ public class Parser {
         getToken(TokenType.ROUND_OPEN);
         statement.setCondition(parseCondition());
 
-        if(getOptionalToken(TokenType.CURLY_OPEN)) {
+        if (getOptionalToken(TokenType.CURLY_OPEN)) {
             statement.setTrueBlock(parseStatementBlock());
         } else {
             statement.setTrueBlock(parseSingleStatement());
         }
 
+        if (getOptionalToken(TokenType.ELSE)) {
+            if (getOptionalToken(TokenType.CURLY_OPEN)) {
+                statement.setFalseBlock(parseStatementBlock());
+            } else {
+                statement.setFalseBlock(parseSingleStatement());
+            }
+        }
 
+        return statement;
     }
 
     private StatementBlock parseSingleStatement() throws UnexpectedTokenException, InvalidTokenException, IOException {
