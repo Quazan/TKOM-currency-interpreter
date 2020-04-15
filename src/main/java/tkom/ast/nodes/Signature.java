@@ -4,7 +4,7 @@ import lombok.Data;
 import tkom.utils.Type;
 
 @Data
-public abstract class Signature {
+public class Signature {
     private Type returnType;
 
     private String name;

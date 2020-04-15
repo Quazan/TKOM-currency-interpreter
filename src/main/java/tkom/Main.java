@@ -6,6 +6,7 @@ import tkom.currency.Rates;
 import tkom.error.InvalidTokenException;
 import tkom.input.JsonReader;
 import tkom.lexer.Lexer;
+import tkom.parser.Parser;
 import tkom.utils.Token;
 import tkom.utils.TokenType;
 
@@ -18,17 +19,14 @@ public class Main {
         JsonReader jsonReader = new JsonReader();
         Token token;
 
-        Program program = new Program();
-        program.addFunction(new Function());
-
         try {
             Rates rates = jsonReader.getRates(new FileReader("src/main/resources/rates.json"));
             FileReader fileReader = new FileReader("src/main/resources/program.txt");
             Lexer lexer = new Lexer(fileReader, rates.getCurrencies());
+            Parser parser = new Parser(lexer);
 
-            while ((token = lexer.nextToken()).getType() != TokenType.END_OF_FILE) {
-                System.out.println(token);
-            }
+            Program program = parser.parseProgram();
+
         } catch (IOException | InvalidTokenException e) {
             e.getMessage();
         }
