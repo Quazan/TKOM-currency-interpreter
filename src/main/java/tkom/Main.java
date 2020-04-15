@@ -1,5 +1,7 @@
 package tkom;
 
+import tkom.ast.nodes.Function;
+import tkom.ast.nodes.Program;
 import tkom.currency.Rates;
 import tkom.error.InvalidTokenException;
 import tkom.input.JsonReader;
@@ -15,6 +17,9 @@ public class Main {
     public static void main(String[] args) {
         JsonReader jsonReader = new JsonReader();
         Token token;
+
+        Program program = new Program();
+        program.addFunction(new Function());
 
         try {
             Rates rates = jsonReader.getRates(new FileReader("src/main/resources/rates.json"));
