@@ -1,0 +1,15 @@
+{
+  "currencies":[
+    "EUR",
+    "PLN",
+    "CHF",
+    "JPY",
+    "GBP"
+  ],
+  "exchange":{
+    "PLN":4.68,
+    "GBP":0.90,
+    "CHF":0.5,
+    "JPY":300
+  }
+}
