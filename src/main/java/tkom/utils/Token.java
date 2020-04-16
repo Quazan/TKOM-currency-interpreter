@@ -1,7 +1,15 @@
 package tkom.utils;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.math.BigDecimal;
 
+
+@Getter
+@Setter
+@ToString
 public class Token {
 
     private TokenType type;
@@ -29,47 +37,10 @@ public class Token {
         this.position = position;
     }
 
-    public TokenType getType() {
-        return type;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public Integer getLine() {
-        return line;
-    }
-
-    public Integer getPosition() {
-        return position;
-    }
-
-    public BigDecimal getNumericValue() {
-        return numericValue;
-    }
-
-    public void setType(TokenType type) {
-        this.type = type;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
     public void setTypeAndValue(TokenType type, String value) {
         this.type = type;
         this.value = value;
         setNumericValue();
     }
 
-    @Override
-    public String toString() {
-        return "Token{" +
-                "type=" + type +
-                ", value='" + value + '\'' +
-                ", line=" + line +
-                ", position=" + position +
-                '}';
-    }
 }

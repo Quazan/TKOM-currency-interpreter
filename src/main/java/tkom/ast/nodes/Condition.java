@@ -3,6 +3,7 @@ package tkom.ast.nodes;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import tkom.ast.Node;
 import tkom.utils.NodeType;
 import tkom.utils.TokenType;
@@ -12,6 +13,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@ToString
 public class Condition implements Node {
 
     boolean negated = false;

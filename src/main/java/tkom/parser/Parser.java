@@ -19,6 +19,10 @@ public class Parser {
     private final Lexer lexer;
     private boolean buffer = false;
 
+    private Token currentToken() {
+        return lexer.getToken();
+    }
+
     private Token advance() throws IOException, InvalidTokenException {
         if (buffer) {
             buffer = false;
@@ -27,18 +31,31 @@ public class Parser {
         return lexer.nextToken();
     }
 
-    private Token currentToken() {
-        return lexer.getToken();
-    }
-
-    public Program parseProgram() throws IOException, InvalidTokenException, UnexpectedTokenException {
-        Program program = new Program();
-
-        while (getOptionalTokenType(TokenAttributes.valueTypes)) {
-            program.addFunction(parseFunction());
+    private Token getToken(TokenType expectedTokenType) throws IOException, InvalidTokenException, UnexpectedTokenException {
+        Token token = advance();
+        if (token.getType() != expectedTokenType) {
+            throw new UnexpectedTokenException(currentToken().getLine(), currentToken().getPosition());
         }
 
-        return program;
+        return token;
+    }
+
+    private boolean getOptionalToken(TokenType type) throws IOException, InvalidTokenException {
+        if (buffer) {
+            if (currentToken().getType() == type) {
+                buffer = false;
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            if (advance().getType() == type) {
+                return true;
+            } else {
+                buffer = true;
+                return false;
+            }
+        }
     }
 
     private boolean getOptionalTokenType(List<TokenType> type) throws IOException, InvalidTokenException {
@@ -57,15 +74,6 @@ public class Parser {
                 return false;
             }
         }
-    }
-
-    private Token getToken(TokenType expectedTokenType) throws IOException, InvalidTokenException, UnexpectedTokenException {
-        Token token = advance();
-        if (token.getType() != expectedTokenType) {
-            throw new UnexpectedTokenException(currentToken().getLine(), currentToken().getPosition());
-        }
-
-        return token;
     }
 
     private Function parseFunction() throws UnexpectedTokenException, InvalidTokenException, IOException {
@@ -87,6 +95,15 @@ public class Parser {
         return function;
     }
 
+    private Signature parseParameter() throws UnexpectedTokenException, InvalidTokenException, IOException {
+        Signature signature = new Signature();
+
+        signature.setReturnType(currentToken().getValue());
+        signature.setName(getToken(TokenType.IDENTIFIER).getValue());
+
+        return signature;
+    }
+
     private StatementBlock parseStatementBlock() throws UnexpectedTokenException, InvalidTokenException, IOException {
         StatementBlock block = new StatementBlock();
 
@@ -96,6 +113,12 @@ public class Parser {
 
         getToken(TokenType.CURLY_CLOSE);
 
+        return block;
+    }
+
+    private StatementBlock parseSingleStatement() throws UnexpectedTokenException, InvalidTokenException, IOException {
+        StatementBlock block = new StatementBlock();
+        block.addStatement(parseStatement());
         return block;
     }
 
@@ -137,7 +160,7 @@ public class Parser {
 
         functionCall.setName(identifier);
 
-        if(getOptionalToken(TokenType.STRING)) {
+        if (getOptionalToken(TokenType.STRING)) {
             Expression expression = new Expression();
             expression.addOperand(new MyString(currentToken().getValue()));
             functionCall.addArgument(expression);
@@ -186,100 +209,13 @@ public class Parser {
         return statement;
     }
 
-    private Expression parseExpression() throws IOException, InvalidTokenException, UnexpectedTokenException {
-        Expression expression = new Expression();
-
-        expression.addOperand(parseMultiplicativeExpression());
-
-        while (getOptionalTokenType(TokenAttributes.additiveOperators)) {
-            expression.addOperation(currentToken().getType());
-            expression.addOperand(parseMultiplicativeExpression());
-        }
-
-        return expression;
-    }
-
-    private Node parseMultiplicativeExpression() throws IOException, InvalidTokenException, UnexpectedTokenException {
-        Expression expression = new Expression();
-
-        expression.addOperand(parsePrimaryExpression());
-
-        while (getOptionalTokenType(TokenAttributes.multiplicativeOperators)) {
-            expression.addOperation(currentToken().getType());
-            expression.addOperand(parsePrimaryExpression());
-        }
-
-        return expression;
-    }
-
-    private Node parsePrimaryExpression() throws IOException, InvalidTokenException, UnexpectedTokenException {
-
-        switch (advance().getType()) {
-            case MINUS:
-            case NUMBER: {
-                return parseLiteral();
-            }
-            case ROUND_OPEN: {
-                Expression expression = parseExpression();
-                getToken(TokenType.ROUND_CLOSE);
-                return expression;
-            }
-
-            case IDENTIFIER: {
-                java.lang.String identifier = currentToken().getValue();
-                if (getOptionalToken(TokenType.ROUND_OPEN)) {
-                    return parseFunctionCall(identifier);
-                } else {
-                    return new Variable(identifier);
-                }
-            }
-        }
-
-        throw new UnexpectedTokenException(currentToken().getLine(), currentToken().getPosition());
-    }
-
-    private Node parseLiteral() throws IOException, InvalidTokenException, UnexpectedTokenException {
-        Node literal;
-        int sign = 1;
-
-        if (currentToken().getType() == TokenType.MINUS) {
-            sign = -1;
-            getToken(TokenType.NUMBER);
-        }
-
-        if (currentToken().getValue().contains(".")) {
-            literal = new Double();
-            ((Double) literal).setValue(currentToken().getNumericValue().doubleValue() * sign);
-        } else {
-            literal = new Int();
-            ((Int) literal).setValue(currentToken().getNumericValue().intValue() * sign);
-        }
-
-        return literal;
-    }
-
-    private WhileStatement parseWhileStatement() throws UnexpectedTokenException, InvalidTokenException, IOException {
-        WhileStatement statement = new WhileStatement();
-
-        getToken(TokenType.ROUND_OPEN);
-        statement.setCondition(parseCondition());
-        getToken(TokenType.ROUND_CLOSE);
-
-        if (getOptionalToken(TokenType.CURLY_OPEN)) {
-            statement.setWhileBlock(parseStatementBlock());
-        } else {
-            statement.setWhileBlock(parseSingleStatement());
-        }
-
-        return statement;
-    }
-
     private IfStatement parseIfStatement() throws UnexpectedTokenException, InvalidTokenException, IOException {
         IfStatement statement = new IfStatement();
 
         getToken(TokenType.ROUND_OPEN);
         statement.setCondition(parseCondition());
         getToken(TokenType.ROUND_CLOSE);
+
         if (getOptionalToken(TokenType.CURLY_OPEN)) {
             statement.setTrueBlock(parseStatementBlock());
         } else {
@@ -297,28 +233,20 @@ public class Parser {
         return statement;
     }
 
-    private StatementBlock parseSingleStatement() throws UnexpectedTokenException, InvalidTokenException, IOException {
-        StatementBlock block = new StatementBlock();
-        block.addStatement(parseStatement());
-        return block;
-    }
+    private WhileStatement parseWhileStatement() throws UnexpectedTokenException, InvalidTokenException, IOException {
+        WhileStatement statement = new WhileStatement();
 
-    private boolean getOptionalToken(TokenType type) throws IOException, InvalidTokenException {
-        if (buffer) {
-            if (currentToken().getType() == type) {
-                buffer = false;
-                return true;
-            } else {
-                return false;
-            }
+        getToken(TokenType.ROUND_OPEN);
+        statement.setCondition(parseCondition());
+        getToken(TokenType.ROUND_CLOSE);
+
+        if (getOptionalToken(TokenType.CURLY_OPEN)) {
+            statement.setWhileBlock(parseStatementBlock());
         } else {
-            if (advance().getType() == type) {
-                return true;
-            } else {
-                buffer = true;
-                return false;
-            }
+            statement.setWhileBlock(parseSingleStatement());
         }
+
+        return statement;
     }
 
     private Condition parseCondition() throws UnexpectedTokenException, InvalidTokenException, IOException {
@@ -393,13 +321,86 @@ public class Parser {
         return condition;
     }
 
-    private Signature parseParameter() throws UnexpectedTokenException, InvalidTokenException, IOException {
-        Signature signature = new Signature();
+    private Expression parseExpression() throws IOException, InvalidTokenException, UnexpectedTokenException {
+        Expression expression = new Expression();
 
-        signature.setReturnType(currentToken().getValue());
-        signature.setName(getToken(TokenType.IDENTIFIER).getValue());
+        expression.addOperand(parseMultiplicativeExpression());
 
-        return signature;
+        while (getOptionalTokenType(TokenAttributes.additiveOperators)) {
+            expression.addOperation(currentToken().getType());
+            expression.addOperand(parseMultiplicativeExpression());
+        }
+
+        return expression;
+    }
+
+    private Node parseMultiplicativeExpression() throws IOException, InvalidTokenException, UnexpectedTokenException {
+        Expression expression = new Expression();
+
+        expression.addOperand(parsePrimaryExpression());
+
+        while (getOptionalTokenType(TokenAttributes.multiplicativeOperators)) {
+            expression.addOperation(currentToken().getType());
+            expression.addOperand(parsePrimaryExpression());
+        }
+
+        return expression;
+    }
+
+    private Node parsePrimaryExpression() throws IOException, InvalidTokenException, UnexpectedTokenException {
+
+        switch (advance().getType()) {
+            case MINUS:
+            case NUMBER: {
+                return parseLiteral();
+            }
+            case ROUND_OPEN: {
+                Expression expression = parseExpression();
+                getToken(TokenType.ROUND_CLOSE);
+                return expression;
+            }
+
+            case IDENTIFIER: {
+                java.lang.String identifier = currentToken().getValue();
+                if (getOptionalToken(TokenType.ROUND_OPEN)) {
+                    return parseFunctionCall(identifier);
+                } else {
+                    return new Variable(identifier);
+                }
+            }
+        }
+
+        throw new UnexpectedTokenException(currentToken().getLine(), currentToken().getPosition());
+    }
+
+    private Node parseLiteral() throws IOException, InvalidTokenException, UnexpectedTokenException {
+        Node literal;
+        int sign = 1;
+
+        if (currentToken().getType() == TokenType.MINUS) {
+            sign = -1;
+            getToken(TokenType.NUMBER);
+        }
+
+        if (currentToken().getValue().contains(".")) {
+            literal = new Double();
+            ((Double) literal).setValue(currentToken().getNumericValue().doubleValue() * sign);
+        } else {
+            literal = new Int();
+            ((Int) literal).setValue(currentToken().getNumericValue().intValue() * sign);
+        }
+
+        return literal;
+    }
+
+    public Program parseProgram() throws IOException, InvalidTokenException, UnexpectedTokenException {
+        Program program = new Program();
+
+        while (getOptionalTokenType(TokenAttributes.valueTypes)) {
+            program.addFunction(parseFunction());
+        }
+
+        return program;
     }
 
     public Parser(Lexer lexer) {

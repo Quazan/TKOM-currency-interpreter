@@ -3,11 +3,13 @@ package tkom.ast.nodes;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import tkom.ast.Node;
 import tkom.utils.NodeType;
 
 @Getter
 @Setter
+@ToString
 public class MyString implements Node {
 
     private String value;
@@ -18,6 +20,6 @@ public class MyString implements Node {
 
     @Override
     public NodeType getType() {
-        return null;
+        return NodeType.STRING;
     }
 }

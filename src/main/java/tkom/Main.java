@@ -1,5 +1,6 @@
 package tkom;
 
+import tkom.ast.Statement;
 import tkom.ast.nodes.Function;
 import tkom.ast.nodes.Program;
 import tkom.currency.Rates;
@@ -27,8 +28,6 @@ public class Main {
             Parser parser = new Parser(lexer);
 
             Program program = parser.parseProgram();
-            System.out.println(program);
-
         } catch (IOException | InvalidTokenException | UnexpectedTokenException e) {
             e.printStackTrace();
         }

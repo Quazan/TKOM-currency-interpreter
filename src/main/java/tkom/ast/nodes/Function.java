@@ -2,6 +2,7 @@ package tkom.ast.nodes;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import tkom.ast.Node;
 import tkom.utils.NodeType;
 
@@ -10,6 +11,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@ToString
 public class Function extends Signature implements Node {
 
     private List<Signature> parameters;
