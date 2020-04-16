@@ -1,4 +1,4 @@
-package tkom.ast;
+package tkom.utils;
 
 public enum NodeType {
     PROGRAM,
@@ -12,5 +12,7 @@ public enum NodeType {
     FUNCTION_CALL,
     VARIABLE,
     CONDITION,
-    INT, CURRENCY, IF_STATEMENT
+    INT,
+    CURRENCY,
+    IF_STATEMENT
 }

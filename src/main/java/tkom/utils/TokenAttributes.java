@@ -1,5 +1,6 @@
 package tkom.utils;
 
+import javax.lang.model.util.Types;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,4 +21,25 @@ public final class TokenAttributes {
         add(TokenType.IDENTIFIER);
     }};
 
+    public static List<TokenType> multiplicativeOperators = new ArrayList<>() {{
+        add(TokenType.MULTIPLY);
+        add(TokenType.DIVIDE);
+    }};
+
+    public static List<TokenType> additiveOperators = new ArrayList<>() {{
+        add(TokenType.PLUS);
+        add(TokenType.MINUS);
+    }};
+
+    public static List<TokenType> equalityOperators = new ArrayList<>() {{
+        add(TokenType.EQUALITY);
+        add(TokenType.INEQUALITY);
+    }};
+
+    public static List<TokenType> relationOperators = new ArrayList<>() {{
+        add(TokenType.LESS);
+        add(TokenType.LESS_OR_EQUAL);
+        add(TokenType.GREATER);
+        add(TokenType.GREATER_OR_EQUAL);
+    }};
 }

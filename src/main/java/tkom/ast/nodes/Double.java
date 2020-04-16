@@ -2,7 +2,7 @@ package tkom.ast.nodes;
 
 import lombok.Data;
 import tkom.ast.Node;
-import tkom.ast.NodeType;
+import tkom.utils.NodeType;
 
 @Data
 public class Double implements Node {

@@ -2,7 +2,7 @@ package tkom.ast.nodes;
 
 import lombok.Data;
 import tkom.ast.Node;
-import tkom.ast.NodeType;
+import tkom.utils.NodeType;
 import tkom.ast.Statement;
 
 @Data

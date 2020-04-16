@@ -2,7 +2,7 @@ package tkom.ast.nodes;
 
 import lombok.Data;
 import tkom.ast.Node;
-import tkom.ast.NodeType;
+import tkom.utils.NodeType;
 import tkom.utils.TokenType;
 
 import java.util.List;
@@ -15,6 +15,10 @@ public class Condition implements Node {
     private TokenType operator;
 
     private List<Node> operands;
+
+    public void addOperand(Node operand) {
+        this.operands.add(operand);
+    }
 
     public boolean isNegated() {
         return negated;

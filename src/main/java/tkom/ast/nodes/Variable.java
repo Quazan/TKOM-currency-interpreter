@@ -1,9 +1,17 @@
 package tkom.ast.nodes;
 
+import lombok.Data;
 import tkom.ast.Node;
-import tkom.ast.NodeType;
+import tkom.utils.NodeType;
 
-public class Variable extends Signature implements Node {
+@Data
+public class Variable implements Node {
+
+    private String identifier;
+
+    public Variable(String identifier) {
+        this.identifier = identifier;
+    }
 
     @Override
     public NodeType getType() {

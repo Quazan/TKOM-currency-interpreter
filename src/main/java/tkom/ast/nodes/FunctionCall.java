@@ -1,10 +1,9 @@
 package tkom.ast.nodes;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import tkom.ast.Node;
-import tkom.ast.NodeType;
+import tkom.utils.NodeType;
 import tkom.ast.Statement;
 
 import java.util.ArrayList;

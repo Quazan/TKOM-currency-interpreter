@@ -1,8 +1,9 @@
 package tkom.parser;
 
-import tkom.ast.NodeType;
+import tkom.ast.Node;
 import tkom.ast.Statement;
 import tkom.ast.nodes.*;
+import tkom.ast.nodes.Double;
 import tkom.error.InvalidTokenException;
 import tkom.error.UnexpectedTokenException;
 import tkom.lexer.Lexer;
@@ -95,7 +96,6 @@ public class Parser {
             case CURRENCY: {
                 return parseInitStatement();
             }
-
             case IDENTIFIER: {
                 String identifier = currentToken().getValue();
                 if (advance().getType() == TokenType.ASSIGNMENT) {
@@ -105,10 +105,9 @@ public class Parser {
                 }
                 break;
             }
-
-            default:
-                throw new UnexpectedTokenException();
         }
+
+        throw new UnexpectedTokenException();
     }
 
     private FunctionCall parseFunctionCall(String identifier) throws UnexpectedTokenException, InvalidTokenException, IOException {
@@ -116,20 +115,13 @@ public class Parser {
 
         functionCall.setName(identifier);
 
-        while (isValidArgument()) {
-            functionCall.addArgument(parseArgument());
+        while (!getOptionalToken(TokenType.ROUND_CLOSE)) {
+            functionCall.addArgument(parseExpression());
         }
 
-        getToken(TokenType.ROUND_CLOSE);
         getToken(TokenType.SEMICOLON);
 
         return functionCall;
-    }
-
-    private Expression parseArgument() {
-    }
-
-    private boolean isValidArgument() {
     }
 
     private AssignStatement parseAssignStatement(String identifier) throws UnexpectedTokenException, InvalidTokenException, IOException {
@@ -164,10 +156,86 @@ public class Parser {
         return statement;
     }
 
-    private Expression parseExpression() {
+    //TODO
+    private Expression parseExpression() throws IOException, InvalidTokenException, UnexpectedTokenException {
         Expression expression = new Expression();
 
+        expression.addOperand(parseMultiplicativeExpression());
+
+        while (isValidAdditiveOperator(advance().getType())){
+            expression.addOperation(currentToken().getType());
+            expression.addOperand(parseMultiplicativeExpression());
+        }
+
         return expression;
+    }
+
+    private boolean isValidAdditiveOperator(TokenType type) {
+        return TokenAttributes.additiveOperators.contains(type);
+    }
+
+    private boolean isValidMultiplicativeOperator(TokenType type) {
+        return TokenAttributes.multiplicativeOperators.contains(type);
+    }
+
+    private Node parseMultiplicativeExpression() throws IOException, InvalidTokenException, UnexpectedTokenException {
+        Expression expression = new Expression();
+
+        expression.addOperand(parsePrimaryExpression());
+
+        while (isValidMultiplicativeOperator(advance().getType())){
+            expression.addOperation(currentToken().getType());
+            expression.addOperand(parsePrimaryExpression());
+        }
+
+        return expression;
+    }
+
+    private Node parsePrimaryExpression() throws IOException, InvalidTokenException, UnexpectedTokenException {
+
+        switch (advance().getType()) {
+            case MINUS:
+            case NUMBER: {
+                return parseLiteral();
+            }
+            case ROUND_OPEN: {
+                Expression expression = parseExpression();
+                getToken(TokenType.ROUND_CLOSE);
+                return expression;
+            }
+
+            //TODO tutaj może się wyjebać
+            case IDENTIFIER: {
+                String identifier = currentToken().getValue();
+                if(advance().getType() == TokenType.CURLY_OPEN) {
+                    return parseFunctionCall(identifier);
+                } else {
+                    return new Variable(identifier);
+                }
+            }
+        }
+
+        throw new UnexpectedTokenException();
+    }
+
+    private Node parseLiteral() throws IOException, InvalidTokenException, UnexpectedTokenException {
+        Node literal;
+        int sign = 1;
+
+        if(currentToken().getType() == TokenType.MINUS) {
+            sign = -1;
+            getToken(TokenType.NUMBER);
+        }
+
+        if(currentToken().getValue().contains(".")) {
+            literal = new Double();
+            ((Double) literal).setValue(currentToken().getNumericValue().doubleValue() * sign);
+        }  else {
+            literal = new Int();
+            ((Int) literal).setValue(currentToken().getNumericValue().intValue() * sign);
+        }
+
+        return literal;
     }
 
     private WhileStatement parseWhileStatement() throws UnexpectedTokenException, InvalidTokenException, IOException {
@@ -219,10 +287,85 @@ public class Parser {
         return advance().getType() == type;
     }
 
-    private Condition parseCondition() {
+    //TODO może wyjebywać przez tego getOptional
+    private Condition parseCondition() throws UnexpectedTokenException, InvalidTokenException, IOException {
         Condition condition = new Condition();
 
+        condition.addOperand(parseAndCondition());
+
+        while (getOptionalToken(TokenType.OR)) {
+            condition.setOperator(TokenType.OR);
+            condition.addOperand(parseAndCondition());
+        }
+
         return condition;
+    }
+
+    private Node parseAndCondition() throws IOException, InvalidTokenException, UnexpectedTokenException {
+        Condition condition = new Condition();
+
+        condition.addOperand(parseEqualityCondition());
+
+        while (getOptionalToken(TokenType.AND)) {
+            condition.setOperator(TokenType.AND);
+            condition.addOperand(parseEqualityCondition());
+        }
+
+        return condition;
+    }
+
+    private Node parseEqualityCondition() throws IOException, InvalidTokenException, UnexpectedTokenException {
+        Condition condition = new Condition();
+
+        condition.addOperand(parseRelationalCondition());
+
+        while (isValidEqualityOperator(advance().getType())) {
+            condition.setOperator(currentToken().getType());
+            condition.addOperand(parseRelationalCondition());
+        }
+
+        return condition;
+    }
+
+    private Node parseRelationalCondition() throws IOException, InvalidTokenException, UnexpectedTokenException {
+        Condition condition = new Condition();
+
+        condition.addOperand(parsePrimaryCondition());
+
+        while (isValidRelationalOperator(advance().getType())) {
+            condition.setOperator(currentToken().getType());
+            condition.addOperand(parsePrimaryCondition());
+        }
+
+        return condition;
+    }
+
+    private Node parsePrimaryCondition() throws IOException, InvalidTokenException, UnexpectedTokenException {
+        Condition condition;
+        boolean negation = false;
+
+        if(getOptionalToken(TokenType.NOT)) {
+            negation = true;
+        }
+
+        if(advance().getType() == TokenType.ROUND_OPEN) {
+            condition = parseCondition();
+            condition.setNegated(negation);
+            getToken(TokenType.ROUND_CLOSE);
+        } else {
+            condition = new Condition();
+            condition.setNegated(negation);
+            condition.addOperand(parseExpression());
+        }
+        return condition;
+    }
+
+    private boolean isValidRelationalOperator(TokenType type) {
+        return TokenAttributes.relationOperators.contains(type);
+    }
+
+    private boolean isValidEqualityOperator(TokenType type) {
+        return TokenAttributes.equalityOperators.contains(type);
     }
 
     private boolean isValidStatement(TokenType type) {
