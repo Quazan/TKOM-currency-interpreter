@@ -1,16 +1,7 @@
-EUR max(EUR a, EUR b){
-    if(a <= b){
-        return a;
-    }
-    else{
-        return b;
-    }
-}
-
 int main(){
     PLN zlotowki = 15.0;
     zlotowki = zlotowki * 2;
-    print(zlotowki)
+    print(zlotowki);
 
     zlotowki = zlotowki / 1.5;
     print(zlotowki);
@@ -21,7 +12,7 @@ int main(){
     EUR  euro_2 = euro_1 - dolar;
     EUR wynik = max(euro_1, euro_2);
 
-    print(wynik)
+    print(wynik);
 
     int i = 10;
     while(i > 0){
@@ -30,4 +21,13 @@ int main(){
     }
 
     return 0;
+}
+
+EUR max(EUR a, EUR b){
+    if(a <= b){
+        return a;
+    }
+    else{
+        return b;
+    }
 }

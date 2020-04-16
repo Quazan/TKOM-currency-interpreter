@@ -4,6 +4,7 @@ import tkom.ast.nodes.Function;
 import tkom.ast.nodes.Program;
 import tkom.currency.Rates;
 import tkom.error.InvalidTokenException;
+import tkom.error.UnexpectedTokenException;
 import tkom.input.JsonReader;
 import tkom.lexer.Lexer;
 import tkom.parser.Parser;
@@ -26,9 +27,10 @@ public class Main {
             Parser parser = new Parser(lexer);
 
             Program program = parser.parseProgram();
+            System.out.println(program);
 
-        } catch (IOException | InvalidTokenException e) {
-            e.getMessage();
+        } catch (IOException | InvalidTokenException | UnexpectedTokenException e) {
+            e.printStackTrace();
         }
 
     }

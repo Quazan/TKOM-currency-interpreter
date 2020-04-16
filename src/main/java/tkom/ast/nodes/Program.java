@@ -1,5 +1,6 @@
 package tkom.ast.nodes;
 
+import lombok.Data;
 import lombok.Getter;
 import tkom.ast.Node;
 import tkom.utils.NodeType;

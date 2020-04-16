@@ -5,6 +5,7 @@ import tkom.ast.Node;
 import tkom.utils.NodeType;
 import tkom.utils.TokenType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -15,6 +16,10 @@ public class Condition implements Node {
     private TokenType operator;
 
     private List<Node> operands;
+
+    public Condition() {
+        this.operands = new ArrayList<>();
+    }
 
     public void addOperand(Node operand) {
         this.operands.add(operand);
