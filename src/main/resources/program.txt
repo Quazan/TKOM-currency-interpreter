@@ -1,4 +1,5 @@
 int main(){
+    print(-5);
     PLN zlotowki = 15.0;
     zlotowki = zlotowki * 2;
     print(zlotowki);

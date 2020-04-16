@@ -1,9 +1,12 @@
 package tkom.ast.nodes;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 
-@Data
+@Getter
+@Setter
 public class Signature {
     private String returnType;
 

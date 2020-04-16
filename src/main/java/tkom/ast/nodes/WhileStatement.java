@@ -1,11 +1,14 @@
 package tkom.ast.nodes;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import tkom.ast.Node;
 import tkom.utils.NodeType;
 import tkom.ast.Statement;
 
-@Data
+@Getter
+@Setter
 public class WhileStatement implements Statement, Node {
 
     private Condition condition;

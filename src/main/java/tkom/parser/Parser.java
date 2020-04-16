@@ -137,6 +137,14 @@ public class Parser {
 
         functionCall.setName(identifier);
 
+        if(getOptionalToken(TokenType.STRING)) {
+            Expression expression = new Expression();
+            expression.addOperand(new MyString(currentToken().getValue()));
+            functionCall.addArgument(expression);
+            getToken(TokenType.ROUND_CLOSE);
+            return functionCall;
+        }
+
         while (!getOptionalToken(TokenType.ROUND_CLOSE)) {
             functionCall.addArgument(parseExpression());
             getOptionalToken(TokenType.COMMA);
@@ -218,7 +226,7 @@ public class Parser {
             }
 
             case IDENTIFIER: {
-                String identifier = currentToken().getValue();
+                java.lang.String identifier = currentToken().getValue();
                 if (getOptionalToken(TokenType.ROUND_OPEN)) {
                     return parseFunctionCall(identifier);
                 } else {
@@ -393,7 +401,6 @@ public class Parser {
 
         return signature;
     }
-
 
     public Parser(Lexer lexer) {
         this.lexer = lexer;

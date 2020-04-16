@@ -1,12 +1,15 @@
 package tkom.ast.nodes;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import tkom.ast.Node;
 import tkom.utils.NodeType;
 
 import java.math.BigDecimal;
 
-@Data
+@Getter
+@Setter
 public class Currency implements Node {
 
     private BigDecimal value;
