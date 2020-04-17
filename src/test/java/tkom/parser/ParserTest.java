@@ -6,6 +6,7 @@ import tkom.ast.nodes.*;
 import tkom.error.InvalidTokenException;
 import tkom.error.UnexpectedTokenException;
 import tkom.lexer.Lexer;
+import tkom.utils.NodeType;
 import tkom.utils.Token;
 import tkom.utils.TokenType;
 
@@ -221,6 +222,148 @@ public class ParserTest {
 
         assertEquals(expectedOperators.get(0), actual.getOperations().get(0));
         assertEquals(expectedOperators.get(1), actual.getOperations().get(1));
+    }
+
+    @Test
+    public void parsePrimaryNegatedCondition() throws UnexpectedTokenException, InvalidTokenException, IOException {
+        Condition expectedCondition = new Condition();
+        expectedCondition.setNegated(true);
+        String input = "!a";
+        initializeParser(input);
+
+        Condition actual = parser.parsePrimaryCondition();
+
+        assertEquals(expectedCondition.isNegated(), actual.isNegated());
+    }
+
+    @Test
+    public void parseRelationalCondition() throws UnexpectedTokenException, InvalidTokenException, IOException {
+        Condition condition = new Condition();
+        condition.setOperator(TokenType.GREATER);
+        String input = "a > 2";
+        initializeParser(input);
+
+        Condition actual = parser.parseRelationalCondition();
+
+        assertEquals(condition.getOperator(), actual.getOperator());
+    }
+
+    @Test
+    public void parseEqualityCondition() throws UnexpectedTokenException, InvalidTokenException, IOException {
+        Condition condition = new Condition();
+        condition.setOperator(TokenType.EQUALITY);
+        String input = "a == 2";
+        initializeParser(input);
+
+        Condition actual = parser.parseEqualityCondition();
+
+        assertEquals(condition.getOperator(), actual.getOperator());
+    }
+
+    @Test
+    public void parseAndCondition() throws UnexpectedTokenException, InvalidTokenException, IOException {
+        Condition condition = new Condition();
+        condition.setOperator(TokenType.AND);
+        String input = "(a > 2) && (b > 2)";
+        initializeParser(input);
+
+        Condition actual = parser.parseAndCondition();
+
+        assertEquals(condition.getOperator(), actual.getOperator());
+    }
+
+    @Test
+    public void parseOrCondition() throws UnexpectedTokenException, InvalidTokenException, IOException {
+        Condition condition = new Condition();
+        condition.setOperator(TokenType.OR);
+        String input = "(a > 2) || (b > 2)";
+        initializeParser(input);
+
+        Condition actual = parser.parseCondition();
+
+        assertEquals(condition.getOperator(), actual.getOperator());
+    }
+
+    @Test
+    public void parseIfStatement() throws IOException, InvalidTokenException, UnexpectedTokenException {
+        IfStatement expectedStatement = new IfStatement();
+        String input = "if ( a > b ) {}";
+        initializeParser(input);
+
+        parser.advance();
+        IfStatement actual = (IfStatement) parser.parseStatement();
+
+        assertEquals(expectedStatement.getType(), actual.getType());
+        assertEquals(0, actual.getTrueBlock().getStatements().size());
+        assertNull(actual.getFalseBlock());
+    }
+
+    @Test
+    public void parseIfElseStatement() throws IOException, InvalidTokenException, UnexpectedTokenException {
+        IfStatement expectedStatement = new IfStatement();
+        String input = "if ( a > b ) {} else {}";
+        initializeParser(input);
+
+        parser.advance();
+        IfStatement actual = (IfStatement) parser.parseStatement();
+
+        assertEquals(expectedStatement.getType(), actual.getType());
+        assertEquals(0, actual.getTrueBlock().getStatements().size());
+        assertEquals(0, actual.getFalseBlock().getStatements().size());
+    }
+
+    @Test
+    public void parseIfElseIfStatement() throws IOException, InvalidTokenException, UnexpectedTokenException {
+        IfStatement expectedStatement = new IfStatement();
+        String input = "if ( a > b ) {} else if (b == a) {} else {}";
+        initializeParser(input);
+
+        parser.advance();
+        IfStatement actual = (IfStatement) parser.parseStatement();
+
+        assertEquals(expectedStatement.getType(), actual.getType());
+        assertEquals(0, actual.getTrueBlock().getStatements().size());
+        assertEquals(expectedStatement.getType(),
+                ((IfStatement) actual.getFalseBlock().getStatements().get(0)).getType());
+    }
+
+    @Test
+    public void parseIfSingleStatement() throws IOException, InvalidTokenException, UnexpectedTokenException {
+        IfStatement expectedStatement = new IfStatement();
+        String input = "if ( a > b ) return a; else if (b == a) return b;";
+        initializeParser(input);
+
+        parser.advance();
+        IfStatement actual = (IfStatement) parser.parseStatement();
+
+        assertEquals(expectedStatement.getType(), actual.getType());
+        assertEquals(NodeType.RETURN_STATEMENT,
+                ((ReturnStatement) actual.getTrueBlock().getStatements().get(0)).getType());
+        assertEquals(expectedStatement.getType(),
+                ((IfStatement) actual.getFalseBlock().getStatements().get(0)).getType());
+    }
+
+    @Test
+    public void parseReturnStatement() throws IOException, InvalidTokenException, UnexpectedTokenException {
+        ReturnStatement expectedStatement = new ReturnStatement();
+        Expression expression = new Expression();
+        expression.addOperation(TokenType.PLUS);
+        expectedStatement.setExpression(expression);
+        String input = "return a + b;";
+        initializeParser(input);
+
+        parser.advance();
+        ReturnStatement actual = parser.parseReturnStatement();
+
+        assertEquals(expectedStatement.getType(), actual.getType());
+        assertEquals(expectedStatement.getExpression().getType(), actual.getExpression().getType());
+        assertEquals(expectedStatement.getExpression().getOperations().get(0),
+                actual.getExpression().getOperations().get(0));
+    }
+
+    @Test
+    public void parseWhileStatement() {
+
     }
 
 }

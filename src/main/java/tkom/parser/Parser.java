@@ -23,7 +23,7 @@ public class Parser {
         return lexer.getToken();
     }
 
-    private Token advance() throws IOException, InvalidTokenException {
+    Token advance() throws IOException, InvalidTokenException {
         if (buffer) {
             buffer = false;
             return lexer.getToken();

@@ -13,7 +13,7 @@ import tkom.ast.Statement;
 @ToString
 public class ReturnStatement implements Statement, Node {
 
-    public Expression expression;
+    private Expression expression;
 
     @Override
     public NodeType getType() {
