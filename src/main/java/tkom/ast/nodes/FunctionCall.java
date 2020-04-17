@@ -15,7 +15,7 @@ import java.util.List;
 @ToString
 public class FunctionCall implements Node, Statement {
 
-    private String name;
+    private String identifier;
     List<Expression> arguments;
 
     public FunctionCall() {

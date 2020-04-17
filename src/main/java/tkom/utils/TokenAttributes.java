@@ -21,6 +21,13 @@ public final class TokenAttributes {
         add(TokenType.IDENTIFIER);
     }};
 
+    public static List<TokenType> primaryExpressionTypes = new ArrayList<>() {{
+        add(TokenType.MINUS);
+        add(TokenType.NUMBER);
+        add(TokenType.ROUND_OPEN);
+        add(TokenType.IDENTIFIER);
+    }};
+
     public static List<TokenType> multiplicativeOperators = new ArrayList<>() {{
         add(TokenType.MULTIPLY);
         add(TokenType.DIVIDE);

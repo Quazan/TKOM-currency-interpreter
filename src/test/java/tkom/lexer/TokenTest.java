@@ -44,12 +44,12 @@ public class TokenTest {
     @Parameterized.Parameters
     public static Collection data() {
         return Arrays.asList(new Object[][]{
-                {"if", TokenType.IF, ""},
-                {"else", TokenType.ELSE, ""},
-                {"while", TokenType.WHILE, ""},
-                {"return", TokenType.RETURN, ""},
-                {"int", TokenType.INT, ""},
-                {"double", TokenType.DOUBLE, ""},
+                {"if", TokenType.IF, "if"},
+                {"else", TokenType.ELSE, "else"},
+                {"while", TokenType.WHILE, "while"},
+                {"return", TokenType.RETURN, "return"},
+                {"int", TokenType.INT, "int"},
+                {"double", TokenType.DOUBLE, "double"},
                 {"EUR", TokenType.CURRENCY, "EUR"},
                 {"123.5", TokenType.NUMBER, "123.5"},
                 {"main", TokenType.IDENTIFIER, "main"},

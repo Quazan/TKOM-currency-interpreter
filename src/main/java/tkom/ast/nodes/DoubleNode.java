@@ -10,12 +10,12 @@ import tkom.utils.NodeType;
 @Getter
 @Setter
 @ToString
-public class Int implements Node {
+public class DoubleNode implements Node {
 
-    private int value;
+    private double value;
 
     @Override
     public NodeType getType() {
-        return NodeType.INT;
+        return null;
     }
 }

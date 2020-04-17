@@ -1,11 +1,16 @@
 int main(){
-    print(-5);
+
+    if(5 + 6 < 4 + 5) print();
     PLN zlotowki = 15.0;
     zlotowki = zlotowki * 2;
     print(zlotowki);
 
-    zlotowki = zlotowki / 1.5;
+
+
+    zlotowki = (zlotowki / 1.5) * 2 + 2 / (7 - max(a, b, min())) - 2 + 6 - 1;
     print(zlotowki);
+
+    int i;
 
     EUR euro_1 = 123.0;
     USD dolar = 53.0;
@@ -14,6 +19,13 @@ int main(){
     EUR wynik = max(euro_1, euro_2);
 
     print(wynik);
+
+    while(wynik < 10) wynik = wynik * 2;
+
+    if(!(a || b) < c && d == 10 ) print(wynik);
+    else print(wynik * -1);
+
+    print("testy");
 
     int i = 10;
     while(i > 0){

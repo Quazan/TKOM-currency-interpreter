@@ -10,11 +10,11 @@ import tkom.utils.NodeType;
 @Getter
 @Setter
 @ToString
-public class MyString implements Node {
+public class StringNode implements Node {
 
     private String value;
 
-    public MyString(String value) {
+    public StringNode(String value) {
         this.value = value;
     }
 

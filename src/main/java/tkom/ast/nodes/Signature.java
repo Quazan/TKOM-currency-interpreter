@@ -12,5 +12,5 @@ import lombok.ToString;
 public class Signature {
     private String returnType;
 
-    private String name;
+    private String identifier;
 }
