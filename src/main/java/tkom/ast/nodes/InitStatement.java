@@ -10,7 +10,11 @@ import tkom.ast.Statement;
 @ToString
 public class InitStatement extends Signature implements Statement, Node {
 
-    private Expression assignable;
+    private ExpressionNode assignable;
+
+    public InitStatement(String returnType, String identifier) {
+        super(returnType, identifier);
+    }
 
     @Override
     public NodeType getType() {

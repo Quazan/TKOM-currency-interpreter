@@ -1,6 +1,5 @@
 package tkom.ast.nodes;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -13,7 +12,11 @@ import tkom.ast.Statement;
 @ToString
 public class ReturnStatement implements Statement, Node {
 
-    private Expression expression;
+    private ExpressionNode expressionNode;
+
+    public ReturnStatement(ExpressionNode expressionNode) {
+        this.expressionNode = expressionNode;
+    }
 
     @Override
     public NodeType getType() {

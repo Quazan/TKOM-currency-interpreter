@@ -1,7 +1,5 @@
 package tkom;
 
-import tkom.ast.Node;
-import tkom.ast.nodes.Expression;
 import tkom.ast.nodes.Program;
 import tkom.currency.Rates;
 import tkom.error.InvalidTokenException;
@@ -9,7 +7,6 @@ import tkom.error.UnexpectedTokenException;
 import tkom.input.JsonReader;
 import tkom.lexer.Lexer;
 import tkom.parser.Parser;
-import tkom.utils.Token;
 
 import java.io.FileReader;
 import java.io.IOException;

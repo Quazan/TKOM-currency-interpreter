@@ -14,5 +14,7 @@ public enum NodeType {
     CONDITION,
     INT,
     CURRENCY,
-    STRING, IF_STATEMENT
+    STRING,
+    DOUBLE,
+    IF_STATEMENT
 }

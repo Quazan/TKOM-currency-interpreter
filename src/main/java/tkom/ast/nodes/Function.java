@@ -22,6 +22,11 @@ public class Function extends Signature implements Node {
         this.parameters = new ArrayList<>();
     }
 
+    public Function(String returnType, String identifier) {
+        super(returnType, identifier);
+        this.parameters = new ArrayList<>();
+    }
+
     public void addParameter(Signature parameter) {
         parameters.add(parameter);
     }
