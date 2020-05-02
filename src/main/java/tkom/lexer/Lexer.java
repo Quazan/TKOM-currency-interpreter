@@ -106,7 +106,7 @@ public class Lexer {
         String id = readIdentifier();
 
         if (Keywords.keywords.containsKey(id)) {
-            token.setType(Keywords.keywords.get(id));
+            token.setTypeAndValue(Keywords.keywords.get(id), id);
         } else if (currencies.contains(id)) {
             token.setTypeAndValue(TokenType.CURRENCY, id);
         } else {

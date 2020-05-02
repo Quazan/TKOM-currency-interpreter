@@ -4,12 +4,14 @@
     "PLN",
     "CHF",
     "JPY",
-    "GBP"
+    "GBP",
+    "USD"
   ],
   "exchange":{
     "PLN":4.68,
     "GBP":0.90,
     "CHF":0.5,
-    "JPY":300
+    "JPY":300,
+    "USD": 1.0
   }
 }
