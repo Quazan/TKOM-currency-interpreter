@@ -18,7 +18,4 @@ public class Signature {
         this.returnType = returnType;
         this.identifier = identifier;
     }
-
-    public Signature() {
-    }
 }

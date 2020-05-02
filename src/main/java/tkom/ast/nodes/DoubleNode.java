@@ -6,12 +6,14 @@ import lombok.Setter;
 import lombok.ToString;
 import tkom.ast.Expression;
 import tkom.ast.Node;
+import tkom.ast.Value;
+import tkom.execution.Environment;
 import tkom.utils.NodeType;
 
 @Getter
 @Setter
 @ToString
-public class DoubleNode implements Node, Expression {
+public class DoubleNode implements Expression, Value {
 
     private double value;
 
@@ -22,5 +24,10 @@ public class DoubleNode implements Node, Expression {
     @Override
     public NodeType getType() {
         return NodeType.DOUBLE;
+    }
+
+    @Override
+    public Value evaluate(Environment environment) {
+        return this;
     }
 }

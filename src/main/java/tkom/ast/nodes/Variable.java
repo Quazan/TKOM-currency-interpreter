@@ -6,12 +6,15 @@ import lombok.Setter;
 import lombok.ToString;
 import tkom.ast.Expression;
 import tkom.ast.Node;
+import tkom.ast.Value;
+import tkom.error.UndefinedReferenceException;
+import tkom.execution.Environment;
 import tkom.utils.NodeType;
 
 @Getter
 @Setter
 @ToString
-public class Variable implements Node, Expression {
+public class Variable implements Expression {
 
     private String identifier;
 
@@ -22,5 +25,10 @@ public class Variable implements Node, Expression {
     @Override
     public NodeType getType() {
         return NodeType.VARIABLE;
+    }
+
+    @Override
+    public Value evaluate(Environment environment) throws UndefinedReferenceException {
+        return environment.getVariable(identifier);
     }
 }

@@ -4,6 +4,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import tkom.ast.Node;
+import tkom.ast.Value;
+import tkom.error.RuntimeEnvironmentException;
+import tkom.error.UndefinedReferenceException;
+import tkom.execution.Environment;
 import tkom.utils.NodeType;
 
 import java.util.ArrayList;
@@ -17,10 +21,6 @@ public class Function extends Signature implements Node {
     private List<Signature> parameters;
 
     private StatementBlock statementBlock;
-
-    public Function() {
-        this.parameters = new ArrayList<>();
-    }
 
     public Function(String returnType, String identifier) {
         super(returnType, identifier);
@@ -36,4 +36,23 @@ public class Function extends Signature implements Node {
         return NodeType.FUNCTION;
     }
 
+    public Value execute(Environment environment, List<ExpressionNode> arguments) throws UndefinedReferenceException, RuntimeEnvironmentException {
+        environment.createNewScope();
+
+        if(arguments.size() != parameters.size()) {
+            throw new UndefinedReferenceException();
+        }
+
+        for(int i = 0; i < parameters.size(); i++){
+            environment.addVariable(
+                    parameters.get(i).getIdentifier(),
+                    arguments.get(i).evaluate(environment)
+            );
+        }
+
+        Value ret = statementBlock.execute(environment);
+        environment.destroyScope();
+
+        return ret;
+    }
 }
