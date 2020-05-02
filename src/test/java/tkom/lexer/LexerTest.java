@@ -66,6 +66,13 @@ public class LexerTest {
     }
 
     @Test(expected = InvalidTokenException.class)
+    public void stringNotEndedWithQuote() throws IOException, InvalidTokenException {
+        initializeLexer("\"asda");
+
+        lexer.nextToken();
+    }
+
+    @Test(expected = InvalidTokenException.class)
     public void tooBigNumberToken() throws IOException, InvalidTokenException {
         initializeLexer("123456789012345678901234567890123567890");
 

@@ -55,8 +55,4 @@ public class Reader {
         characterPosition--;
     }
 
-    public void close() throws IOException {
-        reader.close();
-    }
-
 }
