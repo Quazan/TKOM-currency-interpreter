@@ -1,8 +1,6 @@
 package tkom.parser;
 
 import org.junit.Test;
-import tkom.ast.Expression;
-import tkom.ast.Node;
 import tkom.ast.nodes.*;
 import tkom.error.InvalidTokenException;
 import tkom.error.UnexpectedTokenException;
@@ -55,7 +53,7 @@ public class ParserTest {
         String input = "int a;";
         initializeParser(input);
 
-        Token actual = parser.getToken(expectedToken.getType());
+        Token actual = parser.getNextToken(expectedToken.getType());
 
         assertEquals(expectedToken.getType(), actual.getType());
     }
@@ -66,7 +64,7 @@ public class ParserTest {
         String input = "EUR euro;";
         initializeParser(input);
 
-        parser.getToken(expectedToken.getType());
+        parser.getNextToken(expectedToken.getType());
 
     }
 
@@ -100,7 +98,7 @@ public class ParserTest {
         String input = "int i;";
         initializeParser(input);
 
-        boolean actual = parser.getOptionalTokenTypes(expectedTokenTypes);
+        boolean actual = parser.getOptionalToken(expectedTokenTypes);
 
         assertTrue(actual);
     }
@@ -113,7 +111,7 @@ public class ParserTest {
         String input = "EUR euro;";
         initializeParser(input);
 
-        boolean actual = parser.getOptionalTokenTypes(expectedTokenTypes);
+        boolean actual = parser.getOptionalToken(expectedTokenTypes);
 
         assertFalse(actual);
     }
