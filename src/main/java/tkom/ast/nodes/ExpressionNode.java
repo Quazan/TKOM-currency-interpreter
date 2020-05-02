@@ -7,6 +7,7 @@ import lombok.ToString;
 import tkom.ast.Expression;
 import tkom.ast.Node;
 import tkom.ast.Value;
+import tkom.error.RuntimeEnvironmentException;
 import tkom.error.UndefinedReferenceException;
 import tkom.execution.Environment;
 import tkom.utils.NodeType;
@@ -42,7 +43,7 @@ public class ExpressionNode implements Expression {
     }
 
     @Override
-    public Value evaluate(Environment environment) throws UndefinedReferenceException {
+    public Value evaluate(Environment environment) throws UndefinedReferenceException, RuntimeEnvironmentException {
         int currentIndex = 0;
         Value leftOperand = operands.get(currentIndex).evaluate(environment);
 
@@ -51,17 +52,37 @@ public class ExpressionNode implements Expression {
             currentIndex++;
             switch (operation) {
                 case DIVIDE:
-                   ((IntNode) leftOperand).divide((IntNode) operands.get(currentIndex).evaluate(environment));
+                    leftOperand = divide((IntNode) leftOperand,(IntNode)  operands.get(currentIndex).evaluate(environment));
+                   break;
                 case MULTIPLY:
-                    ((IntNode) leftOperand).multiply((IntNode) operands.get(currentIndex).evaluate(environment));
+                    leftOperand = multiply((IntNode) leftOperand,(IntNode)  operands.get(currentIndex).evaluate(environment));
+                    break;
                 case PLUS:
-                    ((IntNode) leftOperand).add((IntNode) operands.get(currentIndex).evaluate(environment));
+                    leftOperand = add((IntNode) leftOperand,(IntNode)  operands.get(currentIndex).evaluate(environment));
+                    break;
                 case MINUS:
-                    ((IntNode) leftOperand).subtract((IntNode) operands.get(currentIndex).evaluate(environment));
+                    leftOperand = subtract((IntNode) leftOperand,(IntNode)  operands.get(currentIndex).evaluate(environment));;
+                    break;
             }
         }
 
         return leftOperand;
 
+    }
+
+    private Value divide(IntNode leftOperand, IntNode rightOperand) {
+        return  new IntNode(leftOperand.getValue() / rightOperand.getValue());
+    }
+
+    private Value multiply(IntNode leftOperand, IntNode rightOperand) {
+        return  new IntNode(leftOperand.getValue() * rightOperand.getValue());
+    }
+
+    private Value subtract(IntNode leftOperand, IntNode rightOperand) {
+        return  new IntNode(leftOperand.getValue() - rightOperand.getValue());
+    }
+
+    public Value add(IntNode leftOperand, IntNode rightOperand) {
+        return  new IntNode(leftOperand.getValue() + rightOperand.getValue());
     }
 }

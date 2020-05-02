@@ -2,6 +2,7 @@ package tkom.ast.nodes;
 
 import lombok.*;
 import tkom.ast.Value;
+import tkom.error.RuntimeEnvironmentException;
 import tkom.error.UndefinedReferenceException;
 import tkom.execution.Environment;
 import tkom.utils.NodeType;
@@ -24,12 +25,12 @@ public class InitStatement extends Signature implements Statement{
     }
 
     @Override
-    public Value execute(Environment environment) throws UndefinedReferenceException {
+    public Value execute(Environment environment) throws UndefinedReferenceException, RuntimeEnvironmentException {
         Value assign = assignable.evaluate(environment);
 
         //TODO check if they are compatible
         if(getReturnType().toUpperCase().equals(assign.getType().toString())) {
-            environment.setVariable(getIdentifier(), assign);
+            environment.addVariable(getIdentifier(), assign);
         }
 
         return new IntNode(0);

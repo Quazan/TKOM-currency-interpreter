@@ -37,16 +37,20 @@ public class Function extends Signature implements Node {
     }
 
     public Value execute(Environment environment, List<ExpressionNode> arguments) throws UndefinedReferenceException, RuntimeEnvironmentException {
-        environment.createNewScope();
-
         if(arguments.size() != parameters.size()) {
             throw new UndefinedReferenceException();
         }
 
+        List<Value> argumentsValue = new ArrayList<>();
+        for(ExpressionNode arg : arguments) {
+            argumentsValue.add(arg.evaluate(environment));
+        }
+
+        environment.createNewScope();
         for(int i = 0; i < parameters.size(); i++){
             environment.addVariable(
                     parameters.get(i).getIdentifier(),
-                    arguments.get(i).evaluate(environment)
+                    argumentsValue.get(i)
             );
         }
 

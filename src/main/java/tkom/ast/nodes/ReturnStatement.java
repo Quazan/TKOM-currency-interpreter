@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import tkom.ast.Value;
+import tkom.error.RuntimeEnvironmentException;
 import tkom.error.UndefinedReferenceException;
 import tkom.execution.Environment;
 import tkom.utils.NodeType;
@@ -26,7 +27,7 @@ public class ReturnStatement implements Statement{
     }
 
     @Override
-    public Value execute(Environment environment) throws UndefinedReferenceException {
+    public Value execute(Environment environment) throws UndefinedReferenceException, RuntimeEnvironmentException {
         return expressionNode.evaluate(environment);
     }
 }

@@ -41,8 +41,8 @@ public class FunctionCall implements Statement, Expression {
     }
 
     @Override
-    public Value evaluate(Environment environment) {
-        return null;
+    public Value evaluate(Environment environment) throws UndefinedReferenceException, RuntimeEnvironmentException {
+        return execute(environment);
     }
 
     @Override

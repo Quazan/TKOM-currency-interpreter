@@ -29,19 +29,4 @@ public class IntNode implements Expression, Value {
         return this;
     }
 
-    public void add(IntNode rightOperand) {
-        value += rightOperand.getValue();
-    }
-
-    public void subtract(IntNode rightOperand) {
-        value -= rightOperand.getValue();
-    }
-
-    public void multiply(IntNode rightOperand) {
-        value *= rightOperand.getValue();
-    }
-
-    public void divide(IntNode rightOperand) {
-        value /= rightOperand.getValue();
-    }
 }

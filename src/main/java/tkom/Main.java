@@ -24,12 +24,13 @@ public class Main {
 
         try {
             Rates rates = jsonReader.getRates(new FileReader("src/main/resources/rates.json"));
-            FileReader fileReader = new FileReader("src/main/resources/program.txt");
+            FileReader fileReader = new FileReader("src/main/resources/test.txt");
             Lexer lexer = new Lexer(fileReader, rates.getCurrencies());
             Parser parser = new Parser(lexer);
             Program program = parser.parseProgram();
             Environment environment = new Environment(program.getFunctions());
-            environment.getFunction("main").execute(environment, new ArrayList<>());
+            Value v = environment.getFunction("main").execute(environment, new ArrayList<>());
+            System.out.println(((IntNode) v).getValue());
         } catch (IOException | InvalidTokenException | UnexpectedTokenException | UndefinedReferenceException | RuntimeEnvironmentException e) {
             e.printStackTrace();
         }

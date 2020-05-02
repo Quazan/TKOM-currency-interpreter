@@ -7,6 +7,7 @@ import lombok.ToString;
 import tkom.ast.Expression;
 import tkom.ast.Node;
 import tkom.ast.Value;
+import tkom.error.RuntimeEnvironmentException;
 import tkom.error.UndefinedReferenceException;
 import tkom.execution.Environment;
 import tkom.utils.NodeType;
@@ -44,7 +45,7 @@ public class Condition implements Expression {
     }
 
     @Override
-    public Value evaluate(Environment environment) throws UndefinedReferenceException {
+    public Value evaluate(Environment environment) throws UndefinedReferenceException, RuntimeEnvironmentException {
         Value leftOperand = operands.get(0).evaluate(environment);;
 
         for(int i = 1; i < operands.size(); i++) {
