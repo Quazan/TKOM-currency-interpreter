@@ -16,5 +16,6 @@ public enum NodeType {
     CURRENCY,
     STRING,
     DOUBLE,
-    IF_STATEMENT
+    IF_STATEMENT,
+    BOOL
 }

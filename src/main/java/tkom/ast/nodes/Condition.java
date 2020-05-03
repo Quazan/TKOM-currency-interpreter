@@ -1,11 +1,9 @@
 package tkom.ast.nodes;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import tkom.ast.Expression;
-import tkom.ast.Node;
 import tkom.ast.Value;
 import tkom.error.RuntimeEnvironmentException;
 import tkom.error.UndefinedReferenceException;
@@ -81,47 +79,110 @@ public class Condition implements Expression {
             }
         }
 
-        return new IntNode(0);
+        if(isNegated()) {
+            leftOperand = negate(leftOperand);
+        }
+
+        return leftOperand;
     }
 
-    private Value isEqual(Value leftOperand, Value rightOperand) {
-
-        return new IntNode(0);
+    private BoolNode isEqual(Value leftOperand, Value rightOperand) throws RuntimeEnvironmentException {
+        if(leftOperand.getType() == NodeType.INT && rightOperand.getType() == NodeType.INT) {
+            return new BoolNode(Value.getIntValue(leftOperand) == Value.getIntValue(rightOperand));
+        } else if(leftOperand.getType() == NodeType.DOUBLE && rightOperand.getType() == NodeType.DOUBLE) {
+            return new BoolNode(Value.getDoubleValue(leftOperand) == Value.getDoubleValue(rightOperand));
+        } else if(leftOperand.getType() == NodeType.BOOL && rightOperand.getType() == NodeType.BOOL) {
+            return new BoolNode(Value.getBoolValue(leftOperand) == Value.getBoolValue(rightOperand));
+        } else if(leftOperand.getType() == NodeType.CURRENCY && rightOperand.getType() == NodeType.CURRENCY) {
+            return new BoolNode(Value.getCurrencyValue(leftOperand).equals(Value.getCurrencyValue(rightOperand)));
+        } else if(leftOperand.getType() == NodeType.INT && rightOperand.getType() == NodeType.DOUBLE) {
+            return new BoolNode(Value.getIntValue(leftOperand) == Value.getDoubleValue(rightOperand));
+        } else if(leftOperand.getType() == NodeType.DOUBLE && rightOperand.getType() == NodeType.INT) {
+            return new BoolNode(Value.getDoubleValue(leftOperand) == Value.getIntValue(rightOperand));
+        } else {
+            throw new RuntimeEnvironmentException();
+        }
     }
 
 
-    private Value isLess(Value leftOperand, Value rightOperand) {
-
-        return new IntNode(0);
+    private Value isLess(Value leftOperand, Value rightOperand) throws RuntimeEnvironmentException {
+        if(leftOperand.getType() == NodeType.CURRENCY && rightOperand.getType() == NodeType.CURRENCY) {
+            return new BoolNode(Value.getCurrencyValue(leftOperand).compareTo(Value.getCurrencyValue(rightOperand)) < 0);
+        } else if(leftOperand.getType() == NodeType.INT && rightOperand.getType() == NodeType.INT) {
+            return new BoolNode(Value.getIntValue(leftOperand) < Value.getIntValue(rightOperand));
+        } else if(leftOperand.getType() == NodeType.DOUBLE && rightOperand.getType() == NodeType.DOUBLE) {
+            return new BoolNode(Value.getDoubleValue(leftOperand) < Value.getDoubleValue(rightOperand));
+        } else if(leftOperand.getType() == NodeType.INT && rightOperand.getType() == NodeType.DOUBLE) {
+            return new BoolNode(Value.getIntValue(leftOperand) < Value.getDoubleValue(rightOperand));
+        } else if(leftOperand.getType() == NodeType.DOUBLE && rightOperand.getType() == NodeType.INT) {
+            return new BoolNode(Value.getDoubleValue(leftOperand) < Value.getIntValue(rightOperand));
+        } else {
+            throw new RuntimeEnvironmentException();
+        }
     }
 
-    private Value isLessOrEqual(Value leftOperand, Value rightOperand) {
-
-        return new IntNode(0);
+    private Value isLessOrEqual(Value leftOperand, Value rightOperand) throws RuntimeEnvironmentException {
+        if(leftOperand.getType() == NodeType.CURRENCY && rightOperand.getType() == NodeType.CURRENCY) {
+            return new BoolNode(Value.getCurrencyValue(leftOperand).compareTo(Value.getCurrencyValue(rightOperand)) <= 0);
+        } else if(leftOperand.getType() == NodeType.INT && rightOperand.getType() == NodeType.INT) {
+            return new BoolNode(Value.getIntValue(leftOperand) <= Value.getIntValue(rightOperand));
+        } else if(leftOperand.getType() == NodeType.DOUBLE && rightOperand.getType() == NodeType.DOUBLE) {
+            return new BoolNode(Value.getDoubleValue(leftOperand) <= Value.getDoubleValue(rightOperand));
+        } else if(leftOperand.getType() == NodeType.INT && rightOperand.getType() == NodeType.DOUBLE) {
+            return new BoolNode(Value.getIntValue(leftOperand) <= Value.getDoubleValue(rightOperand));
+        } else if(leftOperand.getType() == NodeType.DOUBLE && rightOperand.getType() == NodeType.INT) {
+            return new BoolNode(Value.getDoubleValue(leftOperand) <= Value.getIntValue(rightOperand));
+        } else {
+            throw new RuntimeEnvironmentException();
+        }
     }
 
-    private Value isGreater(Value leftOperand, Value rightOperand) {
-
-        return new IntNode(0);
+    private Value isGreater(Value leftOperand, Value rightOperand) throws RuntimeEnvironmentException {
+        if(leftOperand.getType() == NodeType.CURRENCY && rightOperand.getType() == NodeType.CURRENCY) {
+            return new BoolNode(Value.getCurrencyValue(leftOperand).compareTo(Value.getCurrencyValue(rightOperand)) > 0);
+        } else if(leftOperand.getType() == NodeType.INT && rightOperand.getType() == NodeType.INT) {
+            return new BoolNode(Value.getIntValue(leftOperand) > Value.getIntValue(rightOperand));
+        } else if(leftOperand.getType() == NodeType.DOUBLE && rightOperand.getType() == NodeType.DOUBLE) {
+            return new BoolNode(Value.getDoubleValue(leftOperand) > Value.getDoubleValue(rightOperand));
+        } else if(leftOperand.getType() == NodeType.INT && rightOperand.getType() == NodeType.DOUBLE) {
+            return new BoolNode(Value.getIntValue(leftOperand) > Value.getDoubleValue(rightOperand));
+        } else if(leftOperand.getType() == NodeType.DOUBLE && rightOperand.getType() == NodeType.INT) {
+            return new BoolNode(Value.getDoubleValue(leftOperand) > Value.getIntValue(rightOperand));
+        } else {
+            throw new RuntimeEnvironmentException();
+        }
     }
 
-    private Value isGreaterOrEqual(Value leftOperand, Value rightOperand) {
-
-        return new IntNode(0);
+    private Value isGreaterOrEqual(Value leftOperand, Value rightOperand) throws RuntimeEnvironmentException {
+        if(leftOperand.getType() == NodeType.CURRENCY && rightOperand.getType() == NodeType.CURRENCY) {
+            return new BoolNode(Value.getCurrencyValue(leftOperand).compareTo(Value.getCurrencyValue(rightOperand)) >= 0);
+        } else if(leftOperand.getType() == NodeType.INT && rightOperand.getType() == NodeType.INT) {
+            return new BoolNode(Value.getIntValue(leftOperand) >= Value.getIntValue(rightOperand));
+        } else if(leftOperand.getType() == NodeType.DOUBLE && rightOperand.getType() == NodeType.DOUBLE) {
+            return new BoolNode(Value.getDoubleValue(leftOperand) >= Value.getDoubleValue(rightOperand));
+        } else if(leftOperand.getType() == NodeType.INT && rightOperand.getType() == NodeType.DOUBLE) {
+            return new BoolNode(Value.getIntValue(leftOperand) >= Value.getDoubleValue(rightOperand));
+        } else if(leftOperand.getType() == NodeType.DOUBLE && rightOperand.getType() == NodeType.INT) {
+            return new BoolNode(Value.getDoubleValue(leftOperand) >= Value.getIntValue(rightOperand));
+        } else {
+            throw new RuntimeEnvironmentException();
+        }
     }
 
     private Value and(Value leftOperand, Value rightOperand) {
-
-        return new IntNode(0);
+        BoolNode left = new BoolNode(leftOperand);
+        BoolNode right = new BoolNode(rightOperand);
+        return new BoolNode(left.isValue() && right.isValue());
     }
 
     private Value or(Value leftOperand, Value rightOperand) {
-
-        return new IntNode(0);
+        BoolNode left = new BoolNode(leftOperand);
+        BoolNode right = new BoolNode(rightOperand);
+        return new BoolNode(left.isValue() || right.isValue());
     }
 
     private Value negate(Value operand) {
-
-        return new IntNode(0);
+        BoolNode op = new BoolNode(operand);
+        return new BoolNode(!op.isValue());
     }
 }

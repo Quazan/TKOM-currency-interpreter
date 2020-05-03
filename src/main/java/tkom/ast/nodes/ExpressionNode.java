@@ -73,54 +73,54 @@ public class ExpressionNode implements Expression {
 
     private Value divide(Value leftOperand, Value rightOperand, Environment environment) throws RuntimeEnvironmentException {
         if(leftOperand.getType() == NodeType.INT && rightOperand.getType() == NodeType.INT) {
-            return new IntNode(getIntValue(leftOperand) / getIntValue(rightOperand));
+            return new IntNode(Value.getIntValue(leftOperand) / Value.getIntValue(rightOperand));
         } else if (leftOperand.getType() == NodeType.INT && rightOperand.getType() == NodeType.DOUBLE) {
-            return new DoubleNode(getIntValue(leftOperand) / getDoubleValue(rightOperand));
+            return new DoubleNode(Value.getIntValue(leftOperand) / Value.getDoubleValue(rightOperand));
         } else if (leftOperand.getType() == NodeType.DOUBLE && rightOperand.getType() == NodeType.INT) {
-            return new DoubleNode(getDoubleValue(leftOperand) / getIntValue(rightOperand));
+            return new DoubleNode(Value.getDoubleValue(leftOperand) / Value.getIntValue(rightOperand));
         } else if(leftOperand.getType() == NodeType.DOUBLE && rightOperand.getType() == NodeType.DOUBLE) {
-            return new DoubleNode(getDoubleValue(leftOperand) / getDoubleValue(rightOperand));
+            return new DoubleNode(Value.getDoubleValue(leftOperand) / Value.getDoubleValue(rightOperand));
         }  else if(leftOperand.getType() == NodeType.CURRENCY && rightOperand.getType() == NodeType.INT) {
-            return new Currency(new BigDecimal(String.valueOf(getCurrencyValue(leftOperand)
-                    .divide(BigDecimal.valueOf(getIntValue(rightOperand)),5 ,RoundingMode.HALF_EVEN))), "EUR" , environment.getExchangeRates());
+            return new Currency(new BigDecimal(String.valueOf(Value.getCurrencyValue(leftOperand)
+                    .divide(BigDecimal.valueOf(Value.getIntValue(rightOperand)),5 ,RoundingMode.HALF_EVEN))), "EUR" , environment.getExchangeRates());
         } else if(leftOperand.getType() == NodeType.CURRENCY && rightOperand.getType() == NodeType.DOUBLE) {
-            return new Currency(new BigDecimal(String.valueOf(getCurrencyValue(leftOperand)
-                    .divide(BigDecimal.valueOf(getDoubleValue(rightOperand)),5 , RoundingMode.HALF_EVEN))), "EUR", environment.getExchangeRates());
+            return new Currency(new BigDecimal(String.valueOf(Value.getCurrencyValue(leftOperand)
+                    .divide(BigDecimal.valueOf(Value.getDoubleValue(rightOperand)),5 , RoundingMode.HALF_EVEN))), "EUR", environment.getExchangeRates());
         }
         throw new RuntimeEnvironmentException();
     }
 
     private Value multiply(Value leftOperand, Value rightOperand, Environment environment) throws RuntimeEnvironmentException {
         if(leftOperand.getType() == NodeType.INT && rightOperand.getType() == NodeType.INT) {
-            return new IntNode(getIntValue(leftOperand) * getIntValue(rightOperand));
+            return new IntNode(Value.getIntValue(leftOperand) * Value.getIntValue(rightOperand));
         } else if (leftOperand.getType() == NodeType.INT && rightOperand.getType() == NodeType.DOUBLE) {
-            return new DoubleNode(getIntValue(leftOperand) * getDoubleValue(rightOperand));
+            return new DoubleNode(Value.getIntValue(leftOperand) * Value.getDoubleValue(rightOperand));
         } else if (leftOperand.getType() == NodeType.DOUBLE && rightOperand.getType() == NodeType.INT) {
-            return new DoubleNode(getDoubleValue(leftOperand) * getIntValue(rightOperand));
+            return new DoubleNode(Value.getDoubleValue(leftOperand) * Value.getIntValue(rightOperand));
         } else if(leftOperand.getType() == NodeType.DOUBLE && rightOperand.getType() == NodeType.DOUBLE) {
-            return new DoubleNode(getDoubleValue(leftOperand) * getDoubleValue(rightOperand));
+            return new DoubleNode(Value.getDoubleValue(leftOperand) * Value.getDoubleValue(rightOperand));
         }  else if(leftOperand.getType() == NodeType.CURRENCY && rightOperand.getType() == NodeType.INT) {
-            return new Currency(new BigDecimal(String.valueOf(getCurrencyValue(leftOperand)
-                    .multiply(BigDecimal.valueOf(getIntValue(rightOperand))))), "EUR", environment.getExchangeRates());
+            return new Currency(new BigDecimal(String.valueOf(Value.getCurrencyValue(leftOperand)
+                    .multiply(BigDecimal.valueOf(Value.getIntValue(rightOperand))))), "EUR", environment.getExchangeRates());
         } else if(leftOperand.getType() == NodeType.CURRENCY && rightOperand.getType() == NodeType.DOUBLE) {
-            return new Currency(new BigDecimal(String.valueOf(getCurrencyValue(leftOperand)
-                    .multiply(BigDecimal.valueOf(getDoubleValue(rightOperand))))), "EUR", environment.getExchangeRates());
+            return new Currency(new BigDecimal(String.valueOf(Value.getCurrencyValue(leftOperand)
+                    .multiply(BigDecimal.valueOf(Value.getDoubleValue(rightOperand))))), "EUR", environment.getExchangeRates());
         }
         throw new RuntimeEnvironmentException();
     }
 
     private Value subtract(Value leftOperand, Value rightOperand, Environment environment) throws RuntimeEnvironmentException {
         if(leftOperand.getType() == NodeType.INT && rightOperand.getType() == NodeType.INT) {
-            return new IntNode(getIntValue(leftOperand) - getIntValue(rightOperand));
+            return new IntNode(Value.getIntValue(leftOperand) - Value.getIntValue(rightOperand));
         } else if (leftOperand.getType() == NodeType.INT && rightOperand.getType() == NodeType.DOUBLE) {
-            return new DoubleNode(getIntValue(leftOperand) - getDoubleValue(rightOperand));
+            return new DoubleNode(Value.getIntValue(leftOperand) - Value.getDoubleValue(rightOperand));
         } else if (leftOperand.getType() == NodeType.DOUBLE && rightOperand.getType() == NodeType.INT) {
-            return new DoubleNode(getDoubleValue(leftOperand) - getIntValue(rightOperand));
+            return new DoubleNode(Value.getDoubleValue(leftOperand) - Value.getIntValue(rightOperand));
         } else if(leftOperand.getType() == NodeType.DOUBLE && rightOperand.getType() == NodeType.DOUBLE) {
-            return new DoubleNode(getDoubleValue(leftOperand) - getDoubleValue(rightOperand));
+            return new DoubleNode(Value.getDoubleValue(leftOperand) - Value.getDoubleValue(rightOperand));
         } else if(leftOperand.getType() == NodeType.CURRENCY && rightOperand.getType() == NodeType.CURRENCY) {
             return new Currency(new BigDecimal(String.valueOf(
-                    getCurrencyValue(leftOperand).subtract(getCurrencyValue(rightOperand)))
+                    Value.getCurrencyValue(leftOperand).subtract(Value.getCurrencyValue(rightOperand)))
             ), "EUR", environment.getExchangeRates());
         }
         throw new RuntimeEnvironmentException();
@@ -128,31 +128,19 @@ public class ExpressionNode implements Expression {
 
     public Value add(Value leftOperand, Value rightOperand, Environment environment) throws RuntimeEnvironmentException {
         if(leftOperand.getType() == NodeType.INT && rightOperand.getType() == NodeType.INT) {
-            return new IntNode(getIntValue(leftOperand) + getIntValue(rightOperand));
+            return new IntNode(Value.getIntValue(leftOperand) + Value.getIntValue(rightOperand));
         } else if (leftOperand.getType() == NodeType.INT && rightOperand.getType() == NodeType.DOUBLE) {
-            return new DoubleNode(getIntValue(leftOperand) + getDoubleValue(rightOperand));
+            return new DoubleNode(Value.getIntValue(leftOperand) + Value.getDoubleValue(rightOperand));
         } else if (leftOperand.getType() == NodeType.DOUBLE && rightOperand.getType() == NodeType.INT) {
-            return new DoubleNode(getDoubleValue(leftOperand) + getIntValue(rightOperand));
+            return new DoubleNode(Value.getDoubleValue(leftOperand) + Value.getIntValue(rightOperand));
         } else if(leftOperand.getType() == NodeType.DOUBLE && rightOperand.getType() == NodeType.DOUBLE) {
-            return new DoubleNode(getDoubleValue(leftOperand) + getDoubleValue(rightOperand));
+            return new DoubleNode(Value.getDoubleValue(leftOperand) + Value.getDoubleValue(rightOperand));
         } else if(leftOperand.getType() == NodeType.CURRENCY && rightOperand.getType() == NodeType.CURRENCY) {
             return new Currency(new BigDecimal(String.valueOf(
-                    getCurrencyValue(leftOperand).add(getCurrencyValue(rightOperand)))
+                    Value.getCurrencyValue(leftOperand).add(Value.getCurrencyValue(rightOperand)))
             ), "EUR", environment.getExchangeRates());
         }
 
         throw new RuntimeEnvironmentException();
-    }
-
-    private int getIntValue(Value operand) {
-        return ((IntNode) operand).getValue();
-    }
-
-    private double getDoubleValue(Value operand) {
-        return ((DoubleNode) operand).getValue();
-    }
-
-    private BigDecimal getCurrencyValue(Value operand) {
-        return ((Currency) operand).getValue();
     }
 }

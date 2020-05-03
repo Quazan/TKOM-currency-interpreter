@@ -26,6 +26,10 @@ public class Main {
 
         int i = 2;
         double j = 3.;
+        boolean a = true;
+        boolean b = true;
+
+
         try {
             Rates rates = jsonReader.getRates(new FileReader("src/main/resources/rates.json"));
             FileReader fileReader = new FileReader("src/main/resources/test.txt");
@@ -34,7 +38,7 @@ public class Main {
             Program program = parser.parseProgram();
             Environment environment = new Environment(program.getFunctions(), rates);
             Value v = environment.getFunction("main").execute(environment, new ArrayList<>());
-            System.out.println(((Currency) v).getValue());
+            System.out.println(v);
         } catch (IOException | InvalidTokenException | UnexpectedTokenException | UndefinedReferenceException | RuntimeEnvironmentException e) {
             e.printStackTrace();
         }

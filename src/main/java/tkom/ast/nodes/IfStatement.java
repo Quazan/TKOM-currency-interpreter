@@ -32,32 +32,10 @@ public class IfStatement implements Statement {
     public Value execute(Environment environment) throws UndefinedReferenceException, RuntimeEnvironmentException {
         environment.createNewLocalScope();
 
-        //TODO that's a piece of ugly code
-        Value cond = condition.evaluate(environment);
-        switch (cond.getType()) {
-            case INT:
-                if (((IntNode) cond).getValue() != 0) {
-                    trueBlock.execute(environment);
-                } else {
-                    falseBlock.execute(environment);
-                }
-                break;
-            case DOUBLE:
-                if (((DoubleNode) cond).getValue() != 0) {
-                    trueBlock.execute(environment);
-                } else {
-                    falseBlock.execute(environment);
-                }
-                break;
-            case CURRENCY:
-                if (!((Currency) cond).getValue().equals(BigDecimal.ZERO)) {
-                    trueBlock.execute(environment);
-                } else {
-                    falseBlock.execute(environment);
-                }
-                break;
-            default:
-                throw new RuntimeEnvironmentException();
+        if(Value.getBoolValue(condition.evaluate(environment))) {
+            trueBlock.execute(environment);
+        } else if (falseBlock != null) {
+            falseBlock.execute(environment);
         }
 
         environment.destroyScope();

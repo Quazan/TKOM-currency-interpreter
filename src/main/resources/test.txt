@@ -1,10 +1,18 @@
 int main() {
-PLN a = 2;
-int b = 4;
+    int a = 2;
+    int b = 3;
 
-return func(a, b);
+    if(!(a < b)) a = true(a, b);
+    else a = false(a, b);
+
+    return a;
 }
 
-int func(EUR a, int b) {
-return a * b;
+int true(int a, int b) {
+    return a + b;
 }
+
+int false(int a, int b) {
+    return a - b;
+}
+

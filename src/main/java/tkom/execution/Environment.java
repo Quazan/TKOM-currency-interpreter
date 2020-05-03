@@ -61,10 +61,10 @@ public class Environment {
         }
 
         while (scope.getParentScope() != null) {
+            scope = scope.getParentScope();
             if(scope.containsVariable(identifier)) {
                 return scope.getVariable(identifier);
             }
-            scope = scope.getParentScope();
         }
 
         throw new UndefinedReferenceException();
@@ -73,7 +73,20 @@ public class Environment {
     public void setVariable(String identifier, Value evaluate) throws UndefinedReferenceException {
         Scope scope = scopes.getFirst();
 
-        scope.setVariable(identifier, evaluate);
+        if(scope.containsVariable(identifier)) {
+            scope.setVariable(identifier, evaluate);
+            return;
+        }
+
+        while (scope.getParentScope() != null) {
+            scope = scope.getParentScope();
+            if(scope.containsVariable(identifier)) {
+                scope.setVariable(identifier, evaluate);
+                return;
+            }
+        }
+
+        throw new UndefinedReferenceException();
     }
 
     public Function getFunction(String identifier) {
