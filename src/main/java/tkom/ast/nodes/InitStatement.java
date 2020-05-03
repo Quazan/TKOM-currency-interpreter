@@ -35,9 +35,9 @@ public class InitStatement extends Signature implements Statement{
         } else if(getReturnType().toUpperCase().equals(NodeType.DOUBLE.toString()) && assign.getType() == NodeType.INT) {
             environment.addVariable(getIdentifier(), new DoubleNode(((IntNode) assign).getValue()));
         } else if(environment.containsCurrency(getReturnType()) && assign.getType() == NodeType.INT) {
-            environment.addVariable(getIdentifier(), new Currency(new BigDecimal(((IntNode) assign).getValue())));
+            environment.addVariable(getIdentifier(), new Currency(new BigDecimal(((IntNode) assign).getValue()), getReturnType(), environment.getExchangeRates()));
         } else if(environment.containsCurrency(getReturnType()) && assign.getType() == NodeType.DOUBLE) {
-            environment.addVariable(getIdentifier(), new Currency(new BigDecimal(String.valueOf(((DoubleNode) assign).getValue()))));
+            environment.addVariable(getIdentifier(), new Currency(new BigDecimal(String.valueOf(((DoubleNode) assign).getValue())), getReturnType(), environment.getExchangeRates()));
         } else {
             throw new RuntimeEnvironmentException();
         }

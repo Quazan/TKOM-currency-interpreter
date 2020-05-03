@@ -1,10 +1,10 @@
 int main() {
-EUR a = 2;
-EUR b = 3;
+PLN a = 2;
+int b = 4;
 
 return func(a, b);
 }
 
-int func(EUR a, EUR b) {
-return a + b;
+int func(EUR a, int b) {
+return a * b;
 }

@@ -1,5 +1,7 @@
 package tkom.currency;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Map;
 
@@ -31,5 +33,19 @@ public class Rates {
 
     public boolean contains(String currency) {
         return currencies.contains(currency);
+    }
+
+    public BigDecimal toEUR(String type, BigDecimal value) {
+        if(type.equals("EUR")) {
+            return value;
+        }
+        return value.divide(BigDecimal.valueOf(exchange.get(type)), 5, RoundingMode.HALF_EVEN);
+    }
+
+    public BigDecimal toBaseCurrency(String type, BigDecimal value) {
+        if(type.equals("EUR")) {
+            return value;
+        }
+        return value.multiply(BigDecimal.valueOf(exchange.get(type)));
     }
 }
