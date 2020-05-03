@@ -21,31 +21,6 @@ public class WhileStatement implements Statement{
 
     private StatementBlock whileBlock;
 
-    private boolean checkCondition(Value condition) throws RuntimeEnvironmentException {
-        switch (condition.getType()) {
-            case INT:
-                if (((IntNode) condition).getValue() != 0) {
-                    return true;
-                } else {
-                    return false;
-                }
-            case DOUBLE:
-                if (((DoubleNode) condition).getValue() != 0) {
-                    return true;
-                } else {
-                    return false;
-                }
-            case CURRENCY:
-                if (!((Currency) condition).getValue().equals(BigDecimal.ZERO)) {
-                    return true;
-                } else {
-                    return false;
-                }
-            default:
-                throw new RuntimeEnvironmentException();
-        }
-    }
-
     @Override
     public NodeType getType() {
         return NodeType.WHILE_STATEMENT;
@@ -54,13 +29,17 @@ public class WhileStatement implements Statement{
     @Override
     public Value execute(Environment environment) throws UndefinedReferenceException, RuntimeEnvironmentException {
         environment.createNewLocalScope();
+        Value ret = new IntNode(0);
 
-        while(checkCondition(condition.evaluate(environment))) {
-            whileBlock.execute(environment);
+        while(((BoolNode) condition.evaluate(environment)).isValue()) {
+            ret = whileBlock.execute(environment);
+            if(ret.getType() == NodeType.RETURN_CALL) {
+                return ret;
+            }
         }
 
         environment.destroyScope();
-        return new IntNode(0);
+        return ret;
     }
 
 

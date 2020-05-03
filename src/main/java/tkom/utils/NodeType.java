@@ -17,5 +17,6 @@ public enum NodeType {
     STRING,
     DOUBLE,
     IF_STATEMENT,
-    BOOL
+    BOOL,
+    RETURN_CALL
 }

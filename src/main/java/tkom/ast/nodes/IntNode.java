@@ -10,7 +10,6 @@ import tkom.utils.NodeType;
 
 @Getter
 @Setter
-@ToString
 public class IntNode implements Expression, Value {
 
     private int value;
@@ -29,4 +28,8 @@ public class IntNode implements Expression, Value {
         return this;
     }
 
+    @Override
+    public String toString() {
+        return String.valueOf(value);
+    }
 }

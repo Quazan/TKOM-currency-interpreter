@@ -65,6 +65,10 @@ public class Function extends Signature implements Node {
         Value ret = statementBlock.execute(environment);
         environment.destroyScope();
 
+        if(ret.getType() == NodeType.RETURN_CALL) {
+            ret = ((ReturnCall) ret).getReturnedValue();
+        }
+
         if(ret.getType() == NodeType.CURRENCY && environment.containsCurrency(getReturnType())) {
            ret = new Currency(environment.getExchangeRates().toBaseCurrency(getReturnType(), ((Currency) ret).getValue()),
                    getReturnType(), environment.getExchangeRates());

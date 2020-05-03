@@ -12,13 +12,12 @@ import tkom.utils.NodeType;
 
 @Getter
 @Setter
-@ToString
 public class StringNode implements Expression, Value {
 
     private String value;
 
     public StringNode(String value) {
-        this.value = value;
+        this.value = value.substring(1, value.length()-1);
     }
 
     @Override
@@ -29,5 +28,10 @@ public class StringNode implements Expression, Value {
     @Override
     public Value evaluate(Environment environment) {
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return value;
     }
 }

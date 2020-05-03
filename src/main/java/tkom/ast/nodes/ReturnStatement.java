@@ -28,6 +28,6 @@ public class ReturnStatement implements Statement{
 
     @Override
     public Value execute(Environment environment) throws UndefinedReferenceException, RuntimeEnvironmentException {
-        return expressionNode.evaluate(environment);
+        return new ReturnCall(expressionNode.evaluate(environment));
     }
 }

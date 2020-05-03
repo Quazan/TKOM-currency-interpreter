@@ -28,6 +28,20 @@ public class InitStatement extends Signature implements Statement{
 
     @Override
     public Value execute(Environment environment) throws UndefinedReferenceException, RuntimeEnvironmentException {
+        if(assignable == null) {
+            if(getReturnType().toUpperCase().equals(NodeType.INT.toString())) {
+                environment.addVariable(getIdentifier(), new IntNode(0));
+            } else if(getReturnType().toUpperCase().equals(NodeType.DOUBLE.toString())) {
+                environment.addVariable(getIdentifier(), new DoubleNode(0));
+            } else if(environment.containsCurrency(getReturnType())) {
+                environment.addVariable(getIdentifier(), new Currency(new BigDecimal(0), getReturnType(), environment.getExchangeRates()));
+            } else {
+                throw new RuntimeEnvironmentException();
+            }
+
+            return new IntNode(0);
+        }
+
         Value assign = assignable.evaluate(environment);
 
         if(getReturnType().toUpperCase().equals(assign.getType().toString())) {

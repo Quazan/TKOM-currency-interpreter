@@ -32,13 +32,15 @@ public class IfStatement implements Statement {
     public Value execute(Environment environment) throws UndefinedReferenceException, RuntimeEnvironmentException {
         environment.createNewLocalScope();
 
+        Value ret = new IntNode(0);
+
         if(Value.getBoolValue(condition.evaluate(environment))) {
-            trueBlock.execute(environment);
+            ret = trueBlock.execute(environment);
         } else if (falseBlock != null) {
-            falseBlock.execute(environment);
+            ret = falseBlock.execute(environment);
         }
 
         environment.destroyScope();
-        return new IntNode(0);
+        return ret;
     }
 }

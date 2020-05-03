@@ -32,7 +32,7 @@ public class Main {
 
         try {
             Rates rates = jsonReader.getRates(new FileReader("src/main/resources/rates.json"));
-            FileReader fileReader = new FileReader("src/main/resources/test.txt");
+            FileReader fileReader = new FileReader("src/main/resources/program.txt");
             Lexer lexer = new Lexer(fileReader, rates.getCurrencies());
             Parser parser = new Parser(lexer);
             Program program = parser.parseProgram();

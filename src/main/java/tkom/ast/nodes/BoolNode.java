@@ -10,7 +10,6 @@ import java.math.BigDecimal;
 
 @Getter
 @Setter
-@ToString
 public class BoolNode implements Value {
 
     private boolean value;
@@ -40,4 +39,8 @@ public class BoolNode implements Value {
         return NodeType.BOOL;
     }
 
+    @Override
+    public String toString() {
+        return String.valueOf(value);
+    }
 }

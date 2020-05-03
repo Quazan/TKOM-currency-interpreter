@@ -36,13 +36,18 @@ public class StatementBlock implements Node {
     }
 
     public Value execute(Environment environment) throws UndefinedReferenceException, RuntimeEnvironmentException {
+        Value ret = new IntNode(0);
         for (Statement statement : statements) {
             if(statement.getType() == NodeType.RETURN_STATEMENT) {
                 return statement.execute(environment);
             }
-            statement.execute(environment);
+            ret = statement.execute(environment);
+
+            if(ret.getType() == NodeType.RETURN_CALL) {
+                return ret;
+            }
         }
 
-        return new IntNode(0);
+        return ret;
     }
 }

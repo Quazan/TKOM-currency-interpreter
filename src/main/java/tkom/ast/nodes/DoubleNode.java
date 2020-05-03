@@ -12,7 +12,6 @@ import tkom.utils.NodeType;
 
 @Getter
 @Setter
-@ToString
 public class DoubleNode implements Expression, Value {
 
     private double value;
@@ -29,5 +28,10 @@ public class DoubleNode implements Expression, Value {
     @Override
     public Value evaluate(Environment environment) {
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(value);
     }
 }
