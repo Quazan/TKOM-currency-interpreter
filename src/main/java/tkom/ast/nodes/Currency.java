@@ -21,6 +21,11 @@ public class Currency implements Expression, Value {
 
     private String currencyType;
 
+    public Currency(BigDecimal value) {
+        this.value = value;
+        this.currencyType = "EUR";
+    }
+
     @Override
     public NodeType getType() {
         return NodeType.CURRENCY;

@@ -35,9 +35,12 @@ public class AssignStatement implements Statement {
 
         Value assign = assignable.evaluate(environment);
 
-        //TODO castowanie typu
         if(assign.getType() == value.getType()) {
             environment.setVariable(identifier, assign);
+        } else if (value.getType() == NodeType.DOUBLE && assign.getType() == NodeType.INT) {
+            environment.setVariable(identifier, new DoubleNode(((IntNode) assign).getValue()));
+        } else {
+            throw  new RuntimeEnvironmentException();
         }
 
         return new IntNode(0);

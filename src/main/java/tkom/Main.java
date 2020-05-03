@@ -2,6 +2,8 @@ package tkom;
 
 import tkom.ast.Node;
 import tkom.ast.Value;
+import tkom.ast.nodes.Currency;
+import tkom.ast.nodes.DoubleNode;
 import tkom.ast.nodes.IntNode;
 import tkom.ast.nodes.Program;
 import tkom.currency.Rates;
@@ -22,15 +24,17 @@ public class Main {
     public static void main(String[] args) {
         JsonReader jsonReader = new JsonReader();
 
+        int i = 2;
+        double j = 3.;
         try {
             Rates rates = jsonReader.getRates(new FileReader("src/main/resources/rates.json"));
             FileReader fileReader = new FileReader("src/main/resources/test.txt");
             Lexer lexer = new Lexer(fileReader, rates.getCurrencies());
             Parser parser = new Parser(lexer);
             Program program = parser.parseProgram();
-            Environment environment = new Environment(program.getFunctions());
+            Environment environment = new Environment(program.getFunctions(), rates);
             Value v = environment.getFunction("main").execute(environment, new ArrayList<>());
-            System.out.println(((IntNode) v).getValue());
+            System.out.println(((Currency) v).getValue());
         } catch (IOException | InvalidTokenException | UnexpectedTokenException | UndefinedReferenceException | RuntimeEnvironmentException e) {
             e.printStackTrace();
         }

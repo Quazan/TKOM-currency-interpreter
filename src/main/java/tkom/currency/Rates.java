@@ -28,4 +28,8 @@ public class Rates {
     public void setExchange(Map<String, Double> exchange) {
         this.exchange = exchange;
     }
+
+    public boolean contains(String currency) {
+        return currencies.contains(currency);
+    }
 }

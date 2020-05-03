@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import tkom.ast.Value;
 import tkom.ast.nodes.Function;
+import tkom.currency.Rates;
 import tkom.error.UndefinedReferenceException;
 
 import java.util.*;
@@ -14,10 +15,12 @@ public class Environment {
 
     private Map<String, Function> functions;
     private Deque<Scope> scopes;
+    private Rates exchangeRates;
 
-    public Environment(List<Function> functionList) {
+    public Environment(List<Function> functionList, Rates exchangeRates) {
         this.functions = new HashMap<>();
         this.scopes = new ArrayDeque<>();
+        this.exchangeRates = exchangeRates;
 
         for(Function function : functionList) {
             functions.put(function.getIdentifier(), function);
@@ -75,5 +78,9 @@ public class Environment {
 
     public Function getFunction(String identifier) {
         return functions.get(identifier);
+    }
+
+    public boolean containsCurrency(String currency) {
+        return exchangeRates.contains(currency);
     }
 }
