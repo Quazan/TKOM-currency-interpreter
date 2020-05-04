@@ -63,8 +63,8 @@ public class Environment {
             return scope.getVariable(identifier);
         }
 
-        while (scope.getParentScope() != null) {
-            scope = scope.getParentScope();
+        while ((scope = scope.getParentScope()) != null) {
+            //scope = scope.getParentScope();
             if(scope.containsVariable(identifier)) {
                 return scope.getVariable(identifier);
             }

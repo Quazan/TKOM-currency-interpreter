@@ -9,12 +9,13 @@ import tkom.error.UndefinedReferenceException;
 import java.util.HashMap;
 import java.util.Map;
 
-@Getter
-@Setter
 public class Scope {
 
+    @Getter
+    @Setter
     private Scope parentScope;
-    private Map<String, Value> variables;
+
+    private final Map<String, Value> variables;
 
     public Scope() {
         this.variables = new HashMap<>();
