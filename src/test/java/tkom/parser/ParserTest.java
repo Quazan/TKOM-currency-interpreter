@@ -460,6 +460,15 @@ public class ParserTest {
                 actual.getAssignable().getOperations().get(0));
     }
 
+    @Test(expected = UnexpectedTokenException.class)
+    public void parseIncorrectAssignStatement() throws UnexpectedTokenException, InvalidTokenException, IOException {
+        String input = "a; ";
+        initializeParser(input);
+
+        parser.advance();
+        parser.parseStatement();
+    }
+
     @Test
     public void parseFunctionCall() throws UnexpectedTokenException, InvalidTokenException, IOException {
         FunctionCall expectedStatement = new FunctionCall("func");
@@ -480,17 +489,27 @@ public class ParserTest {
         assertEquals(expectedStatement.getArguments().size(), actual.getArguments().size());
     }
 
-    @Test
-    public void parseFunctionCallWithString() throws UnexpectedTokenException, InvalidTokenException, IOException {
-        FunctionCall expectedStatement = new FunctionCall("print");
-        String input = "print(\"test\");";
+    @Test(expected = UnexpectedTokenException.class)
+    public void parseFunctionCallWithIncorrectArguments() throws UnexpectedTokenException, InvalidTokenException, IOException {
+        String input = "func(a + b, d + c, );";
         initializeParser(input);
 
         parser.advance();
-        FunctionCall actual = (FunctionCall) parser.parseStatement();
+        parser.parseStatement();
+    }
+
+    @Test
+    public void parsePrintStatement() throws UnexpectedTokenException, InvalidTokenException, IOException {
+        PrintStatement expectedStatement = new PrintStatement();
+        expectedStatement.addArgument(new StringNode("\"test\""));
+        String input = "print(\"test\", a);";
+        initializeParser(input);
+
+        parser.advance();
+        PrintStatement actual = (PrintStatement) parser.parseStatement();
 
         assertEquals(expectedStatement.getType(), actual.getType());
-        assertEquals(expectedStatement.getIdentifier(), actual.getIdentifier());
+        assertEquals(expectedStatement.getArguments().get(0).toString(), actual.getArguments().get(0).toString());
     }
 
     @Test(expected = UnexpectedTokenException.class)
@@ -525,6 +544,24 @@ public class ParserTest {
                 expectedFunction.getStatementBlock().getStatements().size());
         assertEquals(((ReturnStatement) expectedFunction.getStatementBlock().getStatements().get(0)).getType(),
                 ((ReturnStatement) expectedFunction.getStatementBlock().getStatements().get(0)).getType());
+    }
+
+    @Test(expected = UnexpectedTokenException.class)
+    public void parseFunctionDefinitionWithExtraComa() throws IOException, InvalidTokenException, UnexpectedTokenException {
+        String input = "int func(int a, double b,) {return a + b;}";
+        initializeParser(input);
+
+        parser.advance();
+        parser.parseFunction();
+    }
+
+    @Test(expected = UnexpectedTokenException.class)
+    public void parseFunctionDefinitionWithOnlyType() throws IOException, InvalidTokenException, UnexpectedTokenException {
+        String input = "int func(int a, int b, int,) {return a + b;}";
+        initializeParser(input);
+
+        parser.advance();
+        parser.parseFunction();
     }
 
     @Test

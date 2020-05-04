@@ -24,12 +24,6 @@ public class Main {
     public static void main(String[] args) {
         JsonReader jsonReader = new JsonReader();
 
-        int i = 2;
-        double j = 3.;
-        boolean a = true;
-        boolean b = true;
-
-
         try {
             Rates rates = jsonReader.getRates(new FileReader("src/main/resources/rates.json"));
             FileReader fileReader = new FileReader("src/main/resources/program.txt");

@@ -13,6 +13,7 @@ public final class Keywords {
             put("return", TokenType.RETURN);
             put("int", TokenType.INT);
             put("double", TokenType.DOUBLE);
+            put("print", TokenType.PRINT);
         }
     };
 

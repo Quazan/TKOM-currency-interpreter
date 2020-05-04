@@ -1,13 +1,12 @@
 int main(){
-
     if(5 < 4) print("tak");
     else print("nie");
     PLN zlotowki = 15.0;
     zlotowki = zlotowki * 2;
-    print(zlotowki);
+    print(zlotowki, " to ", "nie ", "dolary");
 
     EUR a = 6;
-    EUR b = 3;
+    EUR b = a;
 
     zlotowki = (zlotowki / 1.5);
     print(max(a,b));
@@ -41,7 +40,7 @@ int main(){
     return 0;
 }
 
-EUR max(EUR a, EUR b){
+EUR max(EUR a, EUR b,){
     if(a >= b){
         return a;
     }

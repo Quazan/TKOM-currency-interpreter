@@ -62,7 +62,7 @@ public class Lexer {
     private String readString() throws IOException, InvalidTokenException {
         do {
             readToBuilder();
-        } while ((Character.isLetterOrDigit(sign) || sign == '_') && sign != '"');
+        } while ((Character.isLetterOrDigit(sign) || sign == '_' || Character.isWhitespace(sign)) && sign != '"');
         stringBuilder.append(sign);
 
         if (stringBuilder.charAt(stringBuilder.length() - 1) != '"') {

@@ -48,11 +48,6 @@ public class FunctionCall implements Statement, Expression {
     @Override
     public Value execute(Environment environment) throws UndefinedReferenceException, RuntimeEnvironmentException {
 
-        if(identifier.equals("print")) {
-            System.out.println(arguments.get(0).evaluate(environment));
-            return new IntNode(0);
-        }
-
         Function function = environment.getFunction(identifier);
 
         if(function == null) {

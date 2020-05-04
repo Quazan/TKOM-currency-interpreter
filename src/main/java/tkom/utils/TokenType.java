@@ -35,5 +35,6 @@ public enum TokenType {
     SEMICOLON,
     DOT,
     INVALID,
+    PRINT,
     END_OF_FILE,
 }

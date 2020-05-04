@@ -19,6 +19,7 @@ public final class TokenAttributes {
         add(TokenType.WHILE);
         add(TokenType.RETURN);
         add(TokenType.IDENTIFIER);
+        add(TokenType.PRINT);
     }};
 
     public static List<TokenType> primaryExpressionTypes = new ArrayList<>() {{
