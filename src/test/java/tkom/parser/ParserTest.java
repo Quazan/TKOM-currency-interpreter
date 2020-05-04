@@ -501,7 +501,7 @@ public class ParserTest {
     @Test
     public void parsePrintStatement() throws UnexpectedTokenException, InvalidTokenException, IOException {
         PrintStatement expectedStatement = new PrintStatement();
-        expectedStatement.addArgument(new StringNode("\"test\""));
+        expectedStatement.addArgument(new StringNode("test"));
         String input = "print(\"test\", a);";
         initializeParser(input);
 

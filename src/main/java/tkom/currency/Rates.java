@@ -1,34 +1,29 @@
 package tkom.currency;
 
+import lombok.Getter;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Rates {
 
-    private List<String> currencies;
-    private Map<String, BigDecimal> exchange;
+    @Getter
+    private final List<String> currencies;
+
+    private final Map<String, BigDecimal> exchange;
 
     public Rates(List<String> currencies, Map<String, BigDecimal> exchange) {
         this.currencies = currencies;
         this.exchange = exchange;
     }
 
-    public List<String> getCurrencies() {
-        return currencies;
-    }
-
-    public void setCurrencies(List<String> currencies) {
-        this.currencies = currencies;
-    }
-
-    public Map<String, BigDecimal> getExchange() {
-        return exchange;
-    }
-
-    public void setExchange(Map<String, BigDecimal> exchange) {
-        this.exchange = exchange;
+    public Rates() {
+        this.currencies = new ArrayList<>();
+        this.exchange = new HashMap<>();
     }
 
     public boolean contains(String currency) {
@@ -42,7 +37,7 @@ public class Rates {
         return value.divide(exchange.get(type), 5, RoundingMode.HALF_EVEN);
     }
 
-    public BigDecimal toBaseCurrency(String type, BigDecimal value) {
+    public BigDecimal toCurrency(String type, BigDecimal value) {
         if(type.equals("EUR")) {
             return value;
         }

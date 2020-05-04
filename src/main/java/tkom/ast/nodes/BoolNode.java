@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import tkom.ast.Value;
+import tkom.error.RuntimeEnvironmentException;
 import tkom.utils.NodeType;
 
 import java.math.BigDecimal;
@@ -30,6 +31,7 @@ public class BoolNode implements Value {
                 break;
             case BOOL:
                 this.value = ((BoolNode) from).isValue();
+                break;
         }
     }
 

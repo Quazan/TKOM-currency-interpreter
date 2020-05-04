@@ -73,7 +73,7 @@ public class Function extends Signature implements Node {
         }
 
         if(ret.getType() == NodeType.CURRENCY && environment.containsCurrency(getReturnType())) {
-           ret = new Currency(environment.getExchangeRates().toBaseCurrency(getReturnType(), ((Currency) ret).getValue()),
+           ret = new Currency(environment.getExchangeRates().toCurrency(getReturnType(), ((Currency) ret).getValue()),
                    getReturnType(), environment.getExchangeRates());
         } else if(!ret.getType().toString().equals(getReturnType().toUpperCase())) {
             throw new RuntimeEnvironmentException("Unexpected return type. Expected: " + getReturnType()

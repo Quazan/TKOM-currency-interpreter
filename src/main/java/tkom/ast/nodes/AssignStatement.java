@@ -1,7 +1,6 @@
 package tkom.ast.nodes;
 
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 import tkom.ast.Value;
 import tkom.error.RuntimeEnvironmentException;
@@ -35,7 +34,7 @@ public class AssignStatement implements Statement {
         Value assign = assignable.evaluate(environment);
 
         if (assign.getType() == NodeType.CURRENCY && value.getType() == NodeType.CURRENCY) {
-            environment.setVariable(identifier, new Currency(environment.getExchangeRates().toBaseCurrency(((Currency) value).getCurrencyType(), Value.getCurrencyValue(assign)), ((Currency) value).getCurrencyType(), environment.getExchangeRates()));
+            environment.setVariable(identifier, new Currency(environment.getExchangeRates().toCurrency(((Currency) value).getCurrencyType(), Value.getCurrencyValue(assign)), ((Currency) value).getCurrencyType(), environment.getExchangeRates()));
         } else if (assign.getType() == value.getType()) {
             environment.setVariable(identifier, assign);
         } else if (value.getType() == NodeType.DOUBLE && assign.getType() == NodeType.INT) {

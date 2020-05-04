@@ -1,8 +1,6 @@
 package tkom.ast.nodes;
 
 import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 import tkom.ast.Expression;
 import tkom.ast.Value;
 import tkom.currency.Rates;
@@ -39,6 +37,6 @@ public class Currency implements Expression, Value {
 
     @Override
     public String toString() {
-        return exchangeRates.toBaseCurrency(currencyType, value) + " " + currencyType;
+        return exchangeRates.toCurrency(currencyType, value) + " " + currencyType;
     }
 }

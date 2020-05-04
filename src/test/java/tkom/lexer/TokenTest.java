@@ -54,7 +54,7 @@ public class TokenTest {
                 {"123.5", TokenType.NUMBER, "123.5"},
                 {"main", TokenType.IDENTIFIER, "main"},
                 {"print", TokenType.PRINT, "print"},
-                {"\"abcdef\"", TokenType.STRING, "\"abcdef\""},
+                {"\"abcdef\"", TokenType.STRING, "abcdef"},
                 {"(", TokenType.ROUND_OPEN, ""},
                 {")", TokenType.ROUND_CLOSE, ""},
                 {"[", TokenType.SQUARE_OPEN, ""},

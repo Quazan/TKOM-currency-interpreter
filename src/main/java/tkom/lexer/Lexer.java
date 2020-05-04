@@ -69,7 +69,7 @@ public class Lexer {
             throw new InvalidTokenException(token.getLine(), token.getPosition());
         }
 
-        return stringBuilder.toString();
+        return stringBuilder.toString().substring(1, stringBuilder.length()-1);
     }
 
     private String readIdentifier() throws IOException, InvalidTokenException {

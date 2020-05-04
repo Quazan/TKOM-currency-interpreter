@@ -13,9 +13,10 @@ import tkom.utils.NodeType;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
+
 public class PrintStatement implements Node, Statement {
 
+    @Getter
     List<Expression> arguments;
 
     public PrintStatement() {
