@@ -75,7 +75,8 @@ public class Condition implements Expression {
                     leftOperand = or(leftOperand, rightOperand);
                     break;
                 default:
-                    throw new RuntimeEnvironmentException();
+                    //TODO sprawdzić
+                    throw new RuntimeEnvironmentException("Czy ja tu jestem potrzebny?");
             }
         }
 
@@ -100,7 +101,8 @@ public class Condition implements Expression {
         } else if(leftOperand.getType() == NodeType.DOUBLE && rightOperand.getType() == NodeType.INT) {
             return new BoolNode(Value.getDoubleValue(leftOperand) == Value.getIntValue(rightOperand));
         } else {
-            throw new RuntimeEnvironmentException();
+            throw new RuntimeEnvironmentException("Cannot compare " + leftOperand.getType()
+                    + " to " + rightOperand.getType());
         }
     }
 
@@ -117,7 +119,8 @@ public class Condition implements Expression {
         } else if(leftOperand.getType() == NodeType.DOUBLE && rightOperand.getType() == NodeType.INT) {
             return new BoolNode(Value.getDoubleValue(leftOperand) < Value.getIntValue(rightOperand));
         } else {
-            throw new RuntimeEnvironmentException();
+            throw new RuntimeEnvironmentException("Cannot compare " + leftOperand.getType()
+                    + " to " + rightOperand.getType());
         }
     }
 
@@ -133,7 +136,8 @@ public class Condition implements Expression {
         } else if(leftOperand.getType() == NodeType.DOUBLE && rightOperand.getType() == NodeType.INT) {
             return new BoolNode(Value.getDoubleValue(leftOperand) <= Value.getIntValue(rightOperand));
         } else {
-            throw new RuntimeEnvironmentException();
+            throw new RuntimeEnvironmentException("Cannot compare " + leftOperand.getType()
+                    + " to " + rightOperand.getType());
         }
     }
 
@@ -149,7 +153,8 @@ public class Condition implements Expression {
         } else if(leftOperand.getType() == NodeType.DOUBLE && rightOperand.getType() == NodeType.INT) {
             return new BoolNode(Value.getDoubleValue(leftOperand) > Value.getIntValue(rightOperand));
         } else {
-            throw new RuntimeEnvironmentException();
+            throw new RuntimeEnvironmentException("Cannot compare " + leftOperand.getType()
+                    + " to " + rightOperand.getType());
         }
     }
 
@@ -165,7 +170,8 @@ public class Condition implements Expression {
         } else if(leftOperand.getType() == NodeType.DOUBLE && rightOperand.getType() == NodeType.INT) {
             return new BoolNode(Value.getDoubleValue(leftOperand) >= Value.getIntValue(rightOperand));
         } else {
-            throw new RuntimeEnvironmentException();
+            throw new RuntimeEnvironmentException("Cannot compare " + leftOperand.getType()
+                    + " to " + rightOperand.getType());
         }
     }
 

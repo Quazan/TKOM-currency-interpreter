@@ -5,6 +5,7 @@ import lombok.Setter;
 import tkom.ast.Value;
 import tkom.ast.nodes.Function;
 import tkom.currency.Rates;
+import tkom.error.RuntimeEnvironmentException;
 import tkom.error.UndefinedReferenceException;
 
 import java.util.*;
@@ -24,7 +25,7 @@ public class Environment {
 
         for(Function function : functionList) {
             if(functions.put(function.getIdentifier(), function) != null) {
-                throw new UndefinedReferenceException();
+                throw new UndefinedReferenceException(function.getIdentifier());
             }
         }
     }
@@ -49,7 +50,7 @@ public class Environment {
         scopes.removeFirst();
     }
 
-    public void addVariable(String identifier, Value value) {
+    public void addVariable(String identifier, Value value) throws RuntimeEnvironmentException {
         Scope currentScope = scopes.getFirst();
 
         currentScope.addVariable(identifier, value);
@@ -69,7 +70,7 @@ public class Environment {
             }
         }
 
-        throw new UndefinedReferenceException();
+        throw new UndefinedReferenceException(identifier);
     }
 
     public void setVariable(String identifier, Value evaluate) throws UndefinedReferenceException {
@@ -88,7 +89,7 @@ public class Environment {
             }
         }
 
-        throw new UndefinedReferenceException();
+        throw new UndefinedReferenceException(identifier);
     }
 
     public Function getFunction(String identifier) {

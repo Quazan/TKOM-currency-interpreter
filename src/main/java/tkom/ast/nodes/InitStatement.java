@@ -36,7 +36,9 @@ public class InitStatement extends Signature implements Statement{
             } else if(environment.containsCurrency(getReturnType())) {
                 environment.addVariable(getIdentifier(), new Currency(new BigDecimal(0), getReturnType(), environment.getExchangeRates()));
             } else {
-                throw new RuntimeEnvironmentException();
+
+                //TODO sprawdzić 2
+                throw new RuntimeEnvironmentException("Czy ja tu jestem potrzebny? 2");
             }
 
             return new IntNode(0);
@@ -55,7 +57,8 @@ public class InitStatement extends Signature implements Statement{
         }  else if(environment.containsCurrency(getReturnType()) && assign.getType() == NodeType.CURRENCY) {
             environment.addVariable(getIdentifier(), new Currency(new BigDecimal(String.valueOf(((Currency) assign).getValue())), getReturnType(), environment.getExchangeRates()));
         }else {
-            throw new RuntimeEnvironmentException();
+            throw new RuntimeEnvironmentException("Cannot assign " + assign.getType()
+                    + " to " + getReturnType().toUpperCase());
         }
 
         return new IntNode(0);

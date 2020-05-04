@@ -51,7 +51,7 @@ public class FunctionCall implements Statement, Expression {
         Function function = environment.getFunction(identifier);
 
         if(function == null) {
-            throw  new UndefinedReferenceException();
+            throw  new UndefinedReferenceException(identifier);
         }
 
         return function.execute(environment, arguments);

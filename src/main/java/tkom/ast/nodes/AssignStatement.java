@@ -35,14 +35,14 @@ public class AssignStatement implements Statement {
 
         Value assign = assignable.evaluate(environment);
 
-        if(assign.getType() == NodeType.CURRENCY && value.getType() == NodeType.CURRENCY) {
+        if (assign.getType() == NodeType.CURRENCY && value.getType() == NodeType.CURRENCY) {
             environment.setVariable(identifier, new Currency(environment.getExchangeRates().toBaseCurrency(((Currency) value).getCurrencyType(), Value.getCurrencyValue(assign)), ((Currency) value).getCurrencyType(), environment.getExchangeRates()));
-        } else if(assign.getType() == value.getType()) {
+        } else if (assign.getType() == value.getType()) {
             environment.setVariable(identifier, assign);
         } else if (value.getType() == NodeType.DOUBLE && assign.getType() == NodeType.INT) {
             environment.setVariable(identifier, new DoubleNode(((IntNode) assign).getValue()));
         } else {
-            throw  new RuntimeEnvironmentException();
+            throw new RuntimeEnvironmentException("Cannot assign " + assign.getType() + " to " + value.getType());
         }
 
         return new IntNode(0);

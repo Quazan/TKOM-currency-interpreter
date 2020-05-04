@@ -87,7 +87,8 @@ public class ExpressionNode implements Expression {
             return new Currency(new BigDecimal(String.valueOf(Value.getCurrencyValue(leftOperand)
                     .divide(BigDecimal.valueOf(Value.getDoubleValue(rightOperand)),5 , RoundingMode.HALF_EVEN))), "EUR", environment.getExchangeRates());
         }
-        throw new RuntimeEnvironmentException();
+        throw new RuntimeEnvironmentException("Cannot divide " + leftOperand.getType()
+                + " to " + rightOperand.getType());
     }
 
     private Value multiply(Value leftOperand, Value rightOperand, Environment environment) throws RuntimeEnvironmentException {
@@ -106,7 +107,8 @@ public class ExpressionNode implements Expression {
             return new Currency(new BigDecimal(String.valueOf(Value.getCurrencyValue(leftOperand)
                     .multiply(BigDecimal.valueOf(Value.getDoubleValue(rightOperand))))), "EUR", environment.getExchangeRates());
         }
-        throw new RuntimeEnvironmentException();
+        throw new RuntimeEnvironmentException("Cannot multiply " + leftOperand.getType()
+                + " to " + rightOperand.getType());
     }
 
     private Value subtract(Value leftOperand, Value rightOperand, Environment environment) throws RuntimeEnvironmentException {
@@ -123,7 +125,8 @@ public class ExpressionNode implements Expression {
                     Value.getCurrencyValue(leftOperand).subtract(Value.getCurrencyValue(rightOperand)))
             ), "EUR", environment.getExchangeRates());
         }
-        throw new RuntimeEnvironmentException();
+        throw new RuntimeEnvironmentException("Cannot subtract " + leftOperand.getType()
+                + " to " + rightOperand.getType());
     }
 
     public Value add(Value leftOperand, Value rightOperand, Environment environment) throws RuntimeEnvironmentException {
@@ -141,6 +144,7 @@ public class ExpressionNode implements Expression {
             ), "EUR", environment.getExchangeRates());
         }
 
-        throw new RuntimeEnvironmentException();
+        throw new RuntimeEnvironmentException("Cannot add " + leftOperand.getType()
+                + " to " + rightOperand.getType());
     }
 }

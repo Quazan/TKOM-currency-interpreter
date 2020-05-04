@@ -3,6 +3,7 @@ package tkom.execution;
 import lombok.Getter;
 import lombok.Setter;
 import tkom.ast.Value;
+import tkom.error.RuntimeEnvironmentException;
 import tkom.error.UndefinedReferenceException;
 
 import java.util.HashMap;
@@ -20,8 +21,10 @@ public class Scope {
     }
 
 
-    public void addVariable(String identifier, Value value) {
-        variables.put(identifier, value);
+    public void addVariable(String identifier, Value value) throws RuntimeEnvironmentException {
+        if(variables.put(identifier, value) != null) {
+            throw new RuntimeEnvironmentException("Variable " + identifier + " is already defined.");
+        }
     }
 
     public Value getVariable(String identifier) {
@@ -34,7 +37,7 @@ public class Scope {
 
     public void setVariable(String identifier, Value value) throws UndefinedReferenceException {
         if(variables.replace(identifier, value) == null ) {
-            throw new UndefinedReferenceException();
+            throw new UndefinedReferenceException(identifier);
         }
     }
 }

@@ -38,7 +38,7 @@ public class Function extends Signature implements Node {
 
     public Value execute(Environment environment, List<ExpressionNode> arguments) throws UndefinedReferenceException, RuntimeEnvironmentException {
         if(arguments.size() != parameters.size()) {
-            throw new UndefinedReferenceException();
+            throw new RuntimeEnvironmentException("Invalid arguments");
         }
 
         List<Value> argumentsValue = new ArrayList<>();
@@ -48,13 +48,16 @@ public class Function extends Signature implements Node {
 
         environment.createNewScope();
         for(int i = 0; i < parameters.size(); i++){
-            if(parameters.get(i).getReturnType().toUpperCase().equals(NodeType.DOUBLE.toString()) && argumentsValue.get(i).getType() == NodeType.INT) {
+            if(parameters.get(i).getReturnType().toUpperCase().equals(NodeType.DOUBLE.toString())
+                    && argumentsValue.get(i).getType() == NodeType.INT) {
                 argumentsValue.add(i, new DoubleNode(((IntNode) argumentsValue.get(i)).getValue()));
             }
 
             if(! (parameters.get(i).getReturnType().toUpperCase().equals(argumentsValue.get(i).getType().toString()) ||
-                    (environment.containsCurrency(parameters.get(i).getReturnType()) && argumentsValue.get(i).getType() == NodeType.CURRENCY))) {
-                throw new RuntimeEnvironmentException();
+                    (environment.containsCurrency(parameters.get(i).getReturnType())
+                            && argumentsValue.get(i).getType() == NodeType.CURRENCY))) {
+                throw new RuntimeEnvironmentException("Unexpected argument type. Expected: " + parameters.get(i).getReturnType()
+                        + " actual: " + argumentsValue.get(i).getType());
             }
             environment.addVariable(
                     parameters.get(i).getIdentifier(),
@@ -73,7 +76,8 @@ public class Function extends Signature implements Node {
            ret = new Currency(environment.getExchangeRates().toBaseCurrency(getReturnType(), ((Currency) ret).getValue()),
                    getReturnType(), environment.getExchangeRates());
         } else if(!ret.getType().toString().equals(getReturnType().toUpperCase())) {
-            throw new RuntimeEnvironmentException();
+            throw new RuntimeEnvironmentException("Unexpected return type. Expected: " + getReturnType()
+                    + " actual: " + ret.getType());
         }
 
         return ret;
