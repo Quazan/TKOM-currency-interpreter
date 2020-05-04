@@ -17,13 +17,15 @@ public class Environment {
     private Deque<Scope> scopes;
     private Rates exchangeRates;
 
-    public Environment(List<Function> functionList, Rates exchangeRates) {
+    public Environment(List<Function> functionList, Rates exchangeRates) throws UndefinedReferenceException {
         this.functions = new HashMap<>();
         this.scopes = new ArrayDeque<>();
         this.exchangeRates = exchangeRates;
 
         for(Function function : functionList) {
-            functions.put(function.getIdentifier(), function);
+            if(functions.put(function.getIdentifier(), function) != null) {
+                throw new UndefinedReferenceException();
+            }
         }
     }
 

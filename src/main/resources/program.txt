@@ -48,5 +48,5 @@ EUR max(EUR a, EUR b){
     else{
         return b;
     }
-
 }
+
