@@ -5,8 +5,10 @@ int main(){
     zlotowki = zlotowki * 2;
     print(zlotowki, " to ", "nie ", "dolary");
 
-    EUR a = 6;
-    EUR b = a;
+    EUR a = 6.;
+    PLN b = a;
+
+    print(b," ", a);
 
     zlotowki = (zlotowki / 1.5);
     print(max(a,b));

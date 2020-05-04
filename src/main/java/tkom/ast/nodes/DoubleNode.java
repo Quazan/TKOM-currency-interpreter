@@ -11,10 +11,9 @@ import tkom.execution.Environment;
 import tkom.utils.NodeType;
 
 @Getter
-@Setter
 public class DoubleNode implements Expression, Value {
 
-    private double value;
+    private final double value;
 
     public DoubleNode(double value) {
         this.value = value;

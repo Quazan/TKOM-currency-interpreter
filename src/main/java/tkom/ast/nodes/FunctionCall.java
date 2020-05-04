@@ -22,10 +22,6 @@ public class FunctionCall implements Statement, Expression {
     private String identifier;
     List<ExpressionNode> arguments;
 
-    public FunctionCall() {
-        this.arguments = new ArrayList<>();
-    }
-
     public FunctionCall(String identifier) {
         this.identifier = identifier;
         this.arguments = new ArrayList<>();

@@ -12,14 +12,14 @@ import tkom.utils.NodeType;
 import java.math.BigDecimal;
 
 @Getter
-@Setter
 public class Currency implements Expression, Value {
 
-    private BigDecimal value;
+    private final BigDecimal value;
 
-    private String currencyType;
+    private final String currencyType;
 
-    private Rates exchangeRates;
+    //TODO może zamiast całej klasy trzymać tylko przelicznik
+    private final Rates exchangeRates;
 
     public Currency(BigDecimal value, String currencyType, Rates exchangeRates) {
         this.currencyType = currencyType;

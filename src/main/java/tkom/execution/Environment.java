@@ -10,22 +10,24 @@ import tkom.error.UndefinedReferenceException;
 
 import java.util.*;
 
-@Getter
-@Setter
+
 public class Environment {
 
-    private Map<String, Function> functions;
-    private Deque<Scope> scopes;
-    private Rates exchangeRates;
+    private final Map<String, Function> functions;
+    private final Deque<Scope> scopes;
 
-    public Environment(List<Function> functionList, Rates exchangeRates) throws UndefinedReferenceException {
+    @Getter
+    private final Rates exchangeRates;
+
+    public Environment(List<Function> functionList, Rates exchangeRates) throws RuntimeEnvironmentException {
         this.functions = new HashMap<>();
         this.scopes = new ArrayDeque<>();
         this.exchangeRates = exchangeRates;
 
         for(Function function : functionList) {
             if(functions.put(function.getIdentifier(), function) != null) {
-                throw new UndefinedReferenceException(function.getIdentifier());
+                throw new RuntimeEnvironmentException("Multiple functions with the same name: "
+                        + function.getIdentifier());
             }
         }
     }

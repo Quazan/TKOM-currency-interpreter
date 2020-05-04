@@ -7,12 +7,11 @@ import lombok.ToString;
 
 
 @Getter
-@Setter
 @ToString
 public class Signature {
-    private String returnType;
+    private final String returnType;
 
-    private String identifier;
+    private final String identifier;
 
     public Signature(String returnType, String identifier) {
         this.returnType = returnType;

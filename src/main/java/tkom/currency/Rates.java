@@ -8,9 +8,9 @@ import java.util.Map;
 public class Rates {
 
     private List<String> currencies;
-    private Map<String, Double> exchange;
+    private Map<String, BigDecimal> exchange;
 
-    public Rates(List<String> currencies, Map<String, Double> exchange) {
+    public Rates(List<String> currencies, Map<String, BigDecimal> exchange) {
         this.currencies = currencies;
         this.exchange = exchange;
     }
@@ -23,11 +23,11 @@ public class Rates {
         this.currencies = currencies;
     }
 
-    public Map<String, Double> getExchange() {
+    public Map<String, BigDecimal> getExchange() {
         return exchange;
     }
 
-    public void setExchange(Map<String, Double> exchange) {
+    public void setExchange(Map<String, BigDecimal> exchange) {
         this.exchange = exchange;
     }
 
@@ -39,13 +39,13 @@ public class Rates {
         if(type.equals("EUR")) {
             return value;
         }
-        return value.divide(BigDecimal.valueOf(exchange.get(type)), 5, RoundingMode.HALF_EVEN);
+        return value.divide(exchange.get(type), 5, RoundingMode.HALF_EVEN);
     }
 
     public BigDecimal toBaseCurrency(String type, BigDecimal value) {
         if(type.equals("EUR")) {
             return value;
         }
-        return value.multiply(BigDecimal.valueOf(exchange.get(type)));
+        return value.multiply(exchange.get(type));
     }
 }

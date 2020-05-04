@@ -11,13 +11,12 @@ import tkom.utils.NodeType;
 import tkom.ast.Statement;
 
 @Getter
-@Setter
 @ToString
 public class AssignStatement implements Statement {
 
-    private String identifier;
+    private final String identifier;
 
-    private ExpressionNode assignable;
+    private final ExpressionNode assignable;
 
     public AssignStatement(String identifier, ExpressionNode assignable) {
         this.identifier = identifier;

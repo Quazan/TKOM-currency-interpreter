@@ -8,10 +8,9 @@ import tkom.utils.NodeType;
 
 import java.math.BigDecimal;
 
-@Getter
-@Setter
 public class BoolNode implements Value {
 
+    @Getter
     private boolean value;
 
     public BoolNode(boolean value) {
