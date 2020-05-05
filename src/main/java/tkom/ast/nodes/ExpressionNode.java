@@ -71,6 +71,10 @@ public class ExpressionNode implements Expression {
     }
 
     private Value divide(Value leftOperand, Value rightOperand, Environment environment) throws RuntimeEnvironmentException {
+        if((rightOperand.getType() == NodeType.INT && ((IntNode) rightOperand).getValue() == 0) ||
+                (rightOperand.getType() == NodeType.DOUBLE && ((DoubleNode) rightOperand).getValue() == 0.)) {
+            throw  new RuntimeEnvironmentException("Dividing by 0 is not allowed.");
+        }
         if(leftOperand.getType() == NodeType.INT && rightOperand.getType() == NodeType.INT) {
             return new IntNode(Value.getIntValue(leftOperand) / Value.getIntValue(rightOperand));
         } else if (leftOperand.getType() == NodeType.INT && rightOperand.getType() == NodeType.DOUBLE) {
