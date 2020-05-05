@@ -369,7 +369,7 @@ public class Parser {
 
         condition.addOperand(parsePrimaryCondition());
 
-        while (getOptionalToken(TokenAttributes.relationOperators)) {
+        if (getOptionalToken(TokenAttributes.relationOperators)) {
             condition.setOperator(currentToken().getType());
             condition.addOperand(parsePrimaryCondition());
         }
