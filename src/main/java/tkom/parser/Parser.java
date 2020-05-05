@@ -12,6 +12,7 @@ import tkom.utils.TokenAttributes;
 import tkom.utils.TokenType;
 
 import java.io.IOException;
+import java.lang.reflect.Parameter;
 import java.util.List;
 
 public class Parser {
@@ -115,8 +116,18 @@ public class Parser {
 
     void parseParameterList(Function function) throws IOException, InvalidTokenException, UnexpectedTokenException {
         do {
-            function.addParameter(parseParameter());
+            Signature param = parseParameter();
+            checkParameter(function.getParameters(), param);
+            function.addParameter(param);
         } while (getOptionalToken(TokenType.COMMA) && getNextToken(TokenAttributes.valueTypes) != null);
+    }
+
+    private void checkParameter(List<Signature> parameters, Signature param) throws UnexpectedTokenException {
+        for(Signature signature : parameters) {
+            if(signature.getIdentifier().equals(param.getIdentifier())) {
+                throw new UnexpectedTokenException("Parameter " + param.getIdentifier() + " is already defined in scope.");
+            }
+        }
     }
 
     Signature parseParameter() throws UnexpectedTokenException, InvalidTokenException, IOException {

@@ -69,15 +69,22 @@ public class Function extends Signature implements Node {
         Value ret = statementBlock.execute(environment);
         environment.destroyScope();
 
-        if(ret.getType() == NodeType.RETURN_CALL) {
-            ret = ((ReturnCall) ret).getReturnedValue();
+        //TODO jeżeli nie jest Return_callem wyrzuć błąd że funkcja nie ma returna
+
+        if(ret.getType() != NodeType.RETURN_CALL) {
+            throw new RuntimeEnvironmentException("Function without return statement");
         }
+
+        ret = ((ReturnCall) ret).getReturnedValue();
+
 
         if(ret.getType() == NodeType.CURRENCY && environment.containsCurrency(getReturnType())) {
            ret = new Currency(environment.getExchangeRates().toCurrency(getReturnType(), ((Currency) ret).getValue()),
                    getReturnType(), environment.getExchangeRates());
+        } else if (ret.getType() == NodeType.INT && getReturnType().toUpperCase().equals(NodeType.DOUBLE.toString())) {
+            ret = new DoubleNode(((IntNode) ret).getValue());
         } else if(!ret.getType().toString().equals(getReturnType().toUpperCase())) {
-            throw new RuntimeEnvironmentException("Unexpected return type. Expected: " + getReturnType()
+            throw new RuntimeEnvironmentException("Unexpected return type. Expected: " + getReturnType().toUpperCase()
                     + " actual: " + ret.getType());
         }
 

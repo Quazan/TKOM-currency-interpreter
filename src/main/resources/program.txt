@@ -5,6 +5,8 @@ int main(){
     zlotowki = zlotowki * 2;
     print(zlotowki, " to ", "nie ", "dolary");
 
+    test(1);
+
     EUR a = 6.;
     PLN b = a;
 
@@ -39,6 +41,8 @@ int main(){
         j = j - 1;
     }
 
+
+
     return 0;
 }
 
@@ -49,5 +53,10 @@ EUR max(EUR a, EUR b){
     else{
         return b;
     }
+}
+
+int test(int a) {
+    int b = 2;
+    return a;
 }
 

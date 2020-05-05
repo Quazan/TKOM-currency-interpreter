@@ -58,6 +58,13 @@ public class Environment {
         currentScope.addVariable(identifier, value);
     }
 
+    public void addFunction(Function function) throws RuntimeEnvironmentException {
+        if(functions.put(function.getIdentifier(), function) != null) {
+            throw new RuntimeEnvironmentException("Multiple functions with the same name: "
+                    + function.getIdentifier());
+        }
+    }
+
     public Value getVariable(String identifier) throws UndefinedReferenceException {
         Scope scope = scopes.getFirst();
 

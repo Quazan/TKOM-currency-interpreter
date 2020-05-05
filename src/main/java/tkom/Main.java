@@ -36,6 +36,5 @@ public class Main {
         } catch (IOException | InvalidTokenException | UnexpectedTokenException | UndefinedReferenceException | RuntimeEnvironmentException e) {
             e.printStackTrace();
         }
-
     }
 }
