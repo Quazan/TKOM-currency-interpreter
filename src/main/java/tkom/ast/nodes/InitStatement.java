@@ -1,6 +1,7 @@
 package tkom.ast.nodes;
 
 import lombok.*;
+import tkom.ast.Expression;
 import tkom.ast.Value;
 import tkom.error.RuntimeEnvironmentException;
 import tkom.error.UndefinedReferenceException;
@@ -15,7 +16,7 @@ import java.math.BigDecimal;
 @ToString
 public class InitStatement extends Signature implements Statement{
 
-    private ExpressionNode assignable;
+    private Expression assignable;
 
     public InitStatement(String returnType, String identifier) {
         super(returnType, identifier);

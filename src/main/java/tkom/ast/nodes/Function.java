@@ -3,6 +3,7 @@ package tkom.ast.nodes;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import tkom.ast.Expression;
 import tkom.ast.Node;
 import tkom.ast.Value;
 import tkom.error.RuntimeEnvironmentException;
@@ -36,13 +37,13 @@ public class Function extends Signature implements Node {
         return NodeType.FUNCTION;
     }
 
-    public Value execute(Environment environment, List<ExpressionNode> arguments) throws UndefinedReferenceException, RuntimeEnvironmentException {
+    public Value execute(Environment environment, List<Expression> arguments) throws UndefinedReferenceException, RuntimeEnvironmentException {
         if(arguments.size() != parameters.size()) {
             throw new RuntimeEnvironmentException("Invalid arguments");
         }
 
         List<Value> argumentsValue = new ArrayList<>();
-        for(ExpressionNode arg : arguments) {
+        for(Expression arg : arguments) {
             argumentsValue.add(arg.evaluate(environment));
         }
 

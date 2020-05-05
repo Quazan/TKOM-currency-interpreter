@@ -212,7 +212,7 @@ public class ParserTest {
         String input = "a * b / 2";
         initializeParser(input);
 
-        ExpressionNode actual = parser.parseMultiplicativeExpression();
+        ExpressionNode actual = (ExpressionNode) parser.parseMultiplicativeExpression();
 
         assertEquals(expectedOperators.get(0), actual.getOperations().get(0));
         assertEquals(expectedOperators.get(1), actual.getOperations().get(1));
@@ -227,7 +227,7 @@ public class ParserTest {
         String input = "a + b - 2";
         initializeParser(input);
 
-        ExpressionNode actual = parser.parseExpression();
+        ExpressionNode actual = (ExpressionNode) parser.parseExpression();
 
         assertEquals(expectedOperators.get(0), actual.getOperations().get(0));
         assertEquals(expectedOperators.get(1), actual.getOperations().get(1));
@@ -365,8 +365,8 @@ public class ParserTest {
 
         assertEquals(expectedStatement.getType(), actual.getType());
         assertEquals(expectedStatement.getExpressionNode().getType(), actual.getExpressionNode().getType());
-        assertEquals(expectedStatement.getExpressionNode().getOperations().get(0),
-                actual.getExpressionNode().getOperations().get(0));
+        assertEquals(((ExpressionNode) expectedStatement.getExpressionNode()).getOperations().get(0),
+                ((ExpressionNode) actual.getExpressionNode()).getOperations().get(0));
     }
 
     @Test
@@ -439,8 +439,8 @@ public class ParserTest {
         assertEquals(expectedStatement.getType(), actual.getType());
         assertEquals(expectedStatement.getReturnType(), actual.getReturnType());
         assertEquals(expectedStatement.getIdentifier(), actual.getIdentifier());
-        assertEquals(expectedStatement.getAssignable().getOperations().get(0),
-                actual.getAssignable().getOperations().get(0));
+        assertEquals(((ExpressionNode) expectedStatement.getAssignable()).getOperations().get(0),
+                ((ExpressionNode)actual.getAssignable()).getOperations().get(0));
     }
 
     @Test
@@ -456,8 +456,8 @@ public class ParserTest {
 
         assertEquals(expectedStatement.getType(), actual.getType());
         assertEquals(expectedStatement.getIdentifier(), actual.getIdentifier());
-        assertEquals(expectedStatement.getAssignable().getOperations().get(0),
-                actual.getAssignable().getOperations().get(0));
+        assertEquals(((ExpressionNode) expectedStatement.getAssignable()).getOperations().get(0),
+                ((ExpressionNode) actual.getAssignable()).getOperations().get(0));
     }
 
     @Test(expected = UnexpectedTokenException.class)
@@ -484,8 +484,8 @@ public class ParserTest {
 
         assertEquals(expectedStatement.getType(), actual.getType());
         assertEquals(expectedStatement.getIdentifier(), actual.getIdentifier());
-        assertEquals(expectedStatement.getArguments().get(0).getOperations().get(0),
-                actual.getArguments().get(0).getOperations().get(0));
+        assertEquals(((ExpressionNode) expectedStatement.getArguments().get(0)).getOperations().get(0),
+                ((ExpressionNode) actual.getArguments().get(0)).getOperations().get(0));
         assertEquals(expectedStatement.getArguments().size(), actual.getArguments().size());
     }
 

@@ -20,15 +20,15 @@ import java.util.List;
 public class FunctionCall implements Statement, Expression {
 
     private String identifier;
-    List<ExpressionNode> arguments;
+    List<Expression> arguments;
 
     public FunctionCall(String identifier) {
         this.identifier = identifier;
         this.arguments = new ArrayList<>();
     }
 
-    public void addArgument(ExpressionNode expressionNode) {
-        arguments.add(expressionNode);
+    public void addArgument(Expression expression) {
+        arguments.add(expression);
     }
 
     @Override

@@ -3,6 +3,7 @@ package tkom.ast.nodes;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import tkom.ast.Expression;
 import tkom.ast.Value;
 import tkom.error.RuntimeEnvironmentException;
 import tkom.error.UndefinedReferenceException;
@@ -15,10 +16,10 @@ import tkom.ast.Statement;
 @ToString
 public class ReturnStatement implements Statement{
 
-    private ExpressionNode expressionNode;
+    private Expression expressionNode;
 
-    public ReturnStatement(ExpressionNode expressionNode) {
-        this.expressionNode = expressionNode;
+    public ReturnStatement(Expression expression) {
+        this.expressionNode = expression;
     }
 
     @Override

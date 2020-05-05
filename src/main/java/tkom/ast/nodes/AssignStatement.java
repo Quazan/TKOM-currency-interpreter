@@ -2,6 +2,7 @@ package tkom.ast.nodes;
 
 import lombok.Getter;
 import lombok.ToString;
+import tkom.ast.Expression;
 import tkom.ast.Value;
 import tkom.error.RuntimeEnvironmentException;
 import tkom.error.UndefinedReferenceException;
@@ -15,9 +16,9 @@ public class AssignStatement implements Statement {
 
     private final String identifier;
 
-    private final ExpressionNode assignable;
+    private final Expression assignable;
 
-    public AssignStatement(String identifier, ExpressionNode assignable) {
+    public AssignStatement(String identifier, Expression assignable) {
         this.identifier = identifier;
         this.assignable = assignable;
     }

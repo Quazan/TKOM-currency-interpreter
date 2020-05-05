@@ -47,7 +47,6 @@ public class ExpressionNode implements Expression {
         int currentIndex = 0;
         Value leftOperand = operands.get(currentIndex).evaluate(environment);
 
-        //TODO overload operators
         for(TokenType operation : operations) {
             currentIndex++;
             Value rightOperand = operands.get(currentIndex).evaluate(environment);

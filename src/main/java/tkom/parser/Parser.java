@@ -386,7 +386,7 @@ public class Parser {
         return condition;
     }
 
-    ExpressionNode parseExpression() throws IOException, InvalidTokenException, UnexpectedTokenException {
+    Expression parseExpression() throws IOException, InvalidTokenException, UnexpectedTokenException {
         ExpressionNode expressionNode = new ExpressionNode();
 
         expressionNode.addOperand(parseMultiplicativeExpression());
@@ -399,7 +399,7 @@ public class Parser {
         return expressionNode;
     }
 
-    ExpressionNode parseMultiplicativeExpression() throws IOException, InvalidTokenException, UnexpectedTokenException {
+    Expression parseMultiplicativeExpression() throws IOException, InvalidTokenException, UnexpectedTokenException {
         ExpressionNode expressionNode = new ExpressionNode();
 
         expressionNode.addOperand(parsePrimaryExpression());
@@ -420,9 +420,9 @@ public class Parser {
                 return parseLiteral();
             }
             case ROUND_OPEN: {
-                ExpressionNode expressionNode = parseExpression();
+                Expression expression = parseExpression();
                 getNextToken(TokenType.ROUND_CLOSE);
-                return expressionNode;
+                return expression;
             }
 
             case IDENTIFIER: {
