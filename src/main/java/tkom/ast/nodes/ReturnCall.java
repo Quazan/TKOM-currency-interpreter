@@ -7,11 +7,10 @@ import tkom.ast.Value;
 import tkom.utils.NodeType;
 
 @Getter
-@Setter
 @ToString
 public class ReturnCall implements Value {
 
-    private Value returnedValue;
+    private final Value returnedValue;
 
     public ReturnCall(Value returnedValue) {
         this.returnedValue = returnedValue;
