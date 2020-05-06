@@ -36,10 +36,6 @@ public class InitStatement extends Signature implements Statement{
                 environment.addVariable(getIdentifier(), new DoubleNode(0));
             } else if(environment.containsCurrency(getReturnType())) {
                 environment.addVariable(getIdentifier(), new Currency(new BigDecimal(0), getReturnType(), environment.getExchangeRates()));
-            } else {
-
-                //TODO sprawdzić 2
-                throw new RuntimeEnvironmentException("Czy ja tu jestem potrzebny? 2");
             }
 
             return new IntNode(0);

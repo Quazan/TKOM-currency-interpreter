@@ -44,7 +44,7 @@ public class Condition implements Expression {
 
     @Override
     public Value evaluate(Environment environment) throws UndefinedReferenceException, RuntimeEnvironmentException {
-        Value leftOperand = operands.get(0).evaluate(environment);;
+        Value leftOperand = operands.get(0).evaluate(environment);
 
         for(int i = 1; i < operands.size(); i++) {
             Value rightOperand = operands.get(i).evaluate(environment);
@@ -74,9 +74,6 @@ public class Condition implements Expression {
                 case OR:
                     leftOperand = or(leftOperand, rightOperand);
                     break;
-                default:
-                    //TODO sprawdzić
-                    throw new RuntimeEnvironmentException("Czy ja tu jestem potrzebny?");
             }
         }
 

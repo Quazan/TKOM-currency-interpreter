@@ -69,8 +69,6 @@ public class Function extends Signature implements Node {
         Value ret = statementBlock.execute(environment);
         environment.destroyScope();
 
-        //TODO jeżeli nie jest Return_callem wyrzuć błąd że funkcja nie ma returna
-
         if(ret.getType() != NodeType.RETURN_CALL) {
             throw new RuntimeEnvironmentException("Function without return statement");
         }
