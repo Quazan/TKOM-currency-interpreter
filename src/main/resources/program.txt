@@ -1,7 +1,5 @@
 int main(){
 
-    if(5 < 5 < 5) print("tak");
-
     if(5 < 4) print("tak");
     else print("nie");
     PLN zlotowki = 15.0;

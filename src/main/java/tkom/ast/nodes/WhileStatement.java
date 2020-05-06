@@ -28,17 +28,18 @@ public class WhileStatement implements Statement{
 
     @Override
     public Value execute(Environment environment) throws UndefinedReferenceException, RuntimeEnvironmentException {
-        environment.createNewLocalScope();
         Value ret = new IntNode(0);
 
         while(((BoolNode) condition.evaluate(environment)).isValue()) {
+            environment.createNewLocalScope();
             ret = whileBlock.execute(environment);
             if(ret.getType() == NodeType.RETURN_CALL) {
+                environment.destroyScope();
                 return ret;
             }
+            environment.destroyScope();
         }
 
-        environment.destroyScope();
         return ret;
     }
 

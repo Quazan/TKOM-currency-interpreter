@@ -1,9 +1,12 @@
 package tkom.ast.nodes;
 
 import org.junit.Before;
+import org.junit.Test;
 import tkom.currency.Rates;
 import tkom.error.InvalidTokenException;
 import tkom.error.RuntimeEnvironmentException;
+import tkom.error.UndefinedReferenceException;
+import tkom.error.UnexpectedTokenException;
 import tkom.execution.Environment;
 import tkom.lexer.Lexer;
 import tkom.parser.Parser;
@@ -56,6 +59,48 @@ public class IfStatementTest {
         prepareFunctions();
         environment = new Environment(functions, rates);
         environment.createNewScope();
+    }
+
+    @Test
+    public void trueCondition() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+        ReturnCall expectedValue = new ReturnCall(new IntNode(42));
+        initializeParser("if(2 < 4) return 42;" +
+                "else return -1;");
+        IfStatement ifStatement = (IfStatement) parser.parseStatement();
+
+        ReturnCall actual = (ReturnCall) ifStatement.execute(environment);
+
+        assertEquals(expectedValue.getType(), actual.getType());
+        assertEquals(expectedValue.getReturnedValue().getType(), actual.getReturnedValue().getType());
+        assertEquals(((IntNode) expectedValue.getReturnedValue()).getValue(),
+                ((IntNode) actual.getReturnedValue()).getValue());
+    }
+
+    @Test
+    public void falseCondition() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+        ReturnCall expectedValue = new ReturnCall(new IntNode(42));
+        initializeParser("if(2 > 4) return -1;" +
+                "else return 42;");
+        IfStatement ifStatement = (IfStatement) parser.parseStatement();
+
+        ReturnCall actual = (ReturnCall) ifStatement.execute(environment);
+
+        assertEquals(expectedValue.getType(), actual.getType());
+        assertEquals(expectedValue.getReturnedValue().getType(), actual.getReturnedValue().getType());
+        assertEquals(((IntNode) expectedValue.getReturnedValue()).getValue(),
+                ((IntNode) actual.getReturnedValue()).getValue());
+    }
+
+    @Test
+    public void ifStatementWithOnlyTrueBlock() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+        IntNode expectedValue = new IntNode(0);
+        initializeParser("if(2 > 4) return -1;");
+        IfStatement ifStatement = (IfStatement) parser.parseStatement();
+
+        IntNode actual = (IntNode) ifStatement.execute(environment);
+
+        assertEquals(expectedValue.getType(), actual.getType());
+        assertEquals(expectedValue.getValue(), actual.getValue());
     }
 
 }
