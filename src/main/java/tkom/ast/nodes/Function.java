@@ -22,20 +22,6 @@ public class Function extends Signature implements Node {
 
     private StatementBlock statementBlock;
 
-    public Function(String returnType, String identifier) {
-        super(returnType, identifier);
-        this.parameters = new ArrayList<>();
-    }
-
-    public void addParameter(Signature parameter) {
-        parameters.add(parameter);
-    }
-
-    @Override
-    public NodeType getType() {
-        return NodeType.FUNCTION;
-    }
-
     private void checkNumberOfParameters(List<Expression> arguments) throws RuntimeEnvironmentException {
         if (arguments.size() != parameters.size()) {
             throw new RuntimeEnvironmentException("Invalid arguments");
@@ -51,6 +37,20 @@ public class Function extends Signature implements Node {
         return argumentsValue;
     }
 
+    private Value validateArgument(Environment environment, Signature parameter, Value argument) throws RuntimeEnvironmentException {
+        if (isReturnType(parameter, NodeType.DOUBLE) && Value.isInt(argument)) {
+            return new DoubleNode(((IntNode) argument).getValue());
+        }
+
+        if (!((isReturnType(parameter, argument.getType())) ||
+                (environment.containsCurrency(parameter.getReturnType()) && Value.isCurrency(argument)))) {
+            throw new RuntimeEnvironmentException("Unexpected argument type. Expected: "
+                    + parameter.getReturnType().toUpperCase() + " actual: " + argument.getType());
+        }
+
+        return argument;
+    }
+
     private void prepareEnvironment(Environment environment, List<Expression> arguments) throws RuntimeEnvironmentException {
         checkNumberOfParameters(arguments);
 
@@ -59,21 +59,9 @@ public class Function extends Signature implements Node {
         environment.createNewScope();
         for (int i = 0; i < parameters.size(); i++) {
             Signature parameter = parameters.get(i);
-            Value argument = argumentsValue.get(i);
-            if (isReturnType(parameter, NodeType.DOUBLE) && Value.isInt(argument)) {
-                argument = new DoubleNode(((IntNode) argument).getValue());
-            }
+            Value argument = validateArgument(environment, parameter, argumentsValue.get(i));
 
-            if (!((isReturnType(parameter, argument.getType())) ||
-                    (environment.containsCurrency(parameter.getReturnType()) && Value.isCurrency(argument)))) {
-                throw new RuntimeEnvironmentException("Unexpected argument type. Expected: "
-                        + parameter.getReturnType().toUpperCase() + " actual: " + argument.getType());
-            }
-
-            environment.addVariable(
-                    parameter.getIdentifier(),
-                    argument
-            );
+            environment.addVariable(parameter.getIdentifier(), argument);
         }
     }
 
@@ -109,6 +97,20 @@ public class Function extends Signature implements Node {
 
         throw new RuntimeEnvironmentException("Unexpected return type. Expected: " + getReturnType().toUpperCase()
                 + " actual: " + ret.getType());
+    }
+
+    public Function(String returnType, String identifier) {
+        super(returnType, identifier);
+        this.parameters = new ArrayList<>();
+    }
+
+    public void addParameter(Signature parameter) {
+        parameters.add(parameter);
+    }
+
+    @Override
+    public NodeType getType() {
+        return NodeType.FUNCTION;
     }
 
     public Value execute(Environment environment, List<Expression> arguments) throws RuntimeEnvironmentException {
