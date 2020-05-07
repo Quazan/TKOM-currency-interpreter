@@ -2,9 +2,9 @@ package tkom.ast.nodes;
 
 import lombok.Getter;
 import lombok.ToString;
+import tkom.ast.Value;
 import tkom.ast.Expression;
 import tkom.ast.Statement;
-import tkom.ast.Value;
 import tkom.error.RuntimeEnvironmentException;
 import tkom.execution.Environment;
 import tkom.utils.NodeType;
@@ -33,12 +33,14 @@ public class AssignStatement implements Statement {
 
         Value assign = assignable.evaluate(environment);
 
-        if (assign.getType() == NodeType.CURRENCY && value.getType() == NodeType.CURRENCY) {
-            environment.setVariable(identifier, new Currency(environment.getExchangeRates().toCurrency(((Currency) value).getCurrencyType(), Value.getCurrencyValue(assign)), ((Currency) value).getCurrencyType(), environment.getExchangeRates()));
+        if (Value.isCurrency(assign) && Value.isCurrency(value)) {
+            environment.setVariable(identifier,
+                    new Currency(assign, ((Currency) value).getCurrencyType(), environment.getExchangeRates()));
         } else if (assign.getType() == value.getType()) {
             environment.setVariable(identifier, assign);
-        } else if (value.getType() == NodeType.DOUBLE && assign.getType() == NodeType.INT) {
-            environment.setVariable(identifier, new DoubleNode(((IntNode) assign).getValue()));
+        } else if (Value.isDouble(value) && Value.isInt(assign)) {
+            environment.setVariable(identifier,
+                    new DoubleNode(((IntNode) assign).getValue()));
         } else {
             throw new RuntimeEnvironmentException("Cannot assign " + assign.getType() + " to " + value.getType());
         }

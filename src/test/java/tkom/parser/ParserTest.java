@@ -295,7 +295,7 @@ public class ParserTest {
 
     @Test
     public void parseIfStatement() throws IOException, InvalidTokenException, UnexpectedTokenException {
-        IfStatement expectedStatement = new IfStatement();
+        IfStatement expectedStatement = new IfStatement(new Condition());
         String input = "if ( a > b ) {}";
         initializeParser(input);
 
@@ -309,7 +309,7 @@ public class ParserTest {
 
     @Test
     public void parseIfElseStatement() throws IOException, InvalidTokenException, UnexpectedTokenException {
-        IfStatement expectedStatement = new IfStatement();
+        IfStatement expectedStatement = new IfStatement(new Condition());
         String input = "if ( a > b ) {} else {}";
         initializeParser(input);
 
@@ -323,7 +323,7 @@ public class ParserTest {
 
     @Test
     public void parseIfElseIfStatement() throws IOException, InvalidTokenException, UnexpectedTokenException {
-        IfStatement expectedStatement = new IfStatement();
+        IfStatement expectedStatement = new IfStatement(new Condition());
         String input = "if ( a > b ) {} else if (b == a) {} else {}";
         initializeParser(input);
 
@@ -333,12 +333,12 @@ public class ParserTest {
         assertEquals(expectedStatement.getType(), actual.getType());
         assertEquals(0, actual.getTrueBlock().getStatements().size());
         assertEquals(expectedStatement.getType(),
-                ((IfStatement) actual.getFalseBlock().getStatements().get(0)).getType());
+                actual.getFalseBlock().getStatements().get(0).getType());
     }
 
     @Test
     public void parseIfSingleStatement() throws IOException, InvalidTokenException, UnexpectedTokenException {
-        IfStatement expectedStatement = new IfStatement();
+        IfStatement expectedStatement = new IfStatement(new Condition());
         String input = "if ( a > b ) return a; else if (b == a) return b;";
         initializeParser(input);
 
@@ -347,9 +347,9 @@ public class ParserTest {
 
         assertEquals(expectedStatement.getType(), actual.getType());
         assertEquals(NodeType.RETURN_STATEMENT,
-                ((ReturnStatement) actual.getTrueBlock().getStatements().get(0)).getType());
+                actual.getTrueBlock().getStatements().get(0).getType());
         assertEquals(expectedStatement.getType(),
-                ((IfStatement) actual.getFalseBlock().getStatements().get(0)).getType());
+                actual.getFalseBlock().getStatements().get(0).getType());
     }
 
     @Test
@@ -383,8 +383,8 @@ public class ParserTest {
         WhileStatement actual = (WhileStatement) parser.parseStatement();
 
         assertEquals(expectedStatement.getType(), actual.getType());
-        assertEquals(((AssignStatement) expectedStatement.getWhileBlock().getStatements().get(0)).getType(),
-                ((AssignStatement) actual.getWhileBlock().getStatements().get(0)).getType());
+        assertEquals(expectedStatement.getWhileBlock().getStatements().get(0).getType(),
+                actual.getWhileBlock().getStatements().get(0).getType());
         assertEquals(((AssignStatement) expectedStatement.getWhileBlock().getStatements().get(0)).getIdentifier(),
                 ((AssignStatement) actual.getWhileBlock().getStatements().get(0)).getIdentifier());
     }
@@ -403,8 +403,8 @@ public class ParserTest {
         WhileStatement actual = (WhileStatement) parser.parseStatement();
 
         assertEquals(expectedStatement.getType(), actual.getType());
-        assertEquals(((AssignStatement) expectedStatement.getWhileBlock().getStatements().get(0)).getType(),
-                ((AssignStatement) actual.getWhileBlock().getStatements().get(0)).getType());
+        assertEquals(expectedStatement.getWhileBlock().getStatements().get(0).getType(),
+                actual.getWhileBlock().getStatements().get(0).getType());
         assertEquals(((AssignStatement) expectedStatement.getWhileBlock().getStatements().get(0)).getIdentifier(),
                 ((AssignStatement) actual.getWhileBlock().getStatements().get(0)).getIdentifier());
     }
@@ -542,8 +542,8 @@ public class ParserTest {
 
         assertEquals(expectedFunction.getStatementBlock().getStatements().size(),
                 expectedFunction.getStatementBlock().getStatements().size());
-        assertEquals(((ReturnStatement) expectedFunction.getStatementBlock().getStatements().get(0)).getType(),
-                ((ReturnStatement) expectedFunction.getStatementBlock().getStatements().get(0)).getType());
+        assertEquals(expectedFunction.getStatementBlock().getStatements().get(0).getType(),
+                expectedFunction.getStatementBlock().getStatements().get(0).getType());
     }
 
     @Test(expected = UnexpectedTokenException.class)

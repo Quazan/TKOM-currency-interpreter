@@ -1,11 +1,10 @@
 package tkom.ast.nodes;
 
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
+import tkom.ast.Value;
 import tkom.ast.Node;
 import tkom.ast.Statement;
-import tkom.ast.Value;
 import tkom.error.RuntimeEnvironmentException;
 import tkom.execution.Environment;
 import tkom.utils.NodeType;

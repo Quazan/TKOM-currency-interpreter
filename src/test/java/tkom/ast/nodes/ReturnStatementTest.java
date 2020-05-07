@@ -65,7 +65,7 @@ public class ReturnStatementTest {
         ReturnCall expectedCall = new ReturnCall(new IntNode(10));
         initializeParser("return 10;");
         parser.advance();
-        ReturnStatement returnStatement = parser.parseReturnStatement();
+        ReturnStatement returnStatement = (ReturnStatement) parser.parseStatement();
 
         ReturnCall actual = (ReturnCall) returnStatement.execute(environment);
 
@@ -80,7 +80,7 @@ public class ReturnStatementTest {
         ReturnCall expectedCall = new ReturnCall(new DoubleNode(10.5));
         initializeParser("return 10.5;");
         parser.advance();
-        ReturnStatement returnStatement = parser.parseReturnStatement();
+        ReturnStatement returnStatement = (ReturnStatement) parser.parseStatement();
 
         ReturnCall actual = (ReturnCall) returnStatement.execute(environment);
 
@@ -97,7 +97,7 @@ public class ReturnStatementTest {
         environment.addVariable("a", currency);
         initializeParser("return a;");
         parser.advance();
-        ReturnStatement returnStatement = parser.parseReturnStatement();
+        ReturnStatement returnStatement = (ReturnStatement) parser.parseStatement();
 
         ReturnCall actual = (ReturnCall) returnStatement.execute(environment);
 

@@ -1,9 +1,8 @@
 package tkom.ast.nodes;
 
 import lombok.Getter;
-import lombok.Setter;
-import tkom.ast.Expression;
 import tkom.ast.Value;
+import tkom.ast.Expression;
 import tkom.execution.Environment;
 import tkom.utils.NodeType;
 

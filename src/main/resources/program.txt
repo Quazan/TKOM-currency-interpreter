@@ -3,7 +3,7 @@ int main(){
     if(5 < 4) print("tak");
     else print("nie");
     PLN zlotowki = 15.0;
-    zlotowki = zlotowki * 2;
+    zlotowki = 2 * zlotowki;
     print(zlotowki, " to ", "nie ", "dolary");
 
     test(1);

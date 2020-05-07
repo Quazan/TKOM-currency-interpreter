@@ -10,15 +10,20 @@ import tkom.utils.NodeType;
 import tkom.ast.Statement;
 
 @Getter
-@Setter
 @ToString
 public class IfStatement implements Statement {
 
-    private Condition condition;
+    private final Condition condition;
 
+    @Setter
     private StatementBlock trueBlock;
 
+    @Setter
     private StatementBlock falseBlock;
+
+    public IfStatement(Condition condition) {
+        this.condition = condition;
+    }
 
     @Override
     public NodeType getType() {

@@ -2,6 +2,7 @@ package tkom.ast.nodes;
 
 import lombok.Getter;
 import lombok.ToString;
+import tkom.utils.NodeType;
 
 
 @Getter
