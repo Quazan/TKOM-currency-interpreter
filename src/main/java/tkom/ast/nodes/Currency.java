@@ -26,7 +26,7 @@ public class Currency implements Expression, ArithmeticValue {
         this.value = exchangeRates.toEUR(currencyType, value);
     }
 
-    public Currency(Value value, String currencyType, Rates exchangeRates) {
+    public Currency(Value value, String currencyType, Rates exchangeRates) throws RuntimeEnvironmentException {
         this.currencyType = currencyType;
         this.exchangeRates = exchangeRates;
         switch (value.getType()){
@@ -40,7 +40,7 @@ public class Currency implements Expression, ArithmeticValue {
                 this.value = exchangeRates.toEUR(((Currency) value).getCurrencyType(), ((Currency) value).getValue());
                 break;
             default:
-                this.value = BigDecimal.ZERO;
+                throw new RuntimeEnvironmentException("Cannot assign " + value.getType() + " to " + getType());
         }
     }
 

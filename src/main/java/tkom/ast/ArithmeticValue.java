@@ -11,8 +11,11 @@ import java.math.RoundingMode;
 public interface ArithmeticValue extends Value{
 
     ArithmeticValue add(Value rightOperand)throws RuntimeEnvironmentException;
+
     ArithmeticValue subtract(Value rightOperand)throws RuntimeEnvironmentException;
+
     ArithmeticValue multiply(Value rightOperand) throws RuntimeEnvironmentException;
+
     ArithmeticValue divide(Value rightOperand)throws RuntimeEnvironmentException;
 
     static boolean isZero(Value value) throws RuntimeEnvironmentException {

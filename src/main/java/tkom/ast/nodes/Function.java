@@ -38,11 +38,11 @@ public class Function extends Signature implements Node {
     }
 
     private Value validateArgument(Environment environment, Signature parameter, Value argument) throws RuntimeEnvironmentException {
-        if (isReturnType(parameter, NodeType.DOUBLE) && Value.isInt(argument)) {
+        if (parameter.isReturnType(NodeType.DOUBLE) && Value.isInt(argument)) {
             return new DoubleNode(((IntNode) argument).getValue());
         }
 
-        if (!((isReturnType(parameter, argument.getType())) ||
+        if (!((parameter.isReturnType(argument.getType())) ||
                 (environment.containsCurrency(parameter.getReturnType()) && Value.isCurrency(argument)))) {
             throw new RuntimeEnvironmentException("Unexpected argument type. Expected: "
                     + parameter.getReturnType().toUpperCase() + " actual: " + argument.getType());
@@ -65,10 +65,6 @@ public class Function extends Signature implements Node {
         }
     }
 
-    private boolean isReturnType(Signature signature, NodeType type){
-        return signature.getReturnType().toUpperCase().equals(type.toString());
-    }
-
     private void checkIfWasReturned(Value ret) throws RuntimeEnvironmentException {
         if (ret.getType() != NodeType.RETURN_CALL) {
             throw new RuntimeEnvironmentException("Function without return statement");
@@ -89,9 +85,9 @@ public class Function extends Signature implements Node {
         if (Value.isCurrency(ret) && environment.containsCurrency(getReturnType())) {
             return new Currency(Value.getCurrencyValue(ret),
                     getReturnType(), environment.getExchangeRates());
-        } else if (Value.isInt(ret) && isReturnType(this, NodeType.DOUBLE)) {
+        } else if (Value.isInt(ret) && isReturnType(NodeType.DOUBLE)) {
             return new DoubleNode(((IntNode) ret).getValue());
-        } else if (isReturnType(this, ret.getType())) {
+        } else if (isReturnType(ret.getType())) {
             return ret;
         }
 

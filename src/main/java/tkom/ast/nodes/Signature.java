@@ -12,8 +12,13 @@ public class Signature {
 
     private final String identifier;
 
+    protected boolean isReturnType(NodeType type){
+        return getReturnType().toUpperCase().equals(type.toString());
+    }
+
     public Signature(String returnType, String identifier) {
         this.returnType = returnType;
         this.identifier = identifier;
     }
+
 }
