@@ -6,7 +6,6 @@ import tkom.ast.Value;
 import tkom.ast.nodes.DoubleNode;
 import tkom.ast.nodes.IntNode;
 import tkom.error.RuntimeEnvironmentException;
-import tkom.error.UndefinedReferenceException;
 
 import static org.junit.Assert.*;
 
@@ -31,7 +30,7 @@ public class ScopeTest {
         IntNode expectedVariable = new IntNode(0);
         scope.addVariable("a", expectedVariable);
 
-        IntNode actual  = (IntNode) scope.getVariable("a");
+        IntNode actual = (IntNode) scope.getVariable("a");
 
         assertEquals(expectedVariable.getType(), actual.getType());
         assertEquals(expectedVariable.getValue(), actual.getValue());
@@ -39,7 +38,7 @@ public class ScopeTest {
 
     @Test
     public void getNonExistingVariable() {
-        Value actual  = scope.getVariable("a");
+        Value actual = scope.getVariable("a");
 
         assertNull(actual);
     }
@@ -57,7 +56,7 @@ public class ScopeTest {
     }
 
     @Test
-    public void setExistingVariable() throws RuntimeEnvironmentException, UndefinedReferenceException {
+    public void setExistingVariable() throws RuntimeEnvironmentException {
         IntNode expectedVariable = new IntNode(5);
         scope.addVariable("a", new IntNode(0));
 
@@ -68,8 +67,8 @@ public class ScopeTest {
         assertEquals(expectedVariable.getValue(), actual.getValue());
     }
 
-    @Test(expected = UndefinedReferenceException.class)
-    public void setNonExistingVariable() throws UndefinedReferenceException {
+    @Test(expected = RuntimeEnvironmentException.class)
+    public void setNonExistingVariable() throws RuntimeEnvironmentException {
         scope.setVariable("a", new IntNode(0));
     }
 

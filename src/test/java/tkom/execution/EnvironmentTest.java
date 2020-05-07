@@ -6,7 +6,6 @@ import tkom.ast.nodes.Function;
 import tkom.ast.nodes.IntNode;
 import tkom.currency.Rates;
 import tkom.error.RuntimeEnvironmentException;
-import tkom.error.UndefinedReferenceException;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -22,22 +21,22 @@ public class EnvironmentTest {
     private Rates rates;
     private List<Function> functions;
 
-    private void prepareRates(){
+    private void prepareRates() {
         List<String> list = new ArrayList<>() {{
             add("EUR");
             add("PLN");
         }};
 
-        Map<String, BigDecimal> exchange = new HashMap<>(){{
+        Map<String, BigDecimal> exchange = new HashMap<>() {{
             put("PLN", new BigDecimal(4));
         }};
 
         this.rates = new Rates(list, exchange);
     }
 
-    private void prepareFunctions(){
-        this.functions = new ArrayList<>(){{
-           add(new Function("int", "main"));
+    private void prepareFunctions() {
+        this.functions = new ArrayList<>() {{
+            add(new Function("int", "main"));
         }};
     }
 
@@ -78,20 +77,26 @@ public class EnvironmentTest {
 
     @Test(expected = RuntimeEnvironmentException.class)
     public void addMultipleFunctionsWithTheSameName() throws RuntimeEnvironmentException {
-        environment = new Environment(new ArrayList<>(){{
+        environment = new Environment(new ArrayList<>() {{
             add(new Function("int", "test"));
             add(new Function("int", "test"));
         }}, rates);
     }
 
     @Test(expected = RuntimeEnvironmentException.class)
-    public void addExistingVariable() throws RuntimeEnvironmentException, UndefinedReferenceException {
+    public void addExistingVariable() throws RuntimeEnvironmentException {
         environment.addVariable("a", new IntNode(0));
         environment.addVariable("a", new IntNode(0));
     }
 
+    @Test(expected = RuntimeEnvironmentException.class)
+    public void addFunctionWithTheSameName() throws RuntimeEnvironmentException {
+        environment.addFunction(new Function("int", "test"));
+        environment.addFunction(new Function("int", "test"));
+    }
+
     @Test
-    public void getVariable() throws RuntimeEnvironmentException, UndefinedReferenceException {
+    public void getVariable() throws RuntimeEnvironmentException {
         IntNode expectedVariable = new IntNode(0);
         environment.addVariable("a", expectedVariable);
 
@@ -102,7 +107,7 @@ public class EnvironmentTest {
     }
 
     @Test
-    public void getVariableFromParentScope() throws RuntimeEnvironmentException, UndefinedReferenceException {
+    public void getVariableFromParentScope() throws RuntimeEnvironmentException {
         IntNode expectedVariable = new IntNode(0);
         environment.addVariable("a", expectedVariable);
         environment.createNewLocalScope();
@@ -113,21 +118,21 @@ public class EnvironmentTest {
         assertEquals(expectedVariable.getType(), actual.getType());
     }
 
-    @Test(expected = UndefinedReferenceException.class)
-    public void getVariableFromNotAccessibleScope() throws RuntimeEnvironmentException, UndefinedReferenceException {
+    @Test(expected = RuntimeEnvironmentException.class)
+    public void getVariableFromNotAccessibleScope() throws RuntimeEnvironmentException {
         environment.addVariable("a", new IntNode(0));
         environment.createNewScope();
 
         environment.getVariable("a");
     }
 
-    @Test(expected = UndefinedReferenceException.class)
-    public void getNonExistingVariable() throws UndefinedReferenceException {
+    @Test(expected = RuntimeEnvironmentException.class)
+    public void getNonExistingVariable() throws RuntimeEnvironmentException {
         environment.getVariable("a");
     }
 
-    @Test(expected = UndefinedReferenceException.class)
-    public void variableDontExistAfterScopeDestroy() throws RuntimeEnvironmentException, UndefinedReferenceException {
+    @Test(expected = RuntimeEnvironmentException.class)
+    public void variableDontExistAfterScopeDestroy() throws RuntimeEnvironmentException {
         environment.createNewLocalScope();
         environment.addVariable("a", new IntNode(0));
         environment.destroyScope();
@@ -136,7 +141,7 @@ public class EnvironmentTest {
     }
 
     @Test
-    public void setVariableToDifferentValue() throws RuntimeEnvironmentException, UndefinedReferenceException {
+    public void setVariableToDifferentValue() throws RuntimeEnvironmentException {
         environment.addVariable("a", new IntNode(0));
         IntNode expectedVariable = new IntNode(5);
 
@@ -148,7 +153,7 @@ public class EnvironmentTest {
     }
 
     @Test
-    public void setVariableFromParentScopeToDifferentValue() throws RuntimeEnvironmentException, UndefinedReferenceException {
+    public void setVariableFromParentScopeToDifferentValue() throws RuntimeEnvironmentException {
         environment.addVariable("a", new IntNode(0));
         IntNode expectedVariable = new IntNode(5);
         environment.createNewLocalScope();
@@ -160,11 +165,10 @@ public class EnvironmentTest {
         assertEquals(expectedVariable.getType(), actual.getType());
     }
 
-    @Test(expected = UndefinedReferenceException.class)
-    public void setNonExistingVariable() throws UndefinedReferenceException {
+    @Test(expected = RuntimeEnvironmentException.class)
+    public void setNonExistingVariable() throws RuntimeEnvironmentException {
         environment.setVariable("a", new IntNode(0));
     }
-
 
 
 }

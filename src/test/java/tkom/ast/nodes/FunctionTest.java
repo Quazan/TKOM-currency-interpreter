@@ -2,11 +2,9 @@ package tkom.ast.nodes;
 
 import org.junit.Before;
 import org.junit.Test;
-import tkom.ast.Value;
 import tkom.currency.Rates;
 import tkom.error.InvalidTokenException;
 import tkom.error.RuntimeEnvironmentException;
-import tkom.error.UndefinedReferenceException;
 import tkom.error.UnexpectedTokenException;
 import tkom.execution.Environment;
 import tkom.lexer.Lexer;
@@ -29,21 +27,21 @@ public class FunctionTest {
     private Rates rates;
     private List<Function> functions;
 
-    private void prepareRates(){
+    private void prepareRates() {
         List<String> list = new ArrayList<>() {{
             add("EUR");
             add("PLN");
         }};
 
-        Map<String, BigDecimal> exchange = new HashMap<>(){{
+        Map<String, BigDecimal> exchange = new HashMap<>() {{
             put("PLN", new BigDecimal(4));
         }};
 
         this.rates = new Rates(list, exchange);
     }
 
-    private void prepareFunctions(){
-        this.functions = new ArrayList<>(){{
+    private void prepareFunctions() {
+        this.functions = new ArrayList<>() {{
             add(new Function("int", "main"));
         }};
     }
@@ -64,7 +62,7 @@ public class FunctionTest {
     }
 
     @Test(expected = RuntimeEnvironmentException.class)
-    public void intFunctionWithoutReturnStatement() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    public void intFunctionWithoutReturnStatement() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         IntNode expectedValue = new IntNode(0);
         initializeParser("int test() {}");
 
@@ -76,7 +74,7 @@ public class FunctionTest {
     }
 
     @Test
-    public void doubleFunctionWithReturnInt() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    public void doubleFunctionWithReturnInt() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         DoubleNode expectedValue = new DoubleNode(0);
         initializeParser("double test() {return 0;}");
 
@@ -88,20 +86,21 @@ public class FunctionTest {
     }
 
     @Test
-    public void functionWithArguments() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    public void functionWithArguments() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         DoubleNode expectedValue = new DoubleNode(5);
         initializeParser("double test(double d) {return d;}");
 
         Function function = parser.parseFunction();
-        DoubleNode actual = (DoubleNode) function.execute(environment, new ArrayList<>(){{add(expectedValue);}});
+        DoubleNode actual = (DoubleNode) function.execute(environment, new ArrayList<>() {{
+            add(expectedValue);
+        }});
 
         assertEquals(expectedValue.getType(), actual.getType());
         assertEquals(expectedValue.getValue(), actual.getValue(), 0);
     }
 
     @Test(expected = RuntimeEnvironmentException.class)
-    public void functionCallWithWrongArgument() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException, UndefinedReferenceException {
-        DoubleNode expectedValue = new DoubleNode(5);
+    public void functionCallWithWrongArgument() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         initializeParser("int test(int i) {return i;}");
         Function function = parser.parseFunction();
         environment.addFunction(function);
@@ -112,7 +111,7 @@ public class FunctionTest {
     }
 
     @Test
-    public void functionCallWithCurrencyArguments() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    public void functionCallWithCurrencyArguments() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         Currency expectedValue = new Currency(new BigDecimal(5), "EUR", rates);
         environment.addVariable("euro", expectedValue);
         initializeParser("EUR test(EUR e) {return e;}");
@@ -129,7 +128,7 @@ public class FunctionTest {
     }
 
     @Test
-    public void functionCallWithDoubleArgumentsAndIntValue() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    public void functionCallWithDoubleArgumentsAndIntValue() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         DoubleNode expectedValue = new DoubleNode(5);
         initializeParser("double test(double d) {return d;}");
         Function function = parser.parseFunction();
@@ -144,7 +143,7 @@ public class FunctionTest {
     }
 
     @Test(expected = RuntimeEnvironmentException.class)
-    public void functionCallWithIncorrectNumberOfArguments() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    public void functionCallWithIncorrectNumberOfArguments() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         initializeParser("double test(double d, double c) {return d;}");
         Function function = parser.parseFunction();
         environment.addFunction(function);
@@ -154,8 +153,8 @@ public class FunctionTest {
         functionCall.execute(environment);
     }
 
-    @Test(expected = UndefinedReferenceException.class)
-    public void functionCallNonExistingFunction() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    @Test(expected = RuntimeEnvironmentException.class)
+    public void functionCallNonExistingFunction() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         initializeParser("test(5);");
 
         FunctionCall functionCall = (FunctionCall) parser.parseStatement();
@@ -163,7 +162,7 @@ public class FunctionTest {
     }
 
     @Test(expected = RuntimeEnvironmentException.class)
-    public void functionWithMismatchingReturnType() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    public void functionWithMismatchingReturnType() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         initializeParser("int test(double d) {return d;}");
         Function function = parser.parseFunction();
         environment.addFunction(function);

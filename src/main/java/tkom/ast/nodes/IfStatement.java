@@ -5,12 +5,9 @@ import lombok.Setter;
 import lombok.ToString;
 import tkom.ast.Value;
 import tkom.error.RuntimeEnvironmentException;
-import tkom.error.UndefinedReferenceException;
 import tkom.execution.Environment;
 import tkom.utils.NodeType;
 import tkom.ast.Statement;
-
-import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -29,12 +26,12 @@ public class IfStatement implements Statement {
     }
 
     @Override
-    public Value execute(Environment environment) throws UndefinedReferenceException, RuntimeEnvironmentException {
+    public Value execute(Environment environment) throws RuntimeEnvironmentException {
         environment.createNewLocalScope();
 
         Value ret = new IntNode(0);
 
-        if(Value.getBoolValue(condition.evaluate(environment))) {
+        if (Value.getBoolValue(condition.evaluate(environment))) {
             ret = trueBlock.execute(environment);
         } else if (falseBlock != null) {
             ret = falseBlock.execute(environment);

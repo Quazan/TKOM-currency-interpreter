@@ -4,23 +4,21 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import tkom.ast.Expression;
+import tkom.ast.Statement;
 import tkom.ast.Value;
 import tkom.error.RuntimeEnvironmentException;
-import tkom.error.UndefinedReferenceException;
 import tkom.execution.Environment;
 import tkom.utils.NodeType;
-import tkom.ast.Statement;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@Setter
 @ToString
 public class FunctionCall implements Statement, Expression {
 
-    private String identifier;
-    List<Expression> arguments;
+    private final String identifier;
+    private final List<Expression> arguments;
 
     public FunctionCall(String identifier) {
         this.identifier = identifier;
@@ -37,17 +35,17 @@ public class FunctionCall implements Statement, Expression {
     }
 
     @Override
-    public Value evaluate(Environment environment) throws UndefinedReferenceException, RuntimeEnvironmentException {
+    public Value evaluate(Environment environment) throws RuntimeEnvironmentException {
         return execute(environment);
     }
 
     @Override
-    public Value execute(Environment environment) throws UndefinedReferenceException, RuntimeEnvironmentException {
+    public Value execute(Environment environment) throws RuntimeEnvironmentException {
 
         Function function = environment.getFunction(identifier);
 
-        if(function == null) {
-            throw  new UndefinedReferenceException(identifier);
+        if (function == null) {
+            throw new RuntimeEnvironmentException("Undefined Reference to: " + identifier);
         }
 
         return function.execute(environment, arguments);

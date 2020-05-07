@@ -5,7 +5,6 @@ import org.junit.Test;
 import tkom.currency.Rates;
 import tkom.error.InvalidTokenException;
 import tkom.error.RuntimeEnvironmentException;
-import tkom.error.UndefinedReferenceException;
 import tkom.error.UnexpectedTokenException;
 import tkom.execution.Environment;
 import tkom.lexer.Lexer;
@@ -28,26 +27,26 @@ public class ExpressionNodeTest {
     private Rates rates;
     private List<Function> functions;
 
-    private void prepareRates(){
+    private void prepareRates() {
         List<String> list = new ArrayList<>() {{
             add("EUR");
             add("PLN");
         }};
 
-        Map<String, BigDecimal> exchange = new HashMap<>(){{
+        Map<String, BigDecimal> exchange = new HashMap<>() {{
             put("PLN", new BigDecimal(4));
         }};
 
         this.rates = new Rates(list, exchange);
     }
 
-    private void prepareFunctions(){
-        this.functions = new ArrayList<>(){{
+    private void prepareFunctions() {
+        this.functions = new ArrayList<>() {{
             add(new Function("int", "main"));
         }};
     }
 
-    private void initializeParser(String tokenInput) throws IOException, InvalidTokenException {
+    private void initializeParser(String tokenInput) {
         StringReader stringReader = new StringReader(tokenInput);
         Lexer lexer = new Lexer(stringReader, rates.getCurrencies());
         parser = new Parser(lexer);
@@ -62,7 +61,7 @@ public class ExpressionNodeTest {
     }
 
     @Test
-    public void addIntToInt() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    public void addIntToInt() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         IntNode expectedValue = new IntNode(5);
         initializeParser("2 + 3");
 
@@ -74,7 +73,7 @@ public class ExpressionNodeTest {
     }
 
     @Test
-    public void addDoubleToDouble() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    public void addDoubleToDouble() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         DoubleNode expectedValue = new DoubleNode(5);
         initializeParser("1.5 + 3.5");
 
@@ -86,7 +85,7 @@ public class ExpressionNodeTest {
     }
 
     @Test
-    public void addCurrencyToCurrency() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    public void addCurrencyToCurrency() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         environment.addVariable("a", new Currency(new BigDecimal("1.5"), "EUR", rates));
         environment.addVariable("b", new Currency(new BigDecimal("3.5"), "EUR", rates));
         Currency expectedValue = new Currency(new BigDecimal("5.0"), "EUR", rates);
@@ -101,7 +100,7 @@ public class ExpressionNodeTest {
     }
 
     @Test
-    public void addDoubleToInt() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    public void addDoubleToInt() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         DoubleNode expectedValue = new DoubleNode(4.5);
         initializeParser("1.5 + 3");
 
@@ -113,7 +112,7 @@ public class ExpressionNodeTest {
     }
 
     @Test
-    public void addIntToDouble() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    public void addIntToDouble() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         DoubleNode expectedValue = new DoubleNode(4.5);
         initializeParser("1 + 3.5");
 
@@ -125,7 +124,7 @@ public class ExpressionNodeTest {
     }
 
     @Test(expected = RuntimeEnvironmentException.class)
-    public void addIntToCurrency() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    public void addIntToCurrency() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         environment.addVariable("a", new Currency(new BigDecimal("1.5"), "EUR", rates));
         initializeParser("a + 1");
 
@@ -134,7 +133,7 @@ public class ExpressionNodeTest {
     }
 
     @Test(expected = RuntimeEnvironmentException.class)
-    public void addDoubleToCurrency() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    public void addDoubleToCurrency() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         environment.addVariable("a", new Currency(new BigDecimal("1.5"), "EUR", rates));
         initializeParser("a + 1.5");
 
@@ -143,7 +142,7 @@ public class ExpressionNodeTest {
     }
 
     @Test
-    public void subtractIntFromInt() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    public void subtractIntFromInt() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         IntNode expectedValue = new IntNode(1);
         initializeParser("3 - 2");
 
@@ -155,7 +154,7 @@ public class ExpressionNodeTest {
     }
 
     @Test
-    public void subtractDoubleFromDouble() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    public void subtractDoubleFromDouble() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         DoubleNode expectedValue = new DoubleNode(2);
         initializeParser("3.5 - 1.5");
 
@@ -167,7 +166,7 @@ public class ExpressionNodeTest {
     }
 
     @Test
-    public void subtractCurrencyFromCurrency() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    public void subtractCurrencyFromCurrency() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         environment.addVariable("a", new Currency(new BigDecimal("3.5"), "EUR", rates));
         environment.addVariable("b", new Currency(new BigDecimal("1.5"), "EUR", rates));
         Currency expectedValue = new Currency(new BigDecimal("2.0"), "EUR", rates);
@@ -182,7 +181,7 @@ public class ExpressionNodeTest {
     }
 
     @Test
-    public void subtractDoubleFromInt() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    public void subtractDoubleFromInt() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         DoubleNode expectedValue = new DoubleNode(2.5);
         initializeParser("3.5 - 1");
 
@@ -194,7 +193,7 @@ public class ExpressionNodeTest {
     }
 
     @Test
-    public void subtractIntFromDouble() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    public void subtractIntFromDouble() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         DoubleNode expectedValue = new DoubleNode(1.5);
         initializeParser("3 - 1.5");
 
@@ -206,7 +205,7 @@ public class ExpressionNodeTest {
     }
 
     @Test(expected = RuntimeEnvironmentException.class)
-    public void subtractIntFromCurrency() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    public void subtractIntFromCurrency() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         environment.addVariable("a", new Currency(new BigDecimal("1.5"), "EUR", rates));
         initializeParser("a - 1");
 
@@ -215,7 +214,7 @@ public class ExpressionNodeTest {
     }
 
     @Test(expected = RuntimeEnvironmentException.class)
-    public void subtractDoubleFromCurrency() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    public void subtractDoubleFromCurrency() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         environment.addVariable("a", new Currency(new BigDecimal("1.5"), "EUR", rates));
         initializeParser("a - 1.5");
 
@@ -224,7 +223,7 @@ public class ExpressionNodeTest {
     }
 
     @Test
-    public void multiplyIntByInt() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    public void multiplyIntByInt() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         IntNode expectedValue = new IntNode(6);
         initializeParser("2 * 3");
 
@@ -236,7 +235,7 @@ public class ExpressionNodeTest {
     }
 
     @Test
-    public void multiplyDoubleByDouble() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    public void multiplyDoubleByDouble() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         DoubleNode expectedValue = new DoubleNode(1.5 * 3.5);
         initializeParser("1.5 * 3.5");
 
@@ -248,7 +247,7 @@ public class ExpressionNodeTest {
     }
 
     @Test(expected = RuntimeEnvironmentException.class)
-    public void multiplyCurrencyByCurrency() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    public void multiplyCurrencyByCurrency() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         environment.addVariable("a", new Currency(new BigDecimal("1.5"), "EUR", rates));
         environment.addVariable("b", new Currency(new BigDecimal("3.5"), "EUR", rates));
         initializeParser("a * b");
@@ -258,7 +257,7 @@ public class ExpressionNodeTest {
     }
 
     @Test
-    public void multiplyDoubleByInt() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    public void multiplyDoubleByInt() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         DoubleNode expectedValue = new DoubleNode(1.5 * 3);
         initializeParser("1.5 * 3");
 
@@ -270,7 +269,7 @@ public class ExpressionNodeTest {
     }
 
     @Test
-    public void multiplyIntByDouble() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    public void multiplyIntByDouble() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         DoubleNode expectedValue = new DoubleNode(1 * 3.5);
         initializeParser("1 * 3.5");
 
@@ -282,7 +281,7 @@ public class ExpressionNodeTest {
     }
 
     @Test
-    public void multiplyIntByCurrency() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    public void multiplyIntByCurrency() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         environment.addVariable("a", new Currency(new BigDecimal("1.5"), "EUR", rates));
         Currency expectedValue = new Currency(new BigDecimal("3.0"), "EUR", rates);
         initializeParser("a * 2");
@@ -296,7 +295,7 @@ public class ExpressionNodeTest {
     }
 
     @Test
-    public void multiplyDoubleByCurrency() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    public void multiplyDoubleByCurrency() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         environment.addVariable("a", new Currency(new BigDecimal("2"), "EUR", rates));
         Currency expectedValue = new Currency(new BigDecimal("5.0"), "EUR", rates);
         initializeParser("a * 2.5");
@@ -310,7 +309,7 @@ public class ExpressionNodeTest {
     }
 
     @Test
-    public void divideIntByInt() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    public void divideIntByInt() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         IntNode expectedValue = new IntNode(0);
         initializeParser("2 / 3");
 
@@ -322,7 +321,7 @@ public class ExpressionNodeTest {
     }
 
     @Test
-    public void divideDoubleByDouble() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    public void divideDoubleByDouble() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         DoubleNode expectedValue = new DoubleNode(1.5 / 3.5);
         initializeParser("1.5 / 3.5");
 
@@ -334,7 +333,7 @@ public class ExpressionNodeTest {
     }
 
     @Test(expected = RuntimeEnvironmentException.class)
-    public void divideCurrencyByCurrency() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    public void divideCurrencyByCurrency() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         environment.addVariable("a", new Currency(new BigDecimal("1.5"), "EUR", rates));
         environment.addVariable("b", new Currency(new BigDecimal("3.5"), "EUR", rates));
         initializeParser("a / b");
@@ -344,7 +343,7 @@ public class ExpressionNodeTest {
     }
 
     @Test
-    public void divideDoubleByInt() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    public void divideDoubleByInt() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         DoubleNode expectedValue = new DoubleNode(1.5 / 3);
         initializeParser("1.5 / 3");
 
@@ -356,7 +355,7 @@ public class ExpressionNodeTest {
     }
 
     @Test
-    public void divideIntByDouble() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    public void divideIntByDouble() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         DoubleNode expectedValue = new DoubleNode(1 / 3.5);
         initializeParser("1 / 3.5");
 
@@ -368,7 +367,7 @@ public class ExpressionNodeTest {
     }
 
     @Test
-    public void divideCurrencyByInt() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    public void divideCurrencyByInt() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         environment.addVariable("a", new Currency(new BigDecimal("1.5"), "EUR", rates));
         Currency expectedValue = new Currency(new BigDecimal("0.50000"), "EUR", rates);
         initializeParser("a / 3");
@@ -382,7 +381,7 @@ public class ExpressionNodeTest {
     }
 
     @Test
-    public void divideCurrencyByDouble() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    public void divideCurrencyByDouble() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         environment.addVariable("a", new Currency(new BigDecimal("2.5"), "EUR", rates));
         Currency expectedValue = new Currency(new BigDecimal("1.00000"), "EUR", rates);
         initializeParser("a / 2.5");
@@ -396,7 +395,7 @@ public class ExpressionNodeTest {
     }
 
     @Test
-    public void correctArithmeticOrder() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    public void correctArithmeticOrder() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         IntNode expectedValue = new IntNode(5);
         initializeParser("2 / 2 + 2 * 2");
 
@@ -408,7 +407,7 @@ public class ExpressionNodeTest {
     }
 
     @Test
-    public void correctArithmeticOrderWithParenthesis() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    public void correctArithmeticOrderWithParenthesis() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         IntNode expectedValue = new IntNode(4);
         initializeParser("(2 + 2) * 2 / 2");
 
@@ -420,7 +419,7 @@ public class ExpressionNodeTest {
     }
 
     @Test
-    public void expressionWithFunctionCall() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    public void expressionWithFunctionCall() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         initializeParser("int test() { return 2;}");
         parser.advance();
         Function function = parser.parseFunction();
@@ -436,7 +435,7 @@ public class ExpressionNodeTest {
     }
 
     @Test(expected = RuntimeEnvironmentException.class)
-    public void divideIntByZero() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    public void divideIntByZero() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         initializeParser("2 / 0");
 
         ExpressionNode expressionNode = (ExpressionNode) parser.parseExpression();
@@ -444,7 +443,7 @@ public class ExpressionNodeTest {
     }
 
     @Test(expected = RuntimeEnvironmentException.class)
-    public void divideDoubleByZero() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    public void divideDoubleByZero() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         initializeParser("2.5 / 0");
 
         ExpressionNode expressionNode = (ExpressionNode) parser.parseExpression();
@@ -452,7 +451,7 @@ public class ExpressionNodeTest {
     }
 
     @Test(expected = RuntimeEnvironmentException.class)
-    public void divideDoubleByCurrency() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    public void divideDoubleByCurrency() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         environment.addVariable("a", new Currency(new BigDecimal("2.5"), "EUR", rates));
         initializeParser("2.5 / a");
 
@@ -461,7 +460,7 @@ public class ExpressionNodeTest {
     }
 
     @Test(expected = RuntimeEnvironmentException.class)
-    public void divideIntByCurrency() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    public void divideIntByCurrency() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         environment.addVariable("a", new Currency(new BigDecimal("2.5"), "EUR", rates));
         initializeParser("2 / a");
 
@@ -470,7 +469,7 @@ public class ExpressionNodeTest {
     }
 
     @Test(expected = RuntimeEnvironmentException.class)
-    public void divideCurrencyByZero() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    public void divideCurrencyByZero() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         environment.addVariable("a", new Currency(new BigDecimal("2.5"), "EUR", rates));
         initializeParser("a / 0.");
 

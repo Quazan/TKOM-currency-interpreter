@@ -3,12 +3,11 @@ package tkom.ast.nodes;
 import lombok.Getter;
 import lombok.ToString;
 import tkom.ast.Expression;
+import tkom.ast.Statement;
 import tkom.ast.Value;
 import tkom.error.RuntimeEnvironmentException;
-import tkom.error.UndefinedReferenceException;
 import tkom.execution.Environment;
 import tkom.utils.NodeType;
-import tkom.ast.Statement;
 
 @Getter
 @ToString
@@ -29,7 +28,7 @@ public class AssignStatement implements Statement {
     }
 
     @Override
-    public Value execute(Environment environment) throws UndefinedReferenceException, RuntimeEnvironmentException {
+    public Value execute(Environment environment) throws RuntimeEnvironmentException {
         Value value = environment.getVariable(identifier);
 
         Value assign = assignable.evaluate(environment);

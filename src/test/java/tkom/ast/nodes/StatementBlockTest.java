@@ -2,11 +2,9 @@ package tkom.ast.nodes;
 
 import org.junit.Before;
 import org.junit.Test;
-import tkom.ast.Statement;
 import tkom.currency.Rates;
 import tkom.error.InvalidTokenException;
 import tkom.error.RuntimeEnvironmentException;
-import tkom.error.UndefinedReferenceException;
 import tkom.error.UnexpectedTokenException;
 import tkom.execution.Environment;
 import tkom.lexer.Lexer;
@@ -28,21 +26,21 @@ public class StatementBlockTest {
     private Rates rates;
     private List<Function> functions;
 
-    private void prepareRates(){
+    private void prepareRates() {
         List<String> list = new ArrayList<>() {{
             add("EUR");
             add("PLN");
         }};
 
-        Map<String, BigDecimal> exchange = new HashMap<>(){{
+        Map<String, BigDecimal> exchange = new HashMap<>() {{
             put("PLN", new BigDecimal(4));
         }};
 
         this.rates = new Rates(list, exchange);
     }
 
-    private void prepareFunctions(){
-        this.functions = new ArrayList<>(){{
+    private void prepareFunctions() {
+        this.functions = new ArrayList<>() {{
             add(new Function("int", "main"));
         }};
     }
@@ -63,7 +61,7 @@ public class StatementBlockTest {
     }
 
     @Test
-    public void afterReturnStatementExecutionIsCancelled() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    public void afterReturnStatementExecutionIsCancelled() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         ReturnCall expectedValue = new ReturnCall(new IntNode(2));
         initializeParser("{int a = 0;" +
                 "a = a + 2;" +
@@ -82,7 +80,7 @@ public class StatementBlockTest {
     }
 
     @Test
-    public void emptyStatementBlock() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    public void emptyStatementBlock() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         IntNode expectedValue = new IntNode(0);
         initializeParser("{}");
         StatementBlock statementBlock = parser.parseStatementBlock();
@@ -94,7 +92,7 @@ public class StatementBlockTest {
     }
 
     @Test
-    public void returnCallsArePropagated() throws IOException, InvalidTokenException, UnexpectedTokenException, UndefinedReferenceException, RuntimeEnvironmentException {
+    public void returnCallsArePropagated() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         ReturnCall expectedValue = new ReturnCall(new IntNode(0));
         initializeParser("{int a = 0;" +
                 "if(a == 0) return a;}");

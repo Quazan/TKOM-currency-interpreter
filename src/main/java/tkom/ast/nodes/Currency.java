@@ -16,7 +16,6 @@ public class Currency implements Expression, Value {
 
     private final String currencyType;
 
-    //TODO może zamiast całej klasy trzymać tylko przelicznik
     private final Rates exchangeRates;
 
     public Currency(BigDecimal value, String currencyType, Rates exchangeRates) {

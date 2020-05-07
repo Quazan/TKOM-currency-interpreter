@@ -102,7 +102,7 @@ public class Parser {
 
         getNextToken(TokenType.ROUND_OPEN);
 
-        if(getOptionalToken(TokenAttributes.valueTypes)){
+        if (getOptionalToken(TokenAttributes.valueTypes)) {
             parseParameterList(function);
         }
 
@@ -123,8 +123,8 @@ public class Parser {
     }
 
     private void checkParameter(List<Signature> parameters, Signature param) throws UnexpectedTokenException {
-        for(Signature signature : parameters) {
-            if(signature.getIdentifier().equals(param.getIdentifier())) {
+        for (Signature signature : parameters) {
+            if (signature.getIdentifier().equals(param.getIdentifier())) {
                 throw new UnexpectedTokenException("Parameter " + param.getIdentifier() + " is already defined in scope.");
             }
         }
@@ -209,7 +209,7 @@ public class Parser {
     public FunctionCall parseFunctionCall(String identifier) throws UnexpectedTokenException, InvalidTokenException, IOException {
         FunctionCall functionCall = new FunctionCall(identifier);
 
-        if(!getOptionalToken(TokenType.ROUND_CLOSE)) {
+        if (!getOptionalToken(TokenType.ROUND_CLOSE)) {
             parseArguments(functionCall);
         }
 
@@ -219,7 +219,7 @@ public class Parser {
     void parseArguments(FunctionCall functionCall) throws UnexpectedTokenException, InvalidTokenException, IOException {
         do {
             functionCall.addArgument(parseExpression());
-        } while(getOptionalToken(TokenType.COMMA));
+        } while (getOptionalToken(TokenType.COMMA));
 
         getNextToken(TokenType.ROUND_CLOSE);
     }
@@ -229,7 +229,7 @@ public class Parser {
 
         getNextToken(TokenType.ROUND_OPEN);
 
-        if(!getOptionalToken(TokenType.ROUND_CLOSE)) {
+        if (!getOptionalToken(TokenType.ROUND_CLOSE)) {
             parsePrintArguments(printStatement);
         }
 
@@ -241,13 +241,13 @@ public class Parser {
     void parsePrintArguments(PrintStatement printStatement) throws UnexpectedTokenException, InvalidTokenException, IOException {
         do {
             printStatement.addArgument(parseExpressionOrString());
-        } while(getOptionalToken(TokenType.COMMA));
+        } while (getOptionalToken(TokenType.COMMA));
 
         getNextToken(TokenType.ROUND_CLOSE);
     }
 
     Expression parseExpressionOrString() throws IOException, InvalidTokenException, UnexpectedTokenException {
-        if(getOptionalToken(TokenType.STRING)){
+        if (getOptionalToken(TokenType.STRING)) {
             return new StringNode(currentToken().getValue());
         } else {
             return parseExpression();

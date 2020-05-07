@@ -38,7 +38,7 @@ public class ParserTest {
         assertEquals(expectedFunction.getParameters().size(),
                 actual.getParameters().size());
 
-        for(int i = 0; i < expectedFunction.getParameters().size(); i++) {
+        for (int i = 0; i < expectedFunction.getParameters().size(); i++) {
             assertEquals(expectedFunction.getParameters().get(i).getIdentifier(),
                     actual.getParameters().get(i).getIdentifier());
             assertEquals(expectedFunction.getParameters().get(i).getReturnType(),
@@ -93,7 +93,7 @@ public class ParserTest {
     @Test
     public void getOptionalTokenTypesTrue() throws IOException, InvalidTokenException {
         List<TokenType> expectedTokenTypes = new ArrayList<>() {{
-          add(TokenType.INT);
+            add(TokenType.INT);
         }};
         String input = "int i;";
         initializeParser(input);
@@ -205,7 +205,7 @@ public class ParserTest {
 
     @Test
     public void parseMultiplicativeExpression() throws UnexpectedTokenException, InvalidTokenException, IOException {
-        List<TokenType> expectedOperators = new ArrayList<>(){{
+        List<TokenType> expectedOperators = new ArrayList<>() {{
             add(TokenType.MULTIPLY);
             add(TokenType.DIVIDE);
         }};
@@ -220,7 +220,7 @@ public class ParserTest {
 
     @Test
     public void parseAdditiveExpression() throws UnexpectedTokenException, InvalidTokenException, IOException {
-        List<TokenType> expectedOperators = new ArrayList<>(){{
+        List<TokenType> expectedOperators = new ArrayList<>() {{
             add(TokenType.PLUS);
             add(TokenType.MINUS);
         }};
@@ -440,7 +440,7 @@ public class ParserTest {
         assertEquals(expectedStatement.getReturnType(), actual.getReturnType());
         assertEquals(expectedStatement.getIdentifier(), actual.getIdentifier());
         assertEquals(((ExpressionNode) expectedStatement.getAssignable()).getOperations().get(0),
-                ((ExpressionNode)actual.getAssignable()).getOperations().get(0));
+                ((ExpressionNode) actual.getAssignable()).getOperations().get(0));
     }
 
     @Test
@@ -526,7 +526,7 @@ public class ParserTest {
         Function expectedFunction = new Function("int", "func");
         StatementBlock block = new StatementBlock();
         block.addStatement(new ReturnStatement(new ExpressionNode()));
-        List<Signature> parameters = new ArrayList<>(){{
+        List<Signature> parameters = new ArrayList<>() {{
             add(new Signature("int", "a"));
             add(new Signature("double", "b"));
         }};
@@ -564,6 +564,15 @@ public class ParserTest {
         parser.parseFunction();
     }
 
+    @Test(expected = UnexpectedTokenException.class)
+    public void parseFunctionDefinitionWithTheSameNameParameters() throws IOException, InvalidTokenException, UnexpectedTokenException {
+        String input = "int func(int a, int a) {return a + a;}";
+        initializeParser(input);
+
+        parser.advance();
+        parser.parseFunction();
+    }
+
     @Test
     public void parseProgram() throws UnexpectedTokenException, InvalidTokenException, IOException {
         Program expectedProgram = new Program();
@@ -580,7 +589,7 @@ public class ParserTest {
         Program actual = parser.parseProgram();
 
         assertEquals(expectedProgram.getFunctions().size(), actual.getFunctions().size());
-        for(int i = 0; i < expectedProgram.getFunctions().size(); i++) {
+        for (int i = 0; i < expectedProgram.getFunctions().size(); i++) {
             assertFunctions(expectedProgram.getFunctions().get(0),
                     actual.getFunctions().get(0));
         }

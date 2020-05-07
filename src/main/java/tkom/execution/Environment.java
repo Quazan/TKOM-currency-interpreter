@@ -1,12 +1,10 @@
 package tkom.execution;
 
 import lombok.Getter;
-import lombok.Setter;
 import tkom.ast.Value;
 import tkom.ast.nodes.Function;
 import tkom.currency.Rates;
 import tkom.error.RuntimeEnvironmentException;
-import tkom.error.UndefinedReferenceException;
 
 import java.util.*;
 
@@ -24,18 +22,18 @@ public class Environment {
         this.scopes = new ArrayDeque<>();
         this.exchangeRates = exchangeRates;
 
-        for(Function function : functionList) {
-            if(functions.put(function.getIdentifier(), function) != null) {
+        for (Function function : functionList) {
+            if (functions.put(function.getIdentifier(), function) != null) {
                 throw new RuntimeEnvironmentException("Multiple functions with the same name: "
                         + function.getIdentifier());
             }
         }
     }
 
-    public void createNewLocalScope(){
+    public void createNewLocalScope() {
         Scope localScope = new Scope();
 
-        if(!scopes.isEmpty()) {
+        if (!scopes.isEmpty()) {
             localScope.setParentScope(scopes.getFirst());
         }
 
@@ -59,46 +57,46 @@ public class Environment {
     }
 
     public void addFunction(Function function) throws RuntimeEnvironmentException {
-        if(functions.put(function.getIdentifier(), function) != null) {
+        if (functions.put(function.getIdentifier(), function) != null) {
             throw new RuntimeEnvironmentException("Multiple functions with the same name: "
                     + function.getIdentifier());
         }
     }
 
-    public Value getVariable(String identifier) throws UndefinedReferenceException {
+    public Value getVariable(String identifier) throws RuntimeEnvironmentException {
         Scope scope = scopes.getFirst();
 
-        if(scope.containsVariable(identifier)) {
+        if (scope.containsVariable(identifier)) {
             return scope.getVariable(identifier);
         }
 
         while ((scope = scope.getParentScope()) != null) {
             //scope = scope.getParentScope();
-            if(scope.containsVariable(identifier)) {
+            if (scope.containsVariable(identifier)) {
                 return scope.getVariable(identifier);
             }
         }
 
-        throw new UndefinedReferenceException(identifier);
+        throw new RuntimeEnvironmentException("Undefined Reference to:" + identifier);
     }
 
-    public void setVariable(String identifier, Value evaluate) throws UndefinedReferenceException {
+    public void setVariable(String identifier, Value evaluate) throws RuntimeEnvironmentException {
         Scope scope = scopes.getFirst();
 
-        if(scope.containsVariable(identifier)) {
+        if (scope.containsVariable(identifier)) {
             scope.setVariable(identifier, evaluate);
             return;
         }
 
         while (scope.getParentScope() != null) {
             scope = scope.getParentScope();
-            if(scope.containsVariable(identifier)) {
+            if (scope.containsVariable(identifier)) {
                 scope.setVariable(identifier, evaluate);
                 return;
             }
         }
 
-        throw new UndefinedReferenceException(identifier);
+        throw new RuntimeEnvironmentException("Undefined Reference to:" + identifier);
     }
 
     public Function getFunction(String identifier) {

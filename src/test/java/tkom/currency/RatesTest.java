@@ -23,7 +23,7 @@ public class RatesTest {
             add("PLN");
         }};
 
-        Map<String, BigDecimal> exchange = new HashMap<>(){{
+        Map<String, BigDecimal> exchange = new HashMap<>() {{
             put("PLN", new BigDecimal(4));
         }};
 
@@ -31,7 +31,7 @@ public class RatesTest {
     }
 
     @Test
-    public void exchangeEURtoPLN(){
+    public void exchangeEURtoPLN() {
         BigDecimal expectedValue = new BigDecimal(4);
 
         BigDecimal actual = rates.toCurrency("PLN", new BigDecimal(1));
@@ -40,7 +40,7 @@ public class RatesTest {
     }
 
     @Test
-    public void exchangeEURtoCurrencyEUR(){
+    public void exchangeEURtoCurrencyEUR() {
         BigDecimal expectedValue = new BigDecimal(1);
 
         BigDecimal actual = rates.toCurrency("EUR", new BigDecimal(1));
@@ -50,7 +50,7 @@ public class RatesTest {
 
 
     @Test
-    public void exchangeEURtoEUR(){
+    public void exchangeEURtoEUR() {
         BigDecimal expectedValue = new BigDecimal(1);
 
         BigDecimal actual = rates.toEUR("EUR", new BigDecimal(1));
@@ -59,7 +59,7 @@ public class RatesTest {
     }
 
     @Test
-    public void exchangePLNtoEUR(){
+    public void exchangePLNtoEUR() {
         BigDecimal expectedValue = new BigDecimal("1.00000");
 
         BigDecimal actual = rates.toEUR("PLN", new BigDecimal(4));

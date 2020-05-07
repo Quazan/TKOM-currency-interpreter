@@ -31,14 +31,14 @@ public class Rates {
     }
 
     public BigDecimal toEUR(String type, BigDecimal value) {
-        if(type.equals("EUR")) {
+        if (type.equals("EUR")) {
             return value;
         }
         return value.divide(exchange.get(type), 5, RoundingMode.HALF_EVEN);
     }
 
     public BigDecimal toCurrency(String type, BigDecimal value) {
-        if(type.equals("EUR")) {
+        if (type.equals("EUR")) {
             return value;
         }
         return value.multiply(exchange.get(type));

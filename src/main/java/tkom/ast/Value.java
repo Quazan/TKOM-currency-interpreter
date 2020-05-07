@@ -7,7 +7,7 @@ import tkom.ast.nodes.IntNode;
 
 import java.math.BigDecimal;
 
-public interface Value extends Node{
+public interface Value extends Node {
     static int getIntValue(Value operand) {
         return ((IntNode) operand).getValue();
     }

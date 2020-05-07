@@ -5,7 +5,6 @@ import org.junit.Before;
 import org.junit.Test;
 import tkom.currency.Rates;
 import tkom.error.RuntimeEnvironmentException;
-import tkom.error.UndefinedReferenceException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -29,7 +28,7 @@ public class PrintStatementTest {
     }
 
     @Test
-    public void printMultipleValues() throws UndefinedReferenceException, RuntimeEnvironmentException {
+    public void printMultipleValues() throws RuntimeEnvironmentException {
         PrintStatement print = new PrintStatement();
         print.addArgument(new IntNode(0));
         print.addArgument(new IntNode(0));
@@ -43,7 +42,7 @@ public class PrintStatementTest {
     }
 
     @Test
-    public void printInt() throws UndefinedReferenceException, RuntimeEnvironmentException {
+    public void printInt() throws RuntimeEnvironmentException {
         PrintStatement print = new PrintStatement();
         print.addArgument(new IntNode(1));
 
@@ -53,7 +52,7 @@ public class PrintStatementTest {
     }
 
     @Test
-    public void printDouble() throws UndefinedReferenceException, RuntimeEnvironmentException {
+    public void printDouble() throws RuntimeEnvironmentException {
         PrintStatement print = new PrintStatement();
         print.addArgument(new DoubleNode(2.));
 
@@ -63,7 +62,7 @@ public class PrintStatementTest {
     }
 
     @Test
-    public void printCurrency() throws UndefinedReferenceException, RuntimeEnvironmentException {
+    public void printCurrency() throws RuntimeEnvironmentException {
         PrintStatement print = new PrintStatement();
         print.addArgument(new Currency(new BigDecimal(3), "EUR", new Rates()));
 
@@ -73,7 +72,7 @@ public class PrintStatementTest {
     }
 
     @Test
-    public void printString() throws UndefinedReferenceException, RuntimeEnvironmentException {
+    public void printString() throws RuntimeEnvironmentException {
         PrintStatement print = new PrintStatement();
         print.addArgument(new StringNode("test"));
 

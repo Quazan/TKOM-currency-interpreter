@@ -6,7 +6,6 @@ import tkom.ast.Node;
 import tkom.ast.Statement;
 import tkom.ast.Value;
 import tkom.error.RuntimeEnvironmentException;
-import tkom.error.UndefinedReferenceException;
 import tkom.execution.Environment;
 import tkom.utils.NodeType;
 
@@ -28,10 +27,10 @@ public class PrintStatement implements Node, Statement {
     }
 
     @Override
-    public Value execute(Environment environment) throws UndefinedReferenceException, RuntimeEnvironmentException {
+    public Value execute(Environment environment) throws RuntimeEnvironmentException {
         StringBuilder sb = new StringBuilder();
 
-        for(Expression exp : arguments){
+        for (Expression exp : arguments) {
             sb.append(exp.evaluate(environment));
         }
 

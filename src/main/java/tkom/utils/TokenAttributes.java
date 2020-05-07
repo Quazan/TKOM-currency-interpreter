@@ -6,9 +6,9 @@ import java.util.List;
 
 public final class TokenAttributes {
     public static List<TokenType> valueTypes = new ArrayList<>() {{
-       add(TokenType.INT);
-       add(TokenType.DOUBLE);
-       add(TokenType.CURRENCY);
+        add(TokenType.INT);
+        add(TokenType.DOUBLE);
+        add(TokenType.CURRENCY);
     }};
 
     public static List<TokenType> statementTypes = new ArrayList<>() {{

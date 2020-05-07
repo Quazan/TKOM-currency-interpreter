@@ -1,15 +1,10 @@
 package tkom;
 
-import tkom.ast.Node;
 import tkom.ast.Value;
-import tkom.ast.nodes.Currency;
-import tkom.ast.nodes.DoubleNode;
-import tkom.ast.nodes.IntNode;
 import tkom.ast.nodes.Program;
 import tkom.currency.Rates;
 import tkom.error.InvalidTokenException;
 import tkom.error.RuntimeEnvironmentException;
-import tkom.error.UndefinedReferenceException;
 import tkom.error.UnexpectedTokenException;
 import tkom.execution.Environment;
 import tkom.input.JsonReader;
@@ -33,7 +28,7 @@ public class Main {
             Environment environment = new Environment(program.getFunctions(), rates);
             Value v = environment.getFunction("main").execute(environment, new ArrayList<>());
             System.out.println(v);
-        } catch (IOException | InvalidTokenException | UnexpectedTokenException | UndefinedReferenceException | RuntimeEnvironmentException e) {
+        } catch (IOException | InvalidTokenException | UnexpectedTokenException | RuntimeEnvironmentException e) {
             e.printStackTrace();
         }
     }
