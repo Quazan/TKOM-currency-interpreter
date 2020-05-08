@@ -12,6 +12,8 @@ import java.math.RoundingMode;
 
 public interface Value extends Node {
 
+    BoolNode isEqual(Value rightOperand) throws RuntimeEnvironmentException;
+
     static int getIntValue(Value operand) {
         return ((IntNode) operand).getValue();
     }

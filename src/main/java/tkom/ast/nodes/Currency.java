@@ -108,4 +108,54 @@ public class Currency implements Expression, ArithmeticValue {
         return new Currency(ArithmeticValue.divideBigDecimals(this, rightOperand),
                 "EUR", exchangeRates);
     }
+
+    @Override
+    public BoolNode isLess(Value rightOperand) throws RuntimeEnvironmentException {
+        if(!Value.isCurrency(rightOperand)) {
+            throw new RuntimeEnvironmentException("Cannot compare " + rightOperand.getType() +
+                    " to " + getType());
+        }
+
+        return new BoolNode(value.compareTo(Value.getCurrencyValue(rightOperand)) < 0);
+    }
+
+    @Override
+    public BoolNode isLessOrEqual(Value rightOperand) throws RuntimeEnvironmentException {
+        if(!Value.isCurrency(rightOperand)) {
+            throw new RuntimeEnvironmentException("Cannot compare " + rightOperand.getType() +
+                    " to " + getType());
+        }
+
+        return new BoolNode(value.compareTo(Value.getCurrencyValue(rightOperand)) <= 0);
+    }
+
+    @Override
+    public BoolNode isGrater(Value rightOperand) throws RuntimeEnvironmentException {
+        if(!Value.isCurrency(rightOperand)) {
+            throw new RuntimeEnvironmentException("Cannot compare " + rightOperand.getType() +
+                    " to " + getType());
+        }
+
+        return new BoolNode(value.compareTo(Value.getCurrencyValue(rightOperand)) > 0);
+    }
+
+    @Override
+    public BoolNode isGraterOrEqual(Value rightOperand) throws RuntimeEnvironmentException {
+        if(!Value.isCurrency(rightOperand)) {
+            throw new RuntimeEnvironmentException("Cannot compare " + rightOperand.getType() +
+                    " to " + getType());
+        }
+
+        return new BoolNode(value.compareTo(Value.getCurrencyValue(rightOperand)) >= 0);
+    }
+
+    @Override
+    public BoolNode isEqual(Value rightOperand) throws RuntimeEnvironmentException {
+        if(!Value.isCurrency(rightOperand)) {
+            throw new RuntimeEnvironmentException("Cannot compare " + rightOperand.getType() +
+                    " to " + getType());
+        }
+
+        return new BoolNode(value.compareTo(Value.getCurrencyValue(rightOperand)) == 0);
+    }
 }

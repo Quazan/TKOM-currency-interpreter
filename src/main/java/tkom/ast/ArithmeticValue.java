@@ -1,5 +1,6 @@
 package tkom.ast;
 
+import tkom.ast.nodes.BoolNode;
 import tkom.ast.nodes.Currency;
 import tkom.ast.nodes.DoubleNode;
 import tkom.ast.nodes.IntNode;
@@ -10,13 +11,21 @@ import java.math.RoundingMode;
 
 public interface ArithmeticValue extends Value{
 
-    ArithmeticValue add(Value rightOperand)throws RuntimeEnvironmentException;
+    ArithmeticValue add(Value rightOperand) throws RuntimeEnvironmentException;
 
-    ArithmeticValue subtract(Value rightOperand)throws RuntimeEnvironmentException;
+    ArithmeticValue subtract(Value rightOperand) throws RuntimeEnvironmentException;
 
     ArithmeticValue multiply(Value rightOperand) throws RuntimeEnvironmentException;
 
-    ArithmeticValue divide(Value rightOperand)throws RuntimeEnvironmentException;
+    ArithmeticValue divide(Value rightOperand) throws RuntimeEnvironmentException;
+
+    BoolNode isLess(Value rightOperand) throws RuntimeEnvironmentException;
+
+    BoolNode isLessOrEqual(Value rightOperand) throws RuntimeEnvironmentException;
+
+    BoolNode isGrater(Value rightOperand) throws RuntimeEnvironmentException;
+
+    BoolNode isGraterOrEqual(Value rightOperand) throws RuntimeEnvironmentException;
 
     static boolean isZero(Value value) throws RuntimeEnvironmentException {
         switch (value.getType()){

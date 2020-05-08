@@ -3,6 +3,7 @@ package tkom.ast.nodes;
 import lombok.Getter;
 import tkom.ast.Value;
 import tkom.ast.Expression;
+import tkom.error.RuntimeEnvironmentException;
 import tkom.execution.Environment;
 import tkom.utils.NodeType;
 
@@ -28,5 +29,15 @@ public class StringNode implements Expression, Value {
     @Override
     public String toString() {
         return value;
+    }
+
+    @Override
+    public BoolNode isEqual(Value rightOperand) throws RuntimeEnvironmentException {
+        if(rightOperand.getType() == NodeType.STRING) {
+            return new BoolNode(value.equals(((StringNode) rightOperand).value));
+        }
+
+        throw new RuntimeEnvironmentException("Cannot compare: " + rightOperand.getType() +
+                " to " + getType());
     }
 }

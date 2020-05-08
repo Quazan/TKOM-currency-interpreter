@@ -90,4 +90,69 @@ public class IntNode implements Expression, ArithmeticValue {
                         " by " + rightOperand.getType());
         }
     }
+
+    @Override
+    public BoolNode isLess(Value rightOperand) throws RuntimeEnvironmentException {
+        switch (rightOperand.getType()){
+            case INT:
+                return new BoolNode(value < Value.getIntValue(rightOperand));
+            case DOUBLE:
+                return new BoolNode(value < Value.getDoubleValue(rightOperand));
+            default:
+                throw new RuntimeEnvironmentException("Cannot compare " + rightOperand.getType() +
+                    " to " + getType());
+        }
+    }
+
+    @Override
+    public BoolNode isLessOrEqual(Value rightOperand) throws RuntimeEnvironmentException {
+        switch (rightOperand.getType()){
+            case INT:
+                return new BoolNode(value <= Value.getIntValue(rightOperand));
+            case DOUBLE:
+                return new BoolNode(value <= Value.getDoubleValue(rightOperand));
+            default:
+                throw new RuntimeEnvironmentException("Cannot compare " + rightOperand.getType() +
+                        " to " + getType());
+        }
+    }
+
+    @Override
+    public BoolNode isGrater(Value rightOperand) throws RuntimeEnvironmentException {
+        switch (rightOperand.getType()){
+            case INT:
+                return new BoolNode(value > Value.getIntValue(rightOperand));
+            case DOUBLE:
+                return new BoolNode(value > Value.getDoubleValue(rightOperand));
+            default:
+                throw new RuntimeEnvironmentException("Cannot compare " + rightOperand.getType() +
+                        " to " + getType());
+        }
+    }
+
+    @Override
+    public BoolNode isGraterOrEqual(Value rightOperand) throws RuntimeEnvironmentException {
+        switch (rightOperand.getType()){
+            case INT:
+                return new BoolNode(value >= Value.getIntValue(rightOperand));
+            case DOUBLE:
+                return new BoolNode(value >= Value.getDoubleValue(rightOperand));
+            default:
+                throw new RuntimeEnvironmentException("Cannot compare " + rightOperand.getType() +
+                        " to " + getType());
+        }
+    }
+
+    @Override
+    public BoolNode isEqual(Value rightOperand) throws RuntimeEnvironmentException {
+        switch (rightOperand.getType()){
+            case INT:
+                return new BoolNode(value == Value.getIntValue(rightOperand));
+            case DOUBLE:
+                return new BoolNode(value == Value.getDoubleValue(rightOperand));
+            default:
+                throw new RuntimeEnvironmentException("Cannot compare " + rightOperand.getType() +
+                        " to " + getType());
+        }
+    }
 }
