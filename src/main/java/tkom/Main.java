@@ -20,10 +20,12 @@ public class Main {
 
         if(args.length != 2) {
             System.out.println("Invalid number of arguments");
+            System.exit(0);
         }
 
         String programFile = args[0];
         String ratesFile = args[1];
+
 
         try {
             Rates rates = jsonReader.getRates(new FileReader(ratesFile));
