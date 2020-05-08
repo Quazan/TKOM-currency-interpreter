@@ -7,6 +7,7 @@ import tkom.ast.Expression;
 import tkom.ast.Statement;
 import tkom.error.RuntimeEnvironmentException;
 import tkom.execution.Environment;
+import tkom.utils.ExecuteStatus;
 import tkom.utils.NodeType;
 
 import java.util.ArrayList;
@@ -35,11 +36,6 @@ public class FunctionCall implements Statement, Expression {
 
     @Override
     public Value evaluate(Environment environment) throws RuntimeEnvironmentException {
-        return execute(environment);
-    }
-
-    @Override
-    public Value execute(Environment environment) throws RuntimeEnvironmentException {
 
         Function function = environment.getFunction(identifier);
 
@@ -48,5 +44,11 @@ public class FunctionCall implements Statement, Expression {
         }
 
         return function.execute(environment, arguments);
+    }
+
+    @Override
+    public ExecuteOut execute(Environment environment) throws RuntimeEnvironmentException {
+        evaluate(environment);
+        return new ExecuteOut(ExecuteStatus.NORMAL);
     }
 }

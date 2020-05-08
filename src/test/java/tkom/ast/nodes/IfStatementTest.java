@@ -9,6 +9,7 @@ import tkom.error.UnexpectedTokenException;
 import tkom.execution.Environment;
 import tkom.lexer.Lexer;
 import tkom.parser.Parser;
+import tkom.utils.ExecuteStatus;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -62,14 +63,14 @@ public class IfStatementTest {
 
     @Test
     public void trueCondition() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
-        ReturnCall expectedValue = new ReturnCall(new IntNode(42));
+        ExecuteOut expectedValue = new ExecuteOut(ExecuteStatus.RETURN, new IntNode(42));
         initializeParser("if(2 < 4) return 42;" +
                 "else return -1;");
         IfStatement ifStatement = (IfStatement) parser.parseStatement();
 
-        ReturnCall actual = (ReturnCall) ifStatement.execute(environment);
+        ExecuteOut actual = (ExecuteOut) ifStatement.execute(environment);
 
-        assertEquals(expectedValue.getType(), actual.getType());
+        assertEquals(expectedValue.getStatus(), actual.getStatus());
         assertEquals(expectedValue.getReturnedValue().getType(), actual.getReturnedValue().getType());
         assertEquals(((IntNode) expectedValue.getReturnedValue()).getValue(),
                 ((IntNode) actual.getReturnedValue()).getValue());
@@ -77,14 +78,14 @@ public class IfStatementTest {
 
     @Test
     public void falseCondition() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
-        ReturnCall expectedValue = new ReturnCall(new IntNode(42));
+        ExecuteOut expectedValue = new ExecuteOut(ExecuteStatus.RETURN, new IntNode(42));
         initializeParser("if(2 > 4) return -1;" +
                 "else return 42;");
         IfStatement ifStatement = (IfStatement) parser.parseStatement();
 
-        ReturnCall actual = (ReturnCall) ifStatement.execute(environment);
+        ExecuteOut actual = (ExecuteOut) ifStatement.execute(environment);
 
-        assertEquals(expectedValue.getType(), actual.getType());
+        assertEquals(expectedValue.getStatus(), actual.getStatus());
         assertEquals(expectedValue.getReturnedValue().getType(), actual.getReturnedValue().getType());
         assertEquals(((IntNode) expectedValue.getReturnedValue()).getValue(),
                 ((IntNode) actual.getReturnedValue()).getValue());
@@ -92,14 +93,14 @@ public class IfStatementTest {
 
     @Test
     public void ifStatementWithOnlyTrueBlock() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
-        IntNode expectedValue = new IntNode(0);
+        ExecuteOut expectedValue = new ExecuteOut(ExecuteStatus.NORMAL);
         initializeParser("if(2 > 4) return -1;");
         IfStatement ifStatement = (IfStatement) parser.parseStatement();
 
-        IntNode actual = (IntNode) ifStatement.execute(environment);
+        ExecuteOut actual = ifStatement.execute(environment);
 
-        assertEquals(expectedValue.getType(), actual.getType());
-        assertEquals(expectedValue.getValue(), actual.getValue());
+        assertEquals(expectedValue.getStatus(), actual.getStatus());
+        assertEquals(expectedValue.getReturnedValue(), actual.getReturnedValue());
     }
 
 }

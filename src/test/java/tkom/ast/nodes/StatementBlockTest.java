@@ -9,6 +9,7 @@ import tkom.error.UnexpectedTokenException;
 import tkom.execution.Environment;
 import tkom.lexer.Lexer;
 import tkom.parser.Parser;
+import tkom.utils.ExecuteStatus;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -62,7 +63,7 @@ public class StatementBlockTest {
 
     @Test
     public void afterReturnStatementExecutionIsCancelled() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
-        ReturnCall expectedValue = new ReturnCall(new IntNode(2));
+        ExecuteOut expectedValue = new ExecuteOut(ExecuteStatus.RETURN, new IntNode(2));
         initializeParser("{int a = 0;" +
                 "a = a + 2;" +
                 "return a;" +
@@ -70,9 +71,9 @@ public class StatementBlockTest {
                 "return a;}");
         StatementBlock statementBlock = parser.parseStatementBlock();
 
-        ReturnCall actual = (ReturnCall) statementBlock.execute(environment);
+        ExecuteOut actual = statementBlock.execute(environment);
 
-        assertEquals(expectedValue.getType(), actual.getType());
+        assertEquals(expectedValue.getStatus(), actual.getStatus());
         assertEquals(((IntNode) expectedValue.getReturnedValue()).getValue(),
                 ((IntNode) actual.getReturnedValue()).getValue());
         assertEquals(expectedValue.getReturnedValue().getType(),
@@ -81,26 +82,26 @@ public class StatementBlockTest {
 
     @Test
     public void emptyStatementBlock() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
-        IntNode expectedValue = new IntNode(0);
+        ExecuteOut expectedValue = new ExecuteOut(ExecuteStatus.NORMAL);
         initializeParser("{}");
         StatementBlock statementBlock = parser.parseStatementBlock();
 
-        IntNode actual = (IntNode) statementBlock.execute(environment);
+        ExecuteOut actual = statementBlock.execute(environment);
 
-        assertEquals(expectedValue.getType(), actual.getType());
-        assertEquals(expectedValue.getValue(), actual.getValue());
+        assertEquals(expectedValue.getStatus(), actual.getStatus());
+        assertEquals(expectedValue.getReturnedValue(), actual.getReturnedValue());
     }
 
     @Test
     public void returnCallsArePropagated() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
-        ReturnCall expectedValue = new ReturnCall(new IntNode(0));
+        ExecuteOut expectedValue = new ExecuteOut(ExecuteStatus.RETURN, new IntNode(0));
         initializeParser("{int a = 0;" +
                 "if(a == 0) return a;}");
         StatementBlock statementBlock = parser.parseStatementBlock();
 
-        ReturnCall actual = (ReturnCall) statementBlock.execute(environment);
+        ExecuteOut actual = statementBlock.execute(environment);
 
-        assertEquals(expectedValue.getType(), actual.getType());
+        assertEquals(expectedValue.getStatus(), actual.getStatus());
         assertEquals(((IntNode) expectedValue.getReturnedValue()).getValue(),
                 ((IntNode) actual.getReturnedValue()).getValue());
         assertEquals(expectedValue.getReturnedValue().getType(),

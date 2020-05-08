@@ -6,6 +6,7 @@ import lombok.ToString;
 import tkom.ast.Value;
 import tkom.error.RuntimeEnvironmentException;
 import tkom.execution.Environment;
+import tkom.utils.ExecuteStatus;
 import tkom.utils.NodeType;
 import tkom.ast.Statement;
 
@@ -31,10 +32,10 @@ public class IfStatement implements Statement {
     }
 
     @Override
-    public Value execute(Environment environment) throws RuntimeEnvironmentException {
+    public ExecuteOut execute(Environment environment) throws RuntimeEnvironmentException {
         environment.createNewLocalScope();
 
-        Value ret = new IntNode(0);
+        ExecuteOut ret = new ExecuteOut(ExecuteStatus.NORMAL);
 
         if (Value.getBoolValue(condition.evaluate(environment))) {
             ret = trueBlock.execute(environment);

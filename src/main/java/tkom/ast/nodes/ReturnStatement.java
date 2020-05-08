@@ -2,11 +2,11 @@ package tkom.ast.nodes;
 
 import lombok.Getter;
 import lombok.ToString;
-import tkom.ast.Value;
 import tkom.ast.Expression;
 import tkom.ast.Statement;
 import tkom.error.RuntimeEnvironmentException;
 import tkom.execution.Environment;
+import tkom.utils.ExecuteStatus;
 import tkom.utils.NodeType;
 
 @Getter
@@ -25,7 +25,7 @@ public class ReturnStatement implements Statement {
     }
 
     @Override
-    public Value execute(Environment environment) throws RuntimeEnvironmentException {
-        return new ReturnCall(expressionNode.evaluate(environment));
+    public ExecuteOut execute(Environment environment) throws RuntimeEnvironmentException {
+        return new ExecuteOut(ExecuteStatus.RETURN , expressionNode.evaluate(environment));
     }
 }

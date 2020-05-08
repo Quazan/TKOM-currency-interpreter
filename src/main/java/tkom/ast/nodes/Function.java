@@ -8,6 +8,7 @@ import tkom.ast.Expression;
 import tkom.ast.Node;
 import tkom.error.RuntimeEnvironmentException;
 import tkom.execution.Environment;
+import tkom.utils.ExecuteStatus;
 import tkom.utils.NodeType;
 
 import java.util.ArrayList;
@@ -65,8 +66,8 @@ public class Function extends Signature implements Node {
         }
     }
 
-    private void checkIfWasReturned(Value ret) throws RuntimeEnvironmentException {
-        if (ret.getType() != NodeType.RETURN_CALL) {
+    private void checkIfWasReturned(ExecuteOut ret) throws RuntimeEnvironmentException {
+        if (!ret.isReturnCall()) {
             throw new RuntimeEnvironmentException("Function without return statement");
         }
     }
@@ -74,11 +75,11 @@ public class Function extends Signature implements Node {
     private Value executeFunction(Environment environment, List<Expression> arguments) throws RuntimeEnvironmentException {
         prepareEnvironment(environment, arguments);
 
-        Value ret = statementBlock.execute(environment);
+        ExecuteOut ret = statementBlock.execute(environment);
         environment.destroyScope();
         checkIfWasReturned(ret);
 
-        return  ((ReturnCall) ret).getReturnedValue();
+        return ret.getReturnedValue();
     }
 
     private Value castReturnedType(Environment environment, Value ret) throws RuntimeEnvironmentException {

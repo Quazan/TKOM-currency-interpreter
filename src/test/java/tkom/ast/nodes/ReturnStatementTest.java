@@ -9,6 +9,7 @@ import tkom.error.UnexpectedTokenException;
 import tkom.execution.Environment;
 import tkom.lexer.Lexer;
 import tkom.parser.Parser;
+import tkom.utils.ExecuteStatus;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -62,14 +63,14 @@ public class ReturnStatementTest {
 
     @Test
     public void returnIntNode() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
-        ReturnCall expectedCall = new ReturnCall(new IntNode(10));
+        ExecuteOut expectedCall = new ExecuteOut(ExecuteStatus.RETURN, new IntNode(10));
         initializeParser("return 10;");
         parser.advance();
         ReturnStatement returnStatement = (ReturnStatement) parser.parseStatement();
 
-        ReturnCall actual = (ReturnCall) returnStatement.execute(environment);
+        ExecuteOut actual = returnStatement.execute(environment);
 
-        assertEquals(expectedCall.getType(), actual.getType());
+        assertEquals(expectedCall.getStatus(), actual.getStatus());
         assertEquals(expectedCall.getReturnedValue().getType(), actual.getReturnedValue().getType());
         assertEquals(((IntNode) expectedCall.getReturnedValue()).getValue(),
                 ((IntNode) actual.getReturnedValue()).getValue());
@@ -77,14 +78,14 @@ public class ReturnStatementTest {
 
     @Test
     public void returnDoubleNode() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
-        ReturnCall expectedCall = new ReturnCall(new DoubleNode(10.5));
+        ExecuteOut expectedCall = new ExecuteOut(ExecuteStatus.RETURN, new DoubleNode(10.5));
         initializeParser("return 10.5;");
         parser.advance();
         ReturnStatement returnStatement = (ReturnStatement) parser.parseStatement();
 
-        ReturnCall actual = (ReturnCall) returnStatement.execute(environment);
+        ExecuteOut actual = returnStatement.execute(environment);
 
-        assertEquals(expectedCall.getType(), actual.getType());
+        assertEquals(expectedCall.getStatus(), actual.getStatus());
         assertEquals(expectedCall.getReturnedValue().getType(), actual.getReturnedValue().getType());
         assertEquals(((DoubleNode) expectedCall.getReturnedValue()).getValue(),
                 ((DoubleNode) actual.getReturnedValue()).getValue(), 0);
@@ -93,15 +94,15 @@ public class ReturnStatementTest {
     @Test
     public void returnVariableWithCurrency() throws IOException, InvalidTokenException, UnexpectedTokenException, RuntimeEnvironmentException {
         Currency currency = new Currency(new BigDecimal(1), "EUR", environment.getExchangeRates());
-        ReturnCall expectedCall = new ReturnCall(currency);
+        ExecuteOut expectedCall = new ExecuteOut(ExecuteStatus.RETURN, currency);
         environment.addVariable("a", currency);
         initializeParser("return a;");
         parser.advance();
         ReturnStatement returnStatement = (ReturnStatement) parser.parseStatement();
 
-        ReturnCall actual = (ReturnCall) returnStatement.execute(environment);
+        ExecuteOut actual = returnStatement.execute(environment);
 
-        assertEquals(expectedCall.getType(), actual.getType());
+        assertEquals(expectedCall.getStatus(), actual.getStatus());
         assertEquals(expectedCall.getReturnedValue().getType(), actual.getReturnedValue().getType());
         assertEquals(((Currency) expectedCall.getReturnedValue()).getValue(),
                 ((Currency) actual.getReturnedValue()).getValue());

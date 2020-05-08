@@ -7,6 +7,7 @@ import tkom.ast.Expression;
 import tkom.ast.Statement;
 import tkom.error.RuntimeEnvironmentException;
 import tkom.execution.Environment;
+import tkom.utils.ExecuteStatus;
 import tkom.utils.NodeType;
 
 @Getter
@@ -28,7 +29,7 @@ public class AssignStatement implements Statement {
     }
 
     @Override
-    public Value execute(Environment environment) throws RuntimeEnvironmentException {
+    public ExecuteOut execute(Environment environment) throws RuntimeEnvironmentException {
         Value value = environment.getVariable(identifier);
 
         Value assign = assignable.evaluate(environment);
@@ -45,6 +46,6 @@ public class AssignStatement implements Statement {
             throw new RuntimeEnvironmentException("Cannot assign " + assign.getType() + " to " + value.getType());
         }
 
-        return new IntNode(0);
+        return new ExecuteOut(ExecuteStatus.NORMAL);
     }
 }

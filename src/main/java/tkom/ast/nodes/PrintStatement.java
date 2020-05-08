@@ -4,9 +4,9 @@ import lombok.Getter;
 import tkom.ast.Expression;
 import tkom.ast.Node;
 import tkom.ast.Statement;
-import tkom.ast.Value;
 import tkom.error.RuntimeEnvironmentException;
 import tkom.execution.Environment;
+import tkom.utils.ExecuteStatus;
 import tkom.utils.NodeType;
 
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ public class PrintStatement implements Node, Statement {
     }
 
     @Override
-    public Value execute(Environment environment) throws RuntimeEnvironmentException {
+    public ExecuteOut execute(Environment environment) throws RuntimeEnvironmentException {
         StringBuilder sb = new StringBuilder();
 
         for (Expression exp : arguments) {
@@ -36,7 +36,7 @@ public class PrintStatement implements Node, Statement {
 
         System.out.println(sb.toString());
 
-        return new IntNode(0);
+        return new ExecuteOut(ExecuteStatus.NORMAL);
     }
 
     @Override

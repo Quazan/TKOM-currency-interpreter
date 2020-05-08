@@ -1,11 +1,11 @@
 package tkom.ast.nodes;
 
 import lombok.*;
-import tkom.ast.Node;
 import tkom.ast.Value;
 import tkom.ast.Expression;
 import tkom.error.RuntimeEnvironmentException;
 import tkom.execution.Environment;
+import tkom.utils.ExecuteStatus;
 import tkom.utils.NodeType;
 import tkom.ast.Statement;
 
@@ -53,16 +53,16 @@ public class InitStatement extends Signature implements Statement {
     }
 
     @Override
-    public Value execute(Environment environment) throws RuntimeEnvironmentException {
+    public ExecuteOut execute(Environment environment) throws RuntimeEnvironmentException {
         if (assignable == null) {
             initializeDefaultValue(environment);
-            return new IntNode(0);
+            return new ExecuteOut(ExecuteStatus.NORMAL);
         }
 
         Value assign = assignable.evaluate(environment);
 
         initializeVariable(environment, assign);
 
-        return new IntNode(0);
+        return new ExecuteOut(ExecuteStatus.NORMAL);
     }
 }

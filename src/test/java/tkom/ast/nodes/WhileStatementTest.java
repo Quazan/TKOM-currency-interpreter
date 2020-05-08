@@ -9,6 +9,7 @@ import tkom.error.UnexpectedTokenException;
 import tkom.execution.Environment;
 import tkom.lexer.Lexer;
 import tkom.parser.Parser;
+import tkom.utils.ExecuteStatus;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -62,7 +63,7 @@ public class WhileStatementTest {
 
     @Test
     public void returnStatementExitsLoop() throws RuntimeEnvironmentException, IOException, InvalidTokenException, UnexpectedTokenException {
-        ReturnCall expectedValue = new ReturnCall(new IntNode(3));
+        ExecuteOut expectedValue = new ExecuteOut(ExecuteStatus.RETURN, new IntNode(3));
         environment.addVariable("a", new IntNode(0));
         initializeParser("while(a < 10){" +
                 "if(a == 3) return a;" +
@@ -70,9 +71,9 @@ public class WhileStatementTest {
         );
         WhileStatement whileStatement = (WhileStatement) parser.parseStatement();
 
-        ReturnCall actual = (ReturnCall) whileStatement.execute(environment);
+        ExecuteOut actual = whileStatement.execute(environment);
 
-        assertEquals(expectedValue.getType(), actual.getType());
+        assertEquals(expectedValue.getStatus(), actual.getStatus());
         assertEquals(expectedValue.getReturnedValue().getType(), actual.getReturnedValue().getType());
         assertEquals(((IntNode) expectedValue.getReturnedValue()).getValue(),
                 ((IntNode) actual.getReturnedValue()).getValue());

@@ -120,7 +120,7 @@ public class FunctionTest {
         initializeParser("test(euro);");
 
         FunctionCall functionCall = (FunctionCall) parser.parseStatement();
-        Currency actual = (Currency) functionCall.execute(environment);
+        Currency actual = (Currency) functionCall.evaluate(environment);
 
         assertEquals(expectedValue.getType(), actual.getType());
         assertEquals(expectedValue.getValue(), actual.getValue());
@@ -136,7 +136,7 @@ public class FunctionTest {
         initializeParser("test(5);");
 
         FunctionCall functionCall = (FunctionCall) parser.parseStatement();
-        DoubleNode actual = (DoubleNode) functionCall.execute(environment);
+        DoubleNode actual = (DoubleNode) functionCall.evaluate(environment);
 
         assertEquals(expectedValue.getType(), actual.getType());
         assertEquals(expectedValue.getValue(), actual.getValue(), 0);
