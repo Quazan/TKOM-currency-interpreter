@@ -24,7 +24,7 @@ public class ExecuteOut {
         this.returnedValue = null;
     }
 
-    public boolean isReturnCall(){
+    public boolean isReturnCall() {
         return status == ExecuteStatus.RETURN;
     }
 }

@@ -18,25 +18,25 @@ public class InitStatement extends Signature implements Statement {
 
     private Expression assignable;
 
-    private void initializeDefaultValue(Environment environment) throws RuntimeEnvironmentException {
+    private Value getDefaultValue(Environment environment) throws RuntimeEnvironmentException {
         if (isReturnType(NodeType.INT)) {
-            environment.addVariable(getIdentifier(), new IntNode(0));
+            return new IntNode(0);
         } else if (isReturnType(NodeType.DOUBLE)) {
-            environment.addVariable(getIdentifier(), new DoubleNode(0));
+            return new DoubleNode(0);
         } else if (environment.containsCurrency(getReturnType())) {
-            environment.addVariable(getIdentifier(), new Currency(BigDecimal.ZERO,
-                    getReturnType(), environment.getExchangeRates()));
+            return new Currency(BigDecimal.ZERO, getReturnType(), environment.getExchangeRates());
         }
+
+        throw new RuntimeEnvironmentException("Unexpected data type: " + getReturnType());
     }
 
-    private void initializeVariable(Environment environment, Value assign) throws RuntimeEnvironmentException {
+    private Value initializeVariable(Environment environment, Value assign) throws RuntimeEnvironmentException {
         if (isReturnType(assign.getType())) {
-            environment.addVariable(getIdentifier(), assign);
+            return assign;
         } else if (isReturnType(NodeType.DOUBLE) && Value.isInt(assign)) {
-            environment.addVariable(getIdentifier(), new DoubleNode(((IntNode) assign).getValue()));
+            return new DoubleNode(Value.getIntValue(assign));
         } else if (environment.containsCurrency(getReturnType())) {
-            environment.addVariable(getIdentifier(), new Currency(assign,
-                    getReturnType(), environment.getExchangeRates()));
+            return new Currency(assign, getReturnType(), environment.getExchangeRates());
         } else {
             throw new RuntimeEnvironmentException("Cannot assign " + assign.getType()
                     + " to " + getReturnType().toUpperCase());
@@ -55,13 +55,12 @@ public class InitStatement extends Signature implements Statement {
     @Override
     public ExecuteOut execute(Environment environment) throws RuntimeEnvironmentException {
         if (assignable == null) {
-            initializeDefaultValue(environment);
+            environment.addVariable(getIdentifier(), getDefaultValue(environment));
             return new ExecuteOut(ExecuteStatus.NORMAL);
         }
 
         Value assign = assignable.evaluate(environment);
-
-        initializeVariable(environment, assign);
+        environment.addVariable(getIdentifier(), initializeVariable(environment, assign));
 
         return new ExecuteOut(ExecuteStatus.NORMAL);
     }

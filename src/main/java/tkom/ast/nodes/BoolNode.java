@@ -13,7 +13,7 @@ public class BoolNode implements Value {
     private boolean value;
 
     private void checkOperandType(Value rightOperand) throws RuntimeEnvironmentException {
-        if(!Value.isBool(rightOperand)) {
+        if (!Value.isBool(rightOperand)) {
             throw new RuntimeEnvironmentException("Cannot compare " + rightOperand.getType() +
                     " to " + getType());
         }

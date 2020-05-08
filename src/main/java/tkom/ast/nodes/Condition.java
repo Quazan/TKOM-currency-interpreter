@@ -27,7 +27,7 @@ public class Condition implements Expression {
     private final List<Expression> operands;
 
     private ArithmeticValue castArithmeticType(Value operand) throws RuntimeEnvironmentException {
-        if(Value.isBool(operand)) {
+        if (Value.isBool(operand)) {
             throw new RuntimeEnvironmentException("Cannot compare " + operand.getType() +
                     " to ArithmeticValue");
         }

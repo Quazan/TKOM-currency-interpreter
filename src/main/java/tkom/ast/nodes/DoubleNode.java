@@ -77,7 +77,7 @@ public class DoubleNode implements Expression, ArithmeticValue {
 
     @Override
     public ArithmeticValue divide(Value rightOperand) throws RuntimeEnvironmentException {
-        if(ArithmeticValue.isZero(rightOperand)) {
+        if (ArithmeticValue.isZero(rightOperand)) {
             throw new RuntimeEnvironmentException("Cannot divide by 0");
         }
 
@@ -94,7 +94,7 @@ public class DoubleNode implements Expression, ArithmeticValue {
 
     @Override
     public BoolNode isLess(Value rightOperand) throws RuntimeEnvironmentException {
-        switch (rightOperand.getType()){
+        switch (rightOperand.getType()) {
             case INT:
                 return new BoolNode(value < Value.getIntValue(rightOperand));
             case DOUBLE:
@@ -107,7 +107,7 @@ public class DoubleNode implements Expression, ArithmeticValue {
 
     @Override
     public BoolNode isLessOrEqual(Value rightOperand) throws RuntimeEnvironmentException {
-        switch (rightOperand.getType()){
+        switch (rightOperand.getType()) {
             case INT:
                 return new BoolNode(value <= Value.getIntValue(rightOperand));
             case DOUBLE:
@@ -120,7 +120,7 @@ public class DoubleNode implements Expression, ArithmeticValue {
 
     @Override
     public BoolNode isGrater(Value rightOperand) throws RuntimeEnvironmentException {
-        switch (rightOperand.getType()){
+        switch (rightOperand.getType()) {
             case INT:
                 return new BoolNode(value > Value.getIntValue(rightOperand));
             case DOUBLE:
@@ -133,7 +133,7 @@ public class DoubleNode implements Expression, ArithmeticValue {
 
     @Override
     public BoolNode isGraterOrEqual(Value rightOperand) throws RuntimeEnvironmentException {
-        switch (rightOperand.getType()){
+        switch (rightOperand.getType()) {
             case INT:
                 return new BoolNode(value >= Value.getIntValue(rightOperand));
             case DOUBLE:
@@ -146,7 +146,7 @@ public class DoubleNode implements Expression, ArithmeticValue {
 
     @Override
     public BoolNode isEqual(Value rightOperand) throws RuntimeEnvironmentException {
-        switch (rightOperand.getType()){
+        switch (rightOperand.getType()) {
             case INT:
                 return new BoolNode(value == Value.getIntValue(rightOperand));
             case DOUBLE:

@@ -33,7 +33,7 @@ public class StringNode implements Expression, Value {
 
     @Override
     public BoolNode isEqual(Value rightOperand) throws RuntimeEnvironmentException {
-        if(rightOperand.getType() == NodeType.STRING) {
+        if (rightOperand.getType() == NodeType.STRING) {
             return new BoolNode(value.equals(((StringNode) rightOperand).value));
         }
 

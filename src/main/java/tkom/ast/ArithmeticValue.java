@@ -9,7 +9,7 @@ import tkom.error.RuntimeEnvironmentException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-public interface ArithmeticValue extends Value{
+public interface ArithmeticValue extends Value {
 
     ArithmeticValue add(Value rightOperand) throws RuntimeEnvironmentException;
 
@@ -28,7 +28,7 @@ public interface ArithmeticValue extends Value{
     BoolNode isGraterOrEqual(Value rightOperand) throws RuntimeEnvironmentException;
 
     static boolean isZero(Value value) throws RuntimeEnvironmentException {
-        switch (value.getType()){
+        switch (value.getType()) {
             case INT:
                 return ((IntNode) value).getValue() == 0;
             case DOUBLE:
@@ -41,7 +41,7 @@ public interface ArithmeticValue extends Value{
     }
 
     static private BigDecimal getBigDecimal(Value value) throws RuntimeEnvironmentException {
-        switch (value.getType()){
+        switch (value.getType()) {
             case INT:
                 return new BigDecimal(((IntNode) value).getValue());
             case DOUBLE:
@@ -50,7 +50,7 @@ public interface ArithmeticValue extends Value{
                 return ((Currency) value).getValue();
         }
 
-        throw new RuntimeEnvironmentException("Cannot convert "  + value.getType() + " to Currency");
+        throw new RuntimeEnvironmentException("Cannot convert " + value.getType() + " to Currency");
     }
 
     static BigDecimal multiplyBigDecimals(Value left, Value right) throws RuntimeEnvironmentException {

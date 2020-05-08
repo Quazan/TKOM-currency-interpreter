@@ -68,7 +68,7 @@ public class IfStatementTest {
                 "else return -1;");
         IfStatement ifStatement = (IfStatement) parser.parseStatement();
 
-        ExecuteOut actual = (ExecuteOut) ifStatement.execute(environment);
+        ExecuteOut actual = ifStatement.execute(environment);
 
         assertEquals(expectedValue.getStatus(), actual.getStatus());
         assertEquals(expectedValue.getReturnedValue().getType(), actual.getReturnedValue().getType());
@@ -83,7 +83,7 @@ public class IfStatementTest {
                 "else return 42;");
         IfStatement ifStatement = (IfStatement) parser.parseStatement();
 
-        ExecuteOut actual = (ExecuteOut) ifStatement.execute(environment);
+        ExecuteOut actual = ifStatement.execute(environment);
 
         assertEquals(expectedValue.getStatus(), actual.getStatus());
         assertEquals(expectedValue.getReturnedValue().getType(), actual.getReturnedValue().getType());

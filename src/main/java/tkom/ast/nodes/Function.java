@@ -38,18 +38,31 @@ public class Function extends Signature implements Node {
         return argumentsValue;
     }
 
-    private Value validateArgument(Environment environment, Signature parameter, Value argument) throws RuntimeEnvironmentException {
-        if (parameter.isReturnType(NodeType.DOUBLE) && Value.isInt(argument)) {
-            return new DoubleNode(((IntNode) argument).getValue());
-        }
-
+    private void checkArgumentType(Environment environment, Signature parameter, Value argument) throws RuntimeEnvironmentException {
         if (!((parameter.isReturnType(argument.getType())) ||
                 (environment.containsCurrency(parameter.getReturnType()) && Value.isCurrency(argument)))) {
             throw new RuntimeEnvironmentException("Unexpected argument type. Expected: "
                     + parameter.getReturnType().toUpperCase() + " actual: " + argument.getType());
         }
+    }
+
+    private Value validateArgument(Environment environment, Signature parameter, Value argument) throws RuntimeEnvironmentException {
+        if (parameter.isReturnType(NodeType.DOUBLE) && Value.isInt(argument)) {
+            return new DoubleNode(((IntNode) argument).getValue());
+        }
+
+        checkArgumentType(environment, parameter, argument);
 
         return argument;
+    }
+
+    private void addVariablesToEnvironment(Environment environment, List<Value> argumentsValue) throws RuntimeEnvironmentException {
+        for (int i = 0; i < parameters.size(); i++) {
+            Signature parameter = parameters.get(i);
+            Value argument = validateArgument(environment, parameter, argumentsValue.get(i));
+
+            environment.addVariable(parameter.getIdentifier(), argument);
+        }
     }
 
     private void prepareEnvironment(Environment environment, List<Expression> arguments) throws RuntimeEnvironmentException {
@@ -58,12 +71,8 @@ public class Function extends Signature implements Node {
         List<Value> argumentsValue = prepareArguments(environment, arguments);
 
         environment.createNewScope();
-        for (int i = 0; i < parameters.size(); i++) {
-            Signature parameter = parameters.get(i);
-            Value argument = validateArgument(environment, parameter, argumentsValue.get(i));
 
-            environment.addVariable(parameter.getIdentifier(), argument);
-        }
+        addVariablesToEnvironment(environment, argumentsValue);
     }
 
     private void checkIfWasReturned(ExecuteOut ret) throws RuntimeEnvironmentException {

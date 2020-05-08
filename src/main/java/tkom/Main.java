@@ -18,7 +18,7 @@ public class Main {
     public static void main(String[] args) {
         JsonReader jsonReader = new JsonReader();
 
-        if(args.length != 2) {
+        if (args.length != 2) {
             System.out.println("Invalid number of arguments");
             System.exit(0);
         }
@@ -34,6 +34,7 @@ public class Main {
             runProgram(program, rates);
         } catch (IOException | InvalidTokenException | UnexpectedTokenException |
                 RuntimeEnvironmentException e) {
+
             System.out.println(e.getMessage());
         }
     }

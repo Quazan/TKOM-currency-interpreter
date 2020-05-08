@@ -22,6 +22,16 @@ public class IfStatement implements Statement {
     @Setter
     private StatementBlock falseBlock;
 
+    private ExecuteOut executeIfStatement(Environment environment) throws RuntimeEnvironmentException {
+        if (Value.getBoolValue(condition.evaluate(environment))) {
+            return trueBlock.execute(environment);
+        } else if (falseBlock != null) {
+            return falseBlock.execute(environment);
+        }
+
+        return new ExecuteOut(ExecuteStatus.NORMAL);
+    }
+
     public IfStatement(Condition condition) {
         this.condition = condition;
     }
@@ -31,17 +41,12 @@ public class IfStatement implements Statement {
         return NodeType.IF_STATEMENT;
     }
 
+
     @Override
     public ExecuteOut execute(Environment environment) throws RuntimeEnvironmentException {
         environment.createNewLocalScope();
 
-        ExecuteOut ret = new ExecuteOut(ExecuteStatus.NORMAL);
-
-        if (Value.getBoolValue(condition.evaluate(environment))) {
-            ret = trueBlock.execute(environment);
-        } else if (falseBlock != null) {
-            ret = falseBlock.execute(environment);
-        }
+        ExecuteOut ret = executeIfStatement(environment);
 
         environment.destroyScope();
         return ret;

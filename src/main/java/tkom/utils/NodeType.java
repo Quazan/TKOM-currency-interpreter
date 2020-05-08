@@ -18,6 +18,5 @@ public enum NodeType {
     DOUBLE,
     IF_STATEMENT,
     BOOL,
-    RETURN_CALL,
     PRINT,
 }

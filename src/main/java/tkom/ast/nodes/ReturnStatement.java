@@ -26,6 +26,7 @@ public class ReturnStatement implements Statement {
 
     @Override
     public ExecuteOut execute(Environment environment) throws RuntimeEnvironmentException {
-        return new ExecuteOut(ExecuteStatus.RETURN , expressionNode.evaluate(environment));
+        return new ExecuteOut(ExecuteStatus.RETURN, expressionNode.evaluate(environment));
     }
+
 }

@@ -29,15 +29,16 @@ public class Currency implements Expression, ArithmeticValue {
     public Currency(Value value, String currencyType, Rates exchangeRates) throws RuntimeEnvironmentException {
         this.currencyType = currencyType;
         this.exchangeRates = exchangeRates;
-        switch (value.getType()){
+        switch (value.getType()) {
             case INT:
-                this.value = exchangeRates.toEUR(currencyType, new BigDecimal(((IntNode) value).getValue()));
+                this.value = exchangeRates.toEUR(currencyType, new BigDecimal(Value.getIntValue(value)));
                 break;
             case DOUBLE:
-                this.value = exchangeRates.toEUR(currencyType, new BigDecimal(String.valueOf(((DoubleNode) value).getValue())));
+                this.value = exchangeRates.toEUR(currencyType,
+                        new BigDecimal(String.valueOf(Value.getDoubleValue(value))));
                 break;
             case CURRENCY:
-                this.value = exchangeRates.toEUR(((Currency) value).getCurrencyType(), ((Currency) value).getValue());
+                this.value = exchangeRates.toEUR(((Currency) value).getCurrencyType(), Value.getCurrencyValue(value));
                 break;
             default:
                 throw new RuntimeEnvironmentException("Cannot assign " + value.getType() + " to " + getType());
@@ -61,31 +62,31 @@ public class Currency implements Expression, ArithmeticValue {
 
     @Override
     public ArithmeticValue add(Value rightOperand) throws RuntimeEnvironmentException {
-        if(!Value.isCurrency(rightOperand)) {
+        if (!Value.isCurrency(rightOperand)) {
             throw new RuntimeEnvironmentException("Cannot add " + rightOperand.getType() + " to " +
                     getType());
         }
 
-        return new Currency(value.add(((Currency) rightOperand).getValue()),
+        return new Currency(value.add(Value.getCurrencyValue(rightOperand)),
                 "EUR",
                 exchangeRates);
     }
 
     @Override
     public ArithmeticValue subtract(Value rightOperand) throws RuntimeEnvironmentException {
-        if(!Value.isCurrency(rightOperand)) {
+        if (!Value.isCurrency(rightOperand)) {
             throw new RuntimeEnvironmentException("Cannot subtract " + rightOperand.getType() + " from " +
                     getType());
         }
 
-        return new Currency(value.subtract(((Currency) rightOperand).getValue()),
+        return new Currency(value.subtract(Value.getCurrencyValue(rightOperand)),
                 "EUR",
                 exchangeRates);
     }
 
     @Override
     public ArithmeticValue multiply(Value rightOperand) throws RuntimeEnvironmentException {
-        if(!(Value.isInt(rightOperand) || Value.isDouble(rightOperand))) {
+        if (!(Value.isInt(rightOperand) || Value.isDouble(rightOperand))) {
             throw new RuntimeEnvironmentException("Cannot multiply " + getType() + " by " +
                     rightOperand.getType());
         }
@@ -96,12 +97,12 @@ public class Currency implements Expression, ArithmeticValue {
 
     @Override
     public ArithmeticValue divide(Value rightOperand) throws RuntimeEnvironmentException {
-        if(!(Value.isInt(rightOperand) || Value.isDouble(rightOperand))) {
+        if (!(Value.isInt(rightOperand) || Value.isDouble(rightOperand))) {
             throw new RuntimeEnvironmentException("Cannot divide " + getType() + " by " +
                     rightOperand.getType());
         }
 
-        if(ArithmeticValue.isZero(rightOperand)) {
+        if (ArithmeticValue.isZero(rightOperand)) {
             throw new RuntimeEnvironmentException("Cannot divide by 0");
         }
 
@@ -111,7 +112,7 @@ public class Currency implements Expression, ArithmeticValue {
 
     @Override
     public BoolNode isLess(Value rightOperand) throws RuntimeEnvironmentException {
-        if(!Value.isCurrency(rightOperand)) {
+        if (!Value.isCurrency(rightOperand)) {
             throw new RuntimeEnvironmentException("Cannot compare " + rightOperand.getType() +
                     " to " + getType());
         }
@@ -121,7 +122,7 @@ public class Currency implements Expression, ArithmeticValue {
 
     @Override
     public BoolNode isLessOrEqual(Value rightOperand) throws RuntimeEnvironmentException {
-        if(!Value.isCurrency(rightOperand)) {
+        if (!Value.isCurrency(rightOperand)) {
             throw new RuntimeEnvironmentException("Cannot compare " + rightOperand.getType() +
                     " to " + getType());
         }
@@ -131,7 +132,7 @@ public class Currency implements Expression, ArithmeticValue {
 
     @Override
     public BoolNode isGrater(Value rightOperand) throws RuntimeEnvironmentException {
-        if(!Value.isCurrency(rightOperand)) {
+        if (!Value.isCurrency(rightOperand)) {
             throw new RuntimeEnvironmentException("Cannot compare " + rightOperand.getType() +
                     " to " + getType());
         }
@@ -141,7 +142,7 @@ public class Currency implements Expression, ArithmeticValue {
 
     @Override
     public BoolNode isGraterOrEqual(Value rightOperand) throws RuntimeEnvironmentException {
-        if(!Value.isCurrency(rightOperand)) {
+        if (!Value.isCurrency(rightOperand)) {
             throw new RuntimeEnvironmentException("Cannot compare " + rightOperand.getType() +
                     " to " + getType());
         }
@@ -151,7 +152,7 @@ public class Currency implements Expression, ArithmeticValue {
 
     @Override
     public BoolNode isEqual(Value rightOperand) throws RuntimeEnvironmentException {
-        if(!Value.isCurrency(rightOperand)) {
+        if (!Value.isCurrency(rightOperand)) {
             throw new RuntimeEnvironmentException("Cannot compare " + rightOperand.getType() +
                     " to " + getType());
         }
