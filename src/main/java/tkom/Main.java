@@ -26,7 +26,6 @@ public class Main {
         String programFile = args[0];
         String ratesFile = args[1];
 
-
         try {
             Rates rates = jsonReader.getRates(new FileReader(ratesFile));
             FileReader fileReader = new FileReader(programFile);
@@ -34,7 +33,6 @@ public class Main {
             runProgram(program, rates);
         } catch (IOException | InvalidTokenException | UnexpectedTokenException |
                 RuntimeEnvironmentException e) {
-
             System.out.println(e.getMessage());
         }
     }

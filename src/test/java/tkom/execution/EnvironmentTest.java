@@ -59,7 +59,7 @@ public class EnvironmentTest {
     }
 
     @Test
-    public void getExistingFunction() {
+    public void getExistingFunction() throws RuntimeEnvironmentException {
         Function expectedFunction = new Function("int", "main");
 
         Function actual = environment.getFunction("main");
@@ -68,11 +68,9 @@ public class EnvironmentTest {
         assertEquals(expectedFunction.getReturnType(), actual.getReturnType());
     }
 
-    @Test
-    public void getNonExistingFunction() {
-        Function actual = environment.getFunction("notafunction");
-
-        assertNull(actual);
+    @Test(expected = RuntimeEnvironmentException.class)
+    public void getNonExistingFunction() throws RuntimeEnvironmentException {
+        environment.getFunction("notafunction");
     }
 
     @Test(expected = RuntimeEnvironmentException.class)

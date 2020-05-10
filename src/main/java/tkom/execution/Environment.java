@@ -99,8 +99,12 @@ public class Environment {
         throw new RuntimeEnvironmentException("Undefined Reference to:" + identifier);
     }
 
-    public Function getFunction(String identifier) {
-        return functions.get(identifier);
+    public Function getFunction(String identifier) throws RuntimeEnvironmentException {
+        if(functions.containsKey(identifier)){
+            return functions.get(identifier);
+        }
+
+        throw new RuntimeEnvironmentException("Main function not found.");
     }
 
     public boolean containsCurrency(String currency) {
