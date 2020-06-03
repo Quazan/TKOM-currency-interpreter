@@ -62,14 +62,14 @@ public class Lexer {
     private String readString() throws IOException, InvalidTokenException {
         do {
             readToBuilder();
-        } while ((Character.isLetterOrDigit(sign) || sign == '_') && sign != '"');
+        } while ((Character.isLetterOrDigit(sign) || sign == '_' || Character.isWhitespace(sign)) && sign != '"');
         stringBuilder.append(sign);
 
         if (stringBuilder.charAt(stringBuilder.length() - 1) != '"') {
             throw new InvalidTokenException(token.getLine(), token.getPosition());
         }
 
-        return stringBuilder.toString();
+        return stringBuilder.toString().substring(1, stringBuilder.length() - 1);
     }
 
     private String readIdentifier() throws IOException, InvalidTokenException {

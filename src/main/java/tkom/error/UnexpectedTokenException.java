@@ -18,4 +18,8 @@ public class UnexpectedTokenException extends Exception {
         super("Invalid token at line: " + line + " position: " + position + " expected TokenTypes: "
                 + expectedTypeList + " provided Token: " + providedType);
     }
+
+    public UnexpectedTokenException(String msg) {
+        super(msg);
+    }
 }

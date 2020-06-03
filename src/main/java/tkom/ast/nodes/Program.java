@@ -1,6 +1,5 @@
 package tkom.ast.nodes;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -11,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@Setter
 @ToString
 public class Program implements Node {
     private final List<Function> functions;
