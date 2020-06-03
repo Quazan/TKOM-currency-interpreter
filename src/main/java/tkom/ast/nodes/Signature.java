@@ -1,24 +1,24 @@
 package tkom.ast.nodes;
 
-import lombok.Data;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
+import tkom.utils.NodeType;
 
 
 @Getter
-@Setter
 @ToString
 public class Signature {
-    private String returnType;
+    private final String returnType;
 
-    private String identifier;
+    private final String identifier;
+
+    protected boolean isReturnType(NodeType type) {
+        return getReturnType().toUpperCase().equals(type.toString());
+    }
 
     public Signature(String returnType, String identifier) {
         this.returnType = returnType;
         this.identifier = identifier;
     }
 
-    public Signature() {
-    }
 }

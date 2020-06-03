@@ -5,4 +5,5 @@ import tkom.utils.NodeType;
 public interface Node {
 
     NodeType getType();
+
 }

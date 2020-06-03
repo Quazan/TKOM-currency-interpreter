@@ -38,7 +38,7 @@ public class ParserTest {
         assertEquals(expectedFunction.getParameters().size(),
                 actual.getParameters().size());
 
-        for(int i = 0; i < expectedFunction.getParameters().size(); i++) {
+        for (int i = 0; i < expectedFunction.getParameters().size(); i++) {
             assertEquals(expectedFunction.getParameters().get(i).getIdentifier(),
                     actual.getParameters().get(i).getIdentifier());
             assertEquals(expectedFunction.getParameters().get(i).getReturnType(),
@@ -93,7 +93,7 @@ public class ParserTest {
     @Test
     public void getOptionalTokenTypesTrue() throws IOException, InvalidTokenException {
         List<TokenType> expectedTokenTypes = new ArrayList<>() {{
-          add(TokenType.INT);
+            add(TokenType.INT);
         }};
         String input = "int i;";
         initializeParser(input);
@@ -205,14 +205,14 @@ public class ParserTest {
 
     @Test
     public void parseMultiplicativeExpression() throws UnexpectedTokenException, InvalidTokenException, IOException {
-        List<TokenType> expectedOperators = new ArrayList<>(){{
+        List<TokenType> expectedOperators = new ArrayList<>() {{
             add(TokenType.MULTIPLY);
             add(TokenType.DIVIDE);
         }};
         String input = "a * b / 2";
         initializeParser(input);
 
-        ExpressionNode actual = parser.parseMultiplicativeExpression();
+        ExpressionNode actual = (ExpressionNode) parser.parseMultiplicativeExpression();
 
         assertEquals(expectedOperators.get(0), actual.getOperations().get(0));
         assertEquals(expectedOperators.get(1), actual.getOperations().get(1));
@@ -220,14 +220,14 @@ public class ParserTest {
 
     @Test
     public void parseAdditiveExpression() throws UnexpectedTokenException, InvalidTokenException, IOException {
-        List<TokenType> expectedOperators = new ArrayList<>(){{
+        List<TokenType> expectedOperators = new ArrayList<>() {{
             add(TokenType.PLUS);
             add(TokenType.MINUS);
         }};
         String input = "a + b - 2";
         initializeParser(input);
 
-        ExpressionNode actual = parser.parseExpression();
+        ExpressionNode actual = (ExpressionNode) parser.parseExpression();
 
         assertEquals(expectedOperators.get(0), actual.getOperations().get(0));
         assertEquals(expectedOperators.get(1), actual.getOperations().get(1));
@@ -295,7 +295,7 @@ public class ParserTest {
 
     @Test
     public void parseIfStatement() throws IOException, InvalidTokenException, UnexpectedTokenException {
-        IfStatement expectedStatement = new IfStatement();
+        IfStatement expectedStatement = new IfStatement(new Condition());
         String input = "if ( a > b ) {}";
         initializeParser(input);
 
@@ -309,7 +309,7 @@ public class ParserTest {
 
     @Test
     public void parseIfElseStatement() throws IOException, InvalidTokenException, UnexpectedTokenException {
-        IfStatement expectedStatement = new IfStatement();
+        IfStatement expectedStatement = new IfStatement(new Condition());
         String input = "if ( a > b ) {} else {}";
         initializeParser(input);
 
@@ -323,7 +323,7 @@ public class ParserTest {
 
     @Test
     public void parseIfElseIfStatement() throws IOException, InvalidTokenException, UnexpectedTokenException {
-        IfStatement expectedStatement = new IfStatement();
+        IfStatement expectedStatement = new IfStatement(new Condition());
         String input = "if ( a > b ) {} else if (b == a) {} else {}";
         initializeParser(input);
 
@@ -333,12 +333,12 @@ public class ParserTest {
         assertEquals(expectedStatement.getType(), actual.getType());
         assertEquals(0, actual.getTrueBlock().getStatements().size());
         assertEquals(expectedStatement.getType(),
-                ((IfStatement) actual.getFalseBlock().getStatements().get(0)).getType());
+                actual.getFalseBlock().getStatements().get(0).getType());
     }
 
     @Test
     public void parseIfSingleStatement() throws IOException, InvalidTokenException, UnexpectedTokenException {
-        IfStatement expectedStatement = new IfStatement();
+        IfStatement expectedStatement = new IfStatement(new Condition());
         String input = "if ( a > b ) return a; else if (b == a) return b;";
         initializeParser(input);
 
@@ -347,9 +347,9 @@ public class ParserTest {
 
         assertEquals(expectedStatement.getType(), actual.getType());
         assertEquals(NodeType.RETURN_STATEMENT,
-                ((ReturnStatement) actual.getTrueBlock().getStatements().get(0)).getType());
+                actual.getTrueBlock().getStatements().get(0).getType());
         assertEquals(expectedStatement.getType(),
-                ((IfStatement) actual.getFalseBlock().getStatements().get(0)).getType());
+                actual.getFalseBlock().getStatements().get(0).getType());
     }
 
     @Test
@@ -365,8 +365,8 @@ public class ParserTest {
 
         assertEquals(expectedStatement.getType(), actual.getType());
         assertEquals(expectedStatement.getExpressionNode().getType(), actual.getExpressionNode().getType());
-        assertEquals(expectedStatement.getExpressionNode().getOperations().get(0),
-                actual.getExpressionNode().getOperations().get(0));
+        assertEquals(((ExpressionNode) expectedStatement.getExpressionNode()).getOperations().get(0),
+                ((ExpressionNode) actual.getExpressionNode()).getOperations().get(0));
     }
 
     @Test
@@ -383,8 +383,8 @@ public class ParserTest {
         WhileStatement actual = (WhileStatement) parser.parseStatement();
 
         assertEquals(expectedStatement.getType(), actual.getType());
-        assertEquals(((AssignStatement) expectedStatement.getWhileBlock().getStatements().get(0)).getType(),
-                ((AssignStatement) actual.getWhileBlock().getStatements().get(0)).getType());
+        assertEquals(expectedStatement.getWhileBlock().getStatements().get(0).getType(),
+                actual.getWhileBlock().getStatements().get(0).getType());
         assertEquals(((AssignStatement) expectedStatement.getWhileBlock().getStatements().get(0)).getIdentifier(),
                 ((AssignStatement) actual.getWhileBlock().getStatements().get(0)).getIdentifier());
     }
@@ -403,8 +403,8 @@ public class ParserTest {
         WhileStatement actual = (WhileStatement) parser.parseStatement();
 
         assertEquals(expectedStatement.getType(), actual.getType());
-        assertEquals(((AssignStatement) expectedStatement.getWhileBlock().getStatements().get(0)).getType(),
-                ((AssignStatement) actual.getWhileBlock().getStatements().get(0)).getType());
+        assertEquals(expectedStatement.getWhileBlock().getStatements().get(0).getType(),
+                actual.getWhileBlock().getStatements().get(0).getType());
         assertEquals(((AssignStatement) expectedStatement.getWhileBlock().getStatements().get(0)).getIdentifier(),
                 ((AssignStatement) actual.getWhileBlock().getStatements().get(0)).getIdentifier());
     }
@@ -439,8 +439,8 @@ public class ParserTest {
         assertEquals(expectedStatement.getType(), actual.getType());
         assertEquals(expectedStatement.getReturnType(), actual.getReturnType());
         assertEquals(expectedStatement.getIdentifier(), actual.getIdentifier());
-        assertEquals(expectedStatement.getAssignable().getOperations().get(0),
-                actual.getAssignable().getOperations().get(0));
+        assertEquals(((ExpressionNode) expectedStatement.getAssignable()).getOperations().get(0),
+                ((ExpressionNode) actual.getAssignable()).getOperations().get(0));
     }
 
     @Test
@@ -456,8 +456,17 @@ public class ParserTest {
 
         assertEquals(expectedStatement.getType(), actual.getType());
         assertEquals(expectedStatement.getIdentifier(), actual.getIdentifier());
-        assertEquals(expectedStatement.getAssignable().getOperations().get(0),
-                actual.getAssignable().getOperations().get(0));
+        assertEquals(((ExpressionNode) expectedStatement.getAssignable()).getOperations().get(0),
+                ((ExpressionNode) actual.getAssignable()).getOperations().get(0));
+    }
+
+    @Test(expected = UnexpectedTokenException.class)
+    public void parseIncorrectAssignStatement() throws UnexpectedTokenException, InvalidTokenException, IOException {
+        String input = "a; ";
+        initializeParser(input);
+
+        parser.advance();
+        parser.parseStatement();
     }
 
     @Test
@@ -475,22 +484,32 @@ public class ParserTest {
 
         assertEquals(expectedStatement.getType(), actual.getType());
         assertEquals(expectedStatement.getIdentifier(), actual.getIdentifier());
-        assertEquals(expectedStatement.getArguments().get(0).getOperations().get(0),
-                actual.getArguments().get(0).getOperations().get(0));
+        assertEquals(((ExpressionNode) expectedStatement.getArguments().get(0)).getOperations().get(0),
+                ((ExpressionNode) actual.getArguments().get(0)).getOperations().get(0));
         assertEquals(expectedStatement.getArguments().size(), actual.getArguments().size());
     }
 
-    @Test
-    public void parseFunctionCallWithString() throws UnexpectedTokenException, InvalidTokenException, IOException {
-        FunctionCall expectedStatement = new FunctionCall("print");
-        String input = "print(\"test\");";
+    @Test(expected = UnexpectedTokenException.class)
+    public void parseFunctionCallWithIncorrectArguments() throws UnexpectedTokenException, InvalidTokenException, IOException {
+        String input = "func(a + b, d + c, );";
         initializeParser(input);
 
         parser.advance();
-        FunctionCall actual = (FunctionCall) parser.parseStatement();
+        parser.parseStatement();
+    }
+
+    @Test
+    public void parsePrintStatement() throws UnexpectedTokenException, InvalidTokenException, IOException {
+        PrintStatement expectedStatement = new PrintStatement();
+        expectedStatement.addArgument(new StringNode("test"));
+        String input = "print(\"test\", a);";
+        initializeParser(input);
+
+        parser.advance();
+        PrintStatement actual = (PrintStatement) parser.parseStatement();
 
         assertEquals(expectedStatement.getType(), actual.getType());
-        assertEquals(expectedStatement.getIdentifier(), actual.getIdentifier());
+        assertEquals(expectedStatement.getArguments().get(0).toString(), actual.getArguments().get(0).toString());
     }
 
     @Test(expected = UnexpectedTokenException.class)
@@ -507,7 +526,7 @@ public class ParserTest {
         Function expectedFunction = new Function("int", "func");
         StatementBlock block = new StatementBlock();
         block.addStatement(new ReturnStatement(new ExpressionNode()));
-        List<Signature> parameters = new ArrayList<>(){{
+        List<Signature> parameters = new ArrayList<>() {{
             add(new Signature("int", "a"));
             add(new Signature("double", "b"));
         }};
@@ -523,8 +542,35 @@ public class ParserTest {
 
         assertEquals(expectedFunction.getStatementBlock().getStatements().size(),
                 expectedFunction.getStatementBlock().getStatements().size());
-        assertEquals(((ReturnStatement) expectedFunction.getStatementBlock().getStatements().get(0)).getType(),
-                ((ReturnStatement) expectedFunction.getStatementBlock().getStatements().get(0)).getType());
+        assertEquals(expectedFunction.getStatementBlock().getStatements().get(0).getType(),
+                expectedFunction.getStatementBlock().getStatements().get(0).getType());
+    }
+
+    @Test(expected = UnexpectedTokenException.class)
+    public void parseFunctionDefinitionWithExtraComa() throws IOException, InvalidTokenException, UnexpectedTokenException {
+        String input = "int func(int a, double b,) {return a + b;}";
+        initializeParser(input);
+
+        parser.advance();
+        parser.parseFunction();
+    }
+
+    @Test(expected = UnexpectedTokenException.class)
+    public void parseFunctionDefinitionWithOnlyType() throws IOException, InvalidTokenException, UnexpectedTokenException {
+        String input = "int func(int a, int b, int,) {return a + b;}";
+        initializeParser(input);
+
+        parser.advance();
+        parser.parseFunction();
+    }
+
+    @Test(expected = UnexpectedTokenException.class)
+    public void parseFunctionDefinitionWithTheSameNameParameters() throws IOException, InvalidTokenException, UnexpectedTokenException {
+        String input = "int func(int a, int a) {return a + a;}";
+        initializeParser(input);
+
+        parser.advance();
+        parser.parseFunction();
     }
 
     @Test
@@ -543,7 +589,7 @@ public class ParserTest {
         Program actual = parser.parseProgram();
 
         assertEquals(expectedProgram.getFunctions().size(), actual.getFunctions().size());
-        for(int i = 0; i < expectedProgram.getFunctions().size(); i++) {
+        for (int i = 0; i < expectedProgram.getFunctions().size(); i++) {
             assertFunctions(expectedProgram.getFunctions().get(0),
                     actual.getFunctions().get(0));
         }

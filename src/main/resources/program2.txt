@@ -1,0 +1,39 @@
+int main(){
+
+    EUR eur = 12;
+    PLN zl = 4.68;
+    PLN suma = eur + zl;
+    print("Suma zlotowek i euro ", suma);
+
+    print("Odsetki wynosza ", odsetki(suma));
+
+    print("rekurencyjne nwd 28 i 24 to ", nwd_rekurencyjne(28, 24));
+    print("iteracyjne nwd 28 i 24 to ", nwd(28, 24));
+
+    return 0;
+}
+
+EUR odsetki(EUR eur){
+    return eur * 0.01;
+}
+
+
+int nwd(int a, int b){
+
+    while(a != b){
+        if(a > b) {
+            a = a - b;
+        } else {
+            b = b - a;
+        }
+    }
+
+    return a;
+}
+
+int nwd_rekurencyjne(int a, int b){
+    if(a == b) return a;
+
+    if(a > b) return nwd_rekurencyjne(a-b, b);
+    else return nwd_rekurencyjne(a, b-a);
+}
